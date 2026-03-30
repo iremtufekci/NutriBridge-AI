@@ -1,0 +1,15 @@
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\bin\Debug\net8.0\Nightbrate.Infrastructure.deps.json
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\bin\Debug\net8.0\Nightbrate.Infrastructure.dll
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\bin\Debug\net8.0\Nightbrate.Infrastructure.pdb
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\bin\Debug\net8.0\Nightbrate.Core.dll
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\bin\Debug\net8.0\Nightbrate.Core.pdb
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\obj\Debug\net8.0\Nightbrate.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\obj\Debug\net8.0\Nightbrate.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\obj\Debug\net8.0\Nightbrate.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\obj\Debug\net8.0\Nightbrate.Infrastructure.AssemblyInfo.cs
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\obj\Debug\net8.0\Nightbrate.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\obj\Debug\net8.0\Nightbra.1A669AB0.Up2Date
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\obj\Debug\net8.0\Nightbrate.Infrastructure.dll
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\obj\Debug\net8.0\refint\Nightbrate.Infrastructure.dll
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\obj\Debug\net8.0\Nightbrate.Infrastructure.pdb
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\obj\Debug\net8.0\ref\Nightbrate.Infrastructure.dll

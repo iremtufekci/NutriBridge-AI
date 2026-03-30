@@ -1,0 +1,12 @@
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Core\bin\Debug\net8.0\Nightbrate.Core.deps.json
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Core\bin\Debug\net8.0\Nightbrate.Core.dll
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Core\bin\Debug\net8.0\Nightbrate.Core.pdb
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Core\obj\Debug\net8.0\Nightbrate.Core.csproj.AssemblyReference.cache
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Core\obj\Debug\net8.0\Nightbrate.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Core\obj\Debug\net8.0\Nightbrate.Core.AssemblyInfoInputs.cache
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Core\obj\Debug\net8.0\Nightbrate.Core.AssemblyInfo.cs
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Core\obj\Debug\net8.0\Nightbrate.Core.csproj.CoreCompileInputs.cache
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Core\obj\Debug\net8.0\Nightbrate.Core.dll
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Core\obj\Debug\net8.0\refint\Nightbrate.Core.dll
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Core\obj\Debug\net8.0\Nightbrate.Core.pdb
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Core\obj\Debug\net8.0\ref\Nightbrate.Core.dll

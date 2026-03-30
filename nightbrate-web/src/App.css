@@ -1,0 +1,56 @@
+.login-container {
+  display: flex;
+  height: 100vh;
+  background-color: #0f172a; /* Çok koyu lacivert/siyah */
+  color: white;
+  font-family: 'Inter', sans-serif;
+}
+
+.login-left {
+  flex: 1;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); /* Canlı yeşil gradyan */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.login-right {
+  flex: 1.2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-form {
+  width: 380px;
+  padding: 40px;
+  background: #1e293b;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: white;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  background: #22c55e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover { background: #16a34a; }
