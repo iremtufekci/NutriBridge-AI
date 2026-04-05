@@ -45,3 +45,4 @@ C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\obj\Debug\net8.0\refi
 C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\obj\Debug\net8.0\Nightbrate.API.pdb
 C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\obj\Debug\net8.0\Nightbrate.API.genruntimeconfig.cache
 C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\obj\Debug\net8.0\ref\Nightbrate.API.dll
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\obj\Debug\net8.0\Nightbrate.API.sourcelink.json

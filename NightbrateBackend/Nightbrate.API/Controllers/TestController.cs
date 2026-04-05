@@ -21,8 +21,10 @@ public class TestController : ControllerBase
     {
         try
         {
-            // MongoDB'ye basit bir komut gönderiyoruz
-            var result = _context.GetCollection<BsonDocument>("Test").Database.RunCommand<BsonDocument>(new BsonDocument("ping", 1));
+            // Yeni Yapı: _context içindeki 'Clients' veya 'Users' üzerinden database'e ulaşıyoruz
+            // Çünkü her koleksiyon zaten kendi içinde Database bağlantısını taşır.
+            var result = _context.Clients.Database.RunCommand<BsonDocument>(new BsonDocument("ping", 1));
+            
             return Ok(new { message = "MongoDB Bağlantısı Başarılı!", detail = result.ToString() });
         }
         catch (Exception ex)
