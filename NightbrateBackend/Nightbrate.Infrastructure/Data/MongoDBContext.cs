@@ -1,22 +1,23 @@
 using MongoDB.Driver;
 using Microsoft.Extensions.Configuration;
+using Nightbrate.Core.Entities; // 1. Bu satır en üstte olmalı
 
-namespace Nightbrate.Infrastructure.Data;
-
-public class MongoDbContext
+namespace Nightbrate.Infrastructure.Data
 {
-    private readonly IMongoDatabase _database;
-
-    public MongoDbContext(IConfiguration configuration)
+    public class MongoDbContext
     {
-        // appsettings.json dosyasından az önce yazdığın linki okur
-        var connectionString = configuration.GetSection("ConnectionStrings:MongoDb").Value;
-        var client = new MongoClient(connectionString);
-        
-        // Veritabanı adını buradan alıyoruz
-        _database = client.GetDatabase("NightbrateDb");
-    }
+        private readonly IMongoDatabase _database;
+        public IMongoCollection<User> Users => _database.GetCollection<User>("Users");
 
-    // Koleksiyonlara (Tablolara) erişmek için bu metodu kullanacağız
-    public IMongoCollection<T> GetCollection<T>(string name) => _database.GetCollection<T>(name);
+        public MongoDbContext(IConfiguration configuration)
+        {
+            var client = new MongoClient(configuration.GetConnectionString("MongoDb"));
+            _database = client.GetDatabase("NightbrateDb");
+        }
+
+        public IMongoCollection<Client> Clients => _database.GetCollection<Client>("Clients");
+        
+        // 2. Bu satır Diyetisyenleri veritabanına bağlar
+        public IMongoCollection<Dietitian> Dietitians => _database.GetCollection<Dietitian>("Dietitians");
+    }
 }

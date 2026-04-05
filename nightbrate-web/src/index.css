@@ -1,4 +1,13 @@
 @import "tailwindcss";
+@layer components {
+  .input-style {
+    @apply w-full p-3 bg-[#0F172A] border border-slate-700 rounded-xl text-white focus:border-[#22C55E] outline-none transition-all;
+  }
+  
+  .btn-primary {
+    @apply w-full py-3 bg-[#22C55E] text-white font-bold rounded-xl hover:bg-[#16A34A] transition-all transform hover:scale-[1.02];
+  }
+}
 :root {
   --text: #6b6375;
   --text-h: #08060d;

@@ -17,53 +17,48 @@ public class UserController : ControllerBase
     {
         _context = context;
     }
+
     [HttpPost("login")]
-public async Task<IActionResult> Login(UserLoginDto request)
-{
-    var usersCollection = _context.GetCollection<User>("Users");
-    
-    // 1. Kullanıcıyı email ile bul
-    var user = await usersCollection.Find(u => u.Email == request.Email).FirstOrDefaultAsync();
-    if (user == null) return BadRequest("Kullanıcı bulunamadı!");
-
-    // 2. Şifreyi doğrula
-    if (!PasswordHasher.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+    public async Task<IActionResult> Login(UserLoginDto request)
     {
-        return BadRequest("Hatalı şifre!");
-    }
+        // HATA BURADAYDI: _context.GetCollection yerine doğrudan koleksiyon özelliğini kullanıyoruz
+        // Not: MongoDbContext içinde 'public IMongoCollection<User> Users => ...' tanımı olmalı
+        var user = await _context.Users.Find(u => u.Email == request.Email).FirstOrDefaultAsync();
+        
+        if (user == null) return BadRequest("Kullanıcı bulunamadı!");
 
-    // 3. Başarılı giriş (İleride buraya JWT Token ekleyeceğiz)
-    return Ok(new { 
-        message = "Giriş başarılı!", 
-        username = user.Username, 
-        role = user.Role.ToString() 
-    });
-}
+        if (!PasswordHasher.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+        {
+            return BadRequest("Hatalı şifre!");
+        }
+
+        return Ok(new { 
+            message = "Giriş başarılı!", 
+            username = user.Username, 
+            role = user.Role.ToString() 
+        });
+    }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register(UserRegisterDto request)
     {
-        var usersCollection = _context.GetCollection<User>("Users");
-
-        // 1. Email zaten kayıtlı mı kontrolü
-        var existingUser = await usersCollection.Find(u => u.Email == request.Email).FirstOrDefaultAsync();
+        // HATA BURADAYDI: _context.Users kullanarak doğrudan erişiyoruz
+        var existingUser = await _context.Users.Find(u => u.Email == request.Email).FirstOrDefaultAsync();
+        
         if (existingUser != null) return BadRequest("Bu email zaten kayıtlı!");
 
-        // 2. Şifreyi Hash'leme
         PasswordHasher.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-        // 3. Yeni kullanıcı nesnesini oluşturma
         var user = new User
         {
             Username = request.Username,
             Email = request.Email,
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt,
-            Role = (UserRole)request.Role // DTO'dan gelen rakamı Role enum'ına çevirir
+            Role = (UserRole)request.Role 
         };
 
-        // 4. Veritabanına kaydetme
-        await usersCollection.InsertOneAsync(user);
+        await _context.Users.InsertOneAsync(user);
 
         return Ok(new { message = "Kayıt başarılı!", userId = user.Id });
     }

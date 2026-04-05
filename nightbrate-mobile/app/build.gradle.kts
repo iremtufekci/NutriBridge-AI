@@ -39,6 +39,12 @@ android {
 }
 
 dependencies {
+    // Retrofit (API haberleşmesi için)
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+// Logları izlemek için (Hata olursa görmemizi sağlar)
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation(libs.androidx.core.ktx)

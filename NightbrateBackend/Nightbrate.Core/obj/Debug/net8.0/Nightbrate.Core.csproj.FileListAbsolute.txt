@@ -10,3 +10,4 @@ C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Core\obj\Debug\net8.0\Nig
 C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Core\obj\Debug\net8.0\refint\Nightbrate.Core.dll
 C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Core\obj\Debug\net8.0\Nightbrate.Core.pdb
 C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Core\obj\Debug\net8.0\ref\Nightbrate.Core.dll
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Core\obj\Debug\net8.0\Nightbrate.Core.sourcelink.json
