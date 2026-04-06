@@ -20,11 +20,9 @@ class MainActivity : AppCompatActivity() {
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
         
-        // Kayıt yönlendirme TextView'ları
         val tvGoToRegisterClient = findViewById<TextView>(R.id.tvGoToRegisterClient)
         val tvGoToRegisterDietitian = findViewById<TextView>(R.id.tvGoToRegisterDietitian)
 
-        // GİRİŞ YAP BUTONU
         btnLogin.setOnClickListener {
             val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString().trim()
@@ -37,13 +35,11 @@ class MainActivity : AppCompatActivity() {
             performLogin(email, password)
         }
 
-        // DANIŞAN KAYIT EKRANINA GİT
         tvGoToRegisterClient.setOnClickListener {
             val intent = Intent(this, RegisterClientActivity::class.java)
             startActivity(intent)
         }
 
-        // DİYETİSYEN BAŞVURU EKRANINA GİT
         tvGoToRegisterDietitian.setOnClickListener {
             val intent = Intent(this, RegisterDietitianActivity::class.java)
             startActivity(intent)
@@ -53,13 +49,24 @@ class MainActivity : AppCompatActivity() {
     private fun performLogin(email: String, password: String) {
         lifecycleScope.launch {
             try {
-                val request = LoginRequest(email, password)
-                val response = RetrofitClient.instance.login(request)
+                val response = RetrofitClient.instance.login(LoginRequest(email, password))
 
                 if (response.isSuccessful) {
                     val userResponse = response.body()
-                    Toast.makeText(this@MainActivity, "Hoş geldin ${userResponse?.username}!", Toast.LENGTH_LONG).show()
-                    // TODO: Ana sayfaya yönlendirme
+                    val role = userResponse?.role?.lowercase() ?: ""
+                    val username = userResponse?.username ?: "Kullanıcı"
+
+                    Toast.makeText(this@MainActivity, "Hoş geldin $username!", Toast.LENGTH_SHORT).show()
+
+                    val intent = when (role) {
+                        "admin" -> Intent(this@MainActivity, AdminDashboardActivity::class.java)
+                        "dietitian", "diyetisyen" -> Intent(this@MainActivity, DietitianDashboardActivity::class.java)
+                        else -> Intent(this@MainActivity, ClientDashboardActivity::class.java)
+                    }
+                    
+                    intent.putExtra("USERNAME", username)
+                    startActivity(intent)
+                    finish()
                 } else {
                     Toast.makeText(this@MainActivity, "Giriş Başarısız: Email veya şifre hatalı!", Toast.LENGTH_SHORT).show()
                 }

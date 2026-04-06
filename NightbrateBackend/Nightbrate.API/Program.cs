@@ -2,41 +2,46 @@ using Nightbrate.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- 1. SERVİS AYARLARI (builder.Build'den önce olmalı!) ---
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<MongoDbContext>();
+// --- 1. SERVİS AYARLARI (builder.Build'den önce) ---
 
-// CORS servisini BURAYA (Yukarı) aldık:
+// CORS Politikasını Tanımla
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
         policy.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
 
-// --- 2. UYGULAMAYI İNŞA ET ---
-var app = builder.Build(); 
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
-// --- 3. İSTEK HATTINI YAPILANDIR (app.Build'den sonra olmalı!) ---
+// Veritabanı Bağlantısı
+builder.Services.AddSingleton<MongoDbContext>();
+
+var app = builder.Build();
+
+// --- 2. MIDDLEWARE YAPILANDIRMASI (Sıralama Çok Önemli!) ---
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// CORS'u aktif et (MapControllers'dan önce olması iyidir)
+// 1. Önce CORS (Her şeyden önce gelmeli)
 app.UseCors("AllowAll");
 
-app.MapControllers();
+// 2. Varsa HTTPS yönlendirmesi (Geliştirme aşamasında bazen sorun çıkarabilir, kapalı tutabilirsin)
+// app.UseHttpsRedirection(); 
 
-// WeatherForecast (İstersen silebilirsin, kalabilir de)
-app.MapGet("/weatherforecast", () => { return "Nightbrate API is running!"; })
-   .WithName("GetWeatherForecast")
-   .WithOpenApi();
+// 3. Auth işlemleri (Controller'lardan önce gelmeli)
+app.UseAuthorization();
+
+// 4. En son rotalar
+app.MapControllers();
 
 app.Run();

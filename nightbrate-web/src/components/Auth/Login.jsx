@@ -1,14 +1,53 @@
 import { useState } from "react";
-import { Link } from "react-router-dom"; // useNavigate şu an kullanılmadığı için kaldırıldı
+import { Link, useNavigate } from "react-router-dom"; 
+import axios from "axios"; 
 
 export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(""); 
+  const [loading, setLoading] = useState(false); 
+  const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Giriş denemesi:", email);
-    alert("Giriş özelliği yakında eklenecek! Şimdilik kayıt sayfalarını test edebilirsiniz.");
+    setError("");
+    setLoading(true);
+
+    try {
+      // KRİTİK DÜZELTME: 5173 olan portu 5231 (Backend portu) olarak güncelledik
+      const response = await axios.post("http://localhost:5231/api/auth/login", {
+        email: email.trim(), // Gereksiz boşlukları temizler
+        password: password
+      });
+
+      // Başarılı giriş: Verileri tarayıcı hafızasına al
+      const { token, role, userName } = response.data;
+      
+      localStorage.setItem("token", token);
+      localStorage.setItem("userRole", role);
+      localStorage.setItem("userName", userName);
+
+      // Role göre yönlendirme
+      if (role === "admin") {
+        navigate("/admin");
+      } else if (role === "dietitian") {
+        navigate("/dietitian");
+      } else {
+        navigate("/client"); 
+      }
+
+    } catch (err) {
+      if (err.response) {
+        // Backend'den gelen hata mesajını göster (E-posta veya şifre hatalı vb.)
+        setError(err.response.data.message || "Giriş başarısız.");
+      } else {
+        // Backend kapalıysa buraya düşer
+        setError("Sunucuya bağlanılamadı. Lütfen Backend'in (5231) çalıştığından emin olun.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -16,11 +55,16 @@ export function Login() {
       <div className="w-full max-w-md">
         <div className="bg-[#1E293B] rounded-2xl p-8 border border-[#334155] shadow-2xl">
           
-          {/* Logo Bölümü */}
           <div className="text-center mb-10">
             <h1 className="text-4xl font-extrabold text-[#22C55E] mb-2">NightBrate</h1>
             <p className="text-[#94A3B8] text-sm">Akıllı Beslenme Platformu</p>
           </div>
+
+          {error && (
+            <div className="mb-6 p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-500 text-sm text-center">
+              {error}
+            </div>
+          )}
 
           <form className="space-y-6" onSubmit={handleLogin}>
             <div className="space-y-2">
@@ -47,37 +91,29 @@ export function Login() {
               />
             </div>
 
-            <p className="text-[#22C55E] text-sm hover:underline cursor-pointer inline-block">Şifremi Unuttum</p>
-
-            <button type="submit" className="w-full py-4 bg-[#22C55E] text-white font-bold rounded-xl text-lg hover:bg-[#16A34A] transition-all transform hover:scale-[1.01] active:scale-[0.98]">
-              Giriş Yap
+            <button 
+              type="submit" 
+              disabled={loading}
+              className={`w-full py-4 bg-[#22C55E] text-white font-bold rounded-xl text-lg transition-all transform hover:scale-[1.01] active:scale-[0.98] ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#16A34A]'}`}
+            >
+              {loading ? "Giriş Yapılıyor..." : "Giriş Yap"}
             </button>
           </form>
 
-          <p className="text-[#94A3B8] text-xs text-center mt-4 italic">Sisteme rolünüze göre otomatik yönlendirilirsiniz.</p>
-
           <div className="mt-8 pt-6 border-t border-[#334155] text-center space-y-2">
-            <p className="text-[#94A3B8] text-sm">
-              Hesabınız yok mu?{" "}
-              <Link to="/register-client" className="text-[#22C55E] font-bold cursor-pointer hover:underline">
-                Danışan Kaydı
-              </Link>
-            </p>
-            
-            <p className="text-[#94A3B8] text-sm">
-              Diyetisyen misiniz?{" "}
-              <Link to="/register-dietitian" className="text-[#22C55E] font-bold cursor-pointer hover:underline">
-                Kayıt Olun
-              </Link>
-            </p>
+             <p className="text-[#94A3B8] text-sm">
+               Hesabınız yok mu?{" "}
+               <Link to="/register-client" className="text-[#22C55E] font-bold cursor-pointer hover:underline">
+                 Danışan Kaydı
+               </Link>
+             </p>
+             <p className="text-[#94A3B8] text-sm">
+               Diyetisyen misiniz?{" "}
+               <Link to="/register-dietitian" className="text-[#22C55E] font-bold cursor-pointer hover:underline">
+                 Kayıt Olun
+               </Link>
+             </p>
           </div>
-        </div>
-
-        {/* Demo Kutusu */}
-        <div className="mt-4 p-4 bg-[#1E293B]/50 rounded-xl border border-[#334155]/50 text-center">
-          <p className="text-[#94A3B8] text-[10px]">
-            <strong>Demo:</strong> admin@nightbrate.com | dietitian@nightbrate.com | client@nightbrate.com
-          </p>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Eye, EyeOff, ArrowRight } from "lucide-react";
+import axios from "axios"; // Axios eklemeyi unutma: npm install axios
 
 export function RegisterClient() {
   const navigate = useNavigate();
@@ -36,36 +37,47 @@ export function RegisterClient() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Backend'deki ClientRegisterDto ile tam uyumlu Payload
     const payload = {
-      ...formData,
-      height: parseInt(formData.height),
-      weight: parseInt(formData.weight),
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      password: formData.password,
+      height: parseFloat(formData.height), 
+      weight: parseFloat(formData.weight),
+      goal: formData.goal,
+      activityLevel: formData.activityLevel,
       birthDate: new Date(formData.birthDate).toISOString()
     };
 
     try {
-     const response = await fetch("http://localhost:5231/api/Auth/register-client", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
+      // Backend portun 5231 olduğu için adresi sabitledik
+      const response = await axios.post("http://localhost:5231/api/Auth/register-client", payload);
 
-      const result = await response.json();
-      if (response.ok) {
-        alert("Kayıt Başarılı! " + result.message);
+      if (response.status === 200 || response.status === 201) {
+        alert("Kayıt Başarılı! " + (response.data.message || "Hoş geldiniz."));
         navigate("/");
-      } else {
-        alert("Hata: " + result.message);
       }
     } catch (error) {
-      console.error("Bağlantı Hatası:", error);
-      alert("Backend sunucusuna bağlanılamadı!");
+      // "undefined" hatasını önlemek için detaylı hata yakalama
+      console.error("Hata Detayı:", error);
+      
+      if (error.response) {
+        // Sunucu bir hata kodu döndürdü (400, 500 vb.)
+        const errorMsg = error.response.data?.message || "Sunucu hatası oluştu.";
+        alert("Hata: " + errorMsg);
+      } else if (error.request) {
+        // İstek yapıldı ama cevap gelmedi (Backend kapalı olabilir)
+        alert("Backend sunucusuna ulaşılamıyor! Lütfen terminalde 'dotnet run' yapın.");
+      } else {
+        alert("Beklenmedik bir hata oluştu: " + error.message);
+      }
     }
   };
 
   return (
     <div className="min-h-screen bg-[#0F172A] flex items-center justify-center p-4">
-      {/* Stil etiketini doğrudan buraya ekledik */}
       <style dangerouslySetInnerHTML={{ __html: `
         .input-style {
           width: 100%;
