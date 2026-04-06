@@ -1,8 +1,5 @@
-namespace Nightbrate.Core.Entities;
-
-public enum UserRole
-{
+public enum UserRole {
     Admin = 0,
     Dietitian = 1,
-    User = 2
+    Client = 2 // Buradaki ismin 'Client' olduğundan emin ol
 }

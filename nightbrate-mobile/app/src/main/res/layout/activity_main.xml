@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark"
+    android:background="#0F172A"
     android:fillViewport="true">
 
     <LinearLayout
@@ -10,145 +10,106 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="24dp">
 
-        <androidx.cardview.widget.CardView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/card_dark"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="12dp"
-            android:layout_marginBottom="16dp">
+            android:background="@drawable/custom_input_bg"
+            android:backgroundTint="#1E293B"
+            android:orientation="vertical"
+            android:padding="32dp">
 
-            <LinearLayout
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="NightBrate"
+                android:textColor="#22C55E"
+                android:textSize="36sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="32dp"
+                android:text="Akıllı Beslenme Platformu"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="E-posta"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="32dp">
+                android:layout_marginTop="8dp"
+                android:background="@drawable/custom_input_bg"
+                android:hint="ornek@email.com"
+                android:padding="16dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#475569"
+                android:inputType="textEmailAddress"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="NightBrate"
-                    android:textColor="@color/primary_green"
-                    android:textSize="36sp"
-                    android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Şifre"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="32dp"
-                    android:text="Akıllı Beslenme Platformu"
-                    android:textColor="@color/text_gray"
-                    android:textSize="14sp" />
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/custom_input_bg"
+                android:hint="••••••••"
+                android:inputType="textPassword"
+                android:padding="16dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#475569"/>
 
-                <TextView
-                    android:text="E-posta"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"/>
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="32dp"
+                android:backgroundTint="#22C55E"
+                android:text="Giriş Yap"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/etEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/custom_input_bg"
-                    android:hint="ornek@email.com"
-                    android:padding="16dp"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/input_placeholder"
-                    android:inputType="textEmailAddress"/>
+            <TextView
+                android:id="@+id/tvGoToRegisterClient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="24dp"
+                android:text="Hesabınız yok mu? Danışan Kaydı"
+                android:textColor="#94A3B8"
+                android:textSize="14sp"
+                android:padding="8dp" />
 
-                <TextView
-                    android:text="Şifre"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginLeft="4dp"/>
+            <TextView
+                android:id="@+id/tvGoToRegisterDietitian"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:text="Diyetisyen misiniz? Başvuru Yapın"
+                android:textColor="#94A3B8"
+                android:textSize="14sp"
+                android:padding="8dp" />
 
-                <EditText
-                    android:id="@+id/etPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/custom_input_bg"
-                    android:hint="••••••••"
-                    android:inputType="textPassword"
-                    android:padding="16dp"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/input_placeholder"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Şifremi Unuttum"
-                    android:textColor="@color/primary_green"
-                    android:textStyle="bold"
-                    android:cursorVisible="true"/>
-
-                <Button
-                    android:id="@+id/btnLogin"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_marginTop="28dp"
-                    android:backgroundTint="@color/primary_green"
-                    android:text="Giriş Yap"
-                    android:textAllCaps="false"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:cornerRadius="14dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="16dp"
-                    android:text="Sisteme rolünüze göre otomatik yönlendirilirsiniz."
-                    android:textColor="@color/text_gray"
-                    android:textSize="11sp"
-                    android:fontStyle="italic"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="24dp"
-                    android:background="@color/input_border" />
-
-                <TextView
-                    android:id="@+id/tvGoToRegisterClient"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="24dp"
-                    android:text="Hesabınız yok mu? Danışan Kaydı"
-                    android:textColor="@color/text_gray"
-                    android:textSize="14sp"
-                    android:padding="8dp"
-                    android:clickable="true"
-                    android:focusable="true" />
-
-                <TextView
-                    android:id="@+id/tvGoToRegisterDietitian"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="8dp"
-                    android:text="Diyetisyen misiniz? Başvuru Yapın"
-                    android:textColor="@color/text_gray"
-                    android:textSize="14sp"
-                    android:padding="8dp"
-                    android:clickable="true"
-                    android:focusable="true" />
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
