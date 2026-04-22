@@ -46,3 +46,11 @@ C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\obj\Debug\net8.0\Nigh
 C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\obj\Debug\net8.0\Nightbrate.API.genruntimeconfig.cache
 C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\obj\Debug\net8.0\ref\Nightbrate.API.dll
 C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\obj\Debug\net8.0\Nightbrate.API.sourcelink.json
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll

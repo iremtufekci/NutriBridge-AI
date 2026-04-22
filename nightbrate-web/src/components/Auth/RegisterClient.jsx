@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Eye, EyeOff, ArrowRight } from "lucide-react";
-import axios from "axios"; // Axios eklemeyi unutma: npm install axios
+import { api } from "../../api/http";
 
 export function RegisterClient() {
   const navigate = useNavigate();
@@ -46,14 +46,11 @@ export function RegisterClient() {
       password: formData.password,
       height: parseFloat(formData.height), 
       weight: parseFloat(formData.weight),
-      goal: formData.goal,
-      activityLevel: formData.activityLevel,
-      birthDate: new Date(formData.birthDate).toISOString()
+      targetCalories: formData.goal === "gain" ? 2400 : formData.goal === "maintain" ? 2100 : 1800
     };
 
     try {
-      // Backend portun 5231 olduğu için adresi sabitledik
-      const response = await axios.post("http://localhost:5231/api/Auth/register-client", payload);
+      const response = await api.post("/api/Auth/register-client", payload);
 
       if (response.status === 200 || response.status === 201) {
         alert("Kayıt Başarılı! " + (response.data.message || "Hoş geldiniz."));

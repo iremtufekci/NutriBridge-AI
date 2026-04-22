@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Nightbrate.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+850725de6b71521247e69fa954d967a0ffa5a0c0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7f0dcb5f29f7711cd2c9e09478b9e6fa42792c98")]
 [assembly: System.Reflection.AssemblyProductAttribute("Nightbrate.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Nightbrate.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

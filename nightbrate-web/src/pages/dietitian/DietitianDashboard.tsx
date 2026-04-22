@@ -1,121 +1,159 @@
+import { useEffect, useMemo, useState } from "react";
 import { SidebarLayout } from "../../components/SidebarLayout";
-import { StatCard } from "../../components/UIComponents";
-import { Users, BookOpen, CheckSquare, AlertTriangle, ChevronRight, MessageSquare } from "lucide-react";
+import { Users, BookOpen, CheckSquare, AlertTriangle, ChevronRight } from "lucide-react";
+import { api } from "../../api/http";
 
 export function DietitianDashboard() {
-  // Giriş yapan diyetisyenin ismini alıyoruz
-  const dietitianName = localStorage.getItem("userName") || "Diyetisyen";
+  const dietitianName = localStorage.getItem("userName") || "Dr. Ayşe Kaya";
+  const [clients, setClients] = useState<any[]>([]);
 
-  const criticalClients = [
-    { id: 1, name: "Ayşe Yılmaz", reason: "3 Öğün Diyet Dışı", lastSeen: "2 saat önce", avatar: "AY" },
-    { id: 2, name: "Mehmet Kaya", reason: "2 Gün Giriş Yok", lastSeen: "2 gün önce", avatar: "MK" },
+  useEffect(() => {
+    const loadClients = async () => {
+      try {
+        const { data } = await api.get("/api/dietitian/clients-with-last-meal");
+        setClients(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error("Danisanlar alinamadi", error);
+      }
+    };
+    loadClients();
+  }, []);
+
+  const criticalClients = useMemo(
+    () =>
+      clients.slice(0, 3).map((client, index) => ({
+        id: client.id || index,
+        name: `${client.firstName || ""} ${client.lastName || ""}`.trim(),
+        reason: "Son ogun kontrolu gerekiyor",
+        lastSeen: client.lastMeal?.timestamp ? "Yeni kayit var" : "Henuz ogun yok",
+        avatar: (client.firstName || "D").charAt(0),
+      })),
+    [clients]
+  );
+
+  const lastMealPhotos = useMemo(
+    () =>
+      clients
+        .filter((x) => x.lastMeal?.photoUrl)
+        .slice(0, 3)
+        .map((x, i) => ({
+          id: x.id || i,
+          label: x.lastMeal?.timestamp ? "Son kayit" : "Kayit yok",
+          image: x.lastMeal.photoUrl,
+        })),
+    [clients]
+  );
+
+  const tasks = [
+    { id: 1, title: "Elif Şahin - Haftalık Program Güncelleme", subtitle: "Yeni alerjilere göre program revizyonu", due: "Bugün" },
+    { id: 2, title: "Can Öztürk - İlerleme Değerlendirmesi", subtitle: "Aylık kilo takibi ve rapor hazırlama", due: "Bugün" },
+    { id: 3, title: "Zeynep Demir - Kontrol Görüşmesi", subtitle: "Video görüşme planlandı - 15:00", due: "2 saat sonra" },
+  ];
+
+  const statCards = [
+    { title: "Toplam Danışan", value: String(clients.length), icon: Users, iconColor: "text-emerald-500" },
+    { title: "Aktif Program", value: String(clients.length), icon: BookOpen, iconColor: "text-emerald-500" },
+    { title: "Bugünkü Görevler", value: "12", icon: CheckSquare, iconColor: "text-amber-500" },
+    { title: "Kritik Uyarı", value: "3", icon: AlertTriangle, iconColor: "text-rose-500" },
   ];
 
   return (
     <SidebarLayout userRole="dietitian" userName={dietitianName}>
-      <div className="p-8 space-y-8 bg-[#0F172A] min-h-screen text-white">
-        
-        {/* Karşılama Kartı (Gradientli) */}
-        <div className="bg-gradient-to-r from-[#22C55E]/20 to-[#3B82F6]/10 rounded-3xl p-8 border border-white/5 shadow-xl">
-          <h1 className="text-3xl font-bold mb-2 text-white">Merhaba, {dietitianName} 👋</h1>
-          <p className="text-slate-400">Bugün takip etmeniz gereken <span className="text-[#22C55E] font-bold">{criticalClients.length} kritik durum</span> var. Danışanlarınızın güncel aktivitelerine göz atın.</p>
+      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-[#F4F6F8] dark:bg-[#0F172A] min-h-screen text-slate-900 dark:text-white transition-colors">
+        <div className="bg-[#DFF1EA] dark:bg-emerald-500/10 rounded-3xl p-5 sm:p-8 border border-[#CCE6DC] dark:border-emerald-500/20">
+          <h1 className="text-3xl sm:text-5xl font-bold mb-2 text-slate-900 dark:text-white">Merhaba, {dietitianName} 👋</h1>
+          <p className="text-slate-600 dark:text-slate-400">
+            Bugün <span className="font-bold">{criticalClients.length} danışanınızın kritik durumu</span> var. Güncel aktivitelere göz atın.
+          </p>
         </div>
 
-        {/* İstatistikler */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <StatCard 
-            title="Danışanlarım" 
-            value="28" 
-            icon={Users} 
-            iconColor="text-[#22C55E]" 
-          />
-          <StatCard 
-            title="Aktif Program" 
-            value="24" 
-            icon={BookOpen} 
-            iconColor="text-[#3B82F6]" 
-          />
-          <StatCard 
-            title="Günlük Görevler" 
-            value="12" 
-            icon={CheckSquare} 
-            iconColor="text-[#F59E0B]" 
-          />
-          <StatCard 
-            title="Kritik Uyarı" 
-            value="3" 
-            icon={AlertTriangle} 
-            iconColor="text-[#EF4444]" 
-          />
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Kritik Danışanlar Listesi */}
-          <div className="lg:col-span-2 bg-[#1E293B] rounded-2xl p-6 border border-slate-700 shadow-lg">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold flex items-center gap-2">
-                <AlertTriangle size={20} className="text-[#EF4444]" />
-                Kritik Danışanlar
-              </h3>
-              <button className="text-xs text-[#22C55E] hover:underline">Tümünü Yönet</button>
-            </div>
-            
-            <div className="space-y-4">
-              {criticalClients.map(client => (
-                <div 
-                  key={client.id} 
-                  className="p-4 bg-[#0F172A] rounded-xl border-l-4 border-[#EF4444] border-t border-b border-r border-slate-800 flex justify-between items-center hover:bg-slate-900 transition-all cursor-pointer group"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-[#EF4444]/20 text-[#EF4444] flex items-center justify-center font-bold text-sm">
-                      {client.avatar}
-                    </div>
-                    <div>
-                      <p className="font-bold text-slate-100">{client.name}</p>
-                      <p className="text-xs text-[#EF4444] font-medium">{client.reason}</p>
-                    </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {statCards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <div key={card.title} className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1E293B] p-4 sm:p-5 shadow-sm">
+                <div className="flex items-start justify-between">
+                  <p className="text-sm text-slate-500 dark:text-slate-400">{card.title}</p>
+                  <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                    <Icon size={18} className={card.iconColor} />
                   </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-[10px] text-slate-500 font-medium italic">{client.lastSeen}</span>
-                    <div className="p-2 bg-slate-800 rounded-lg group-hover:text-[#22C55E] transition-colors">
-                      <ChevronRight size={18} />
+                </div>
+                <p className="text-3xl font-bold mt-2">{card.value}</p>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
+          <div className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1E293B] p-4 sm:p-5 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-2xl font-bold">Kritik Danışanlar</h3>
+              <span className="text-xs font-semibold px-3 py-1 rounded-full bg-rose-100 text-rose-500">3 Danışan</span>
+            </div>
+
+            <div className="space-y-3">
+              {criticalClients.map((client) => (
+                <div key={client.id} className="rounded-2xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-[#0F172A] p-4 border-l-4 border-l-rose-500">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-9 h-9 rounded-full bg-rose-100 text-rose-500 flex items-center justify-center text-sm font-bold">
+                        {client.avatar}
+                      </div>
+                      <div>
+                        <p className="font-semibold text-lg">{client.name}</p>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">{client.lastSeen}</p>
+                        <p className="inline-flex mt-2 text-xs px-3 py-1 rounded-full bg-rose-100 text-rose-500">{client.reason}</p>
+                      </div>
                     </div>
+                    <ChevronRight className="text-slate-400 mt-1" size={18} />
                   </div>
                 </div>
               ))}
             </div>
+            <button className="mt-4 w-full py-2 text-emerald-500 font-semibold hover:text-emerald-600">Tümünü Görüntüle →</button>
           </div>
 
-          {/* Hızlı İşlemler Yan Panel */}
-          <div className="bg-[#1E293B] rounded-2xl p-6 border border-slate-700 shadow-lg">
-            <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
-              <MessageSquare size={20} className="text-[#22C55E]" />
-              Hızlı İşlemler
-            </h3>
-            <div className="space-y-3">
-              <button className="flex items-center gap-3 w-full p-4 bg-[#0F172A] border border-slate-800 rounded-xl hover:border-[#22C55E] transition-all group">
-                <div className="p-2 bg-[#22C55E]/10 rounded-lg text-[#22C55E]">
-                  <MessageSquare size={20} />
-                </div>
-                <span className="text-sm font-semibold">Mesajları Yanıtla</span>
-              </button>
-              <button className="flex items-center gap-3 w-full p-4 bg-[#0F172A] border border-slate-800 rounded-xl hover:border-[#3B82F6] transition-all group">
-                <div className="p-2 bg-[#3B82F6]/10 rounded-lg text-[#3B82F6]">
-                  <CheckSquare size={20} />
-                </div>
-                <span className="text-sm font-semibold">Program Oluştur</span>
-              </button>
+          <div className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1E293B] p-4 sm:p-5 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-2xl font-bold">Son Öğün Fotoğrafları</h3>
+              <span className="text-sm text-slate-500 dark:text-slate-400">İnceleme Bekliyor</span>
             </div>
-            
-            <div className="mt-6 pt-6 border-t border-slate-700">
-              <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <CheckSquare size={16} className="text-[#F59E0B]" />
-                Haftalık Rapor
-              </h4>
-              <p className="text-xs text-slate-400 leading-relaxed">Danışanlarınızın genel başarı oranı geçen haftaya göre <span className="text-[#22C55E] font-bold">%8 arttı.</span></p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {lastMealPhotos.map((photo) => (
+                <div key={photo.id} className={photo.id === 3 ? "sm:col-span-2" : ""}>
+                  <img
+                    src={photo.image}
+                    alt="Öğün fotoğrafı"
+                    className="w-full h-40 object-cover rounded-2xl"
+                  />
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{photo.label}</p>
+                </div>
+              ))}
             </div>
+            <button className="mt-4 w-full py-2 text-emerald-500 font-semibold hover:text-emerald-600">AI Denetim Paneline Git →</button>
           </div>
         </div>
+
+        <section className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1E293B] p-4 sm:p-5 shadow-sm">
+          <h3 className="text-3xl font-bold mb-4">Bugünkü Görevler</h3>
+          <div className="space-y-3">
+            {tasks.map((task) => (
+              <div key={task.id} className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 dark:bg-[#0F172A] border border-slate-100 dark:border-slate-800 p-4">
+                <div className="flex items-start gap-3">
+                  <input type="checkbox" className="mt-1 h-5 w-5 rounded border-slate-300 dark:border-slate-700" />
+                  <div>
+                    <p className="font-semibold text-lg">{task.title}</p>
+                    <p className="text-slate-500 dark:text-slate-400">{task.subtitle}</p>
+                  </div>
+                </div>
+                <span className={`text-sm font-semibold whitespace-nowrap ${task.due === "2 saat sonra" ? "text-emerald-500" : "text-amber-500"}`}>
+                  {task.due}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </SidebarLayout>
   );

@@ -34,11 +34,19 @@ class RegisterClientActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val request = UserRegisterRequest(
-                username = username,
+            val nameParts = username.split(" ", limit = 2)
+            val firstName = nameParts.firstOrNull().orEmpty()
+            val lastName = nameParts.getOrNull(1).orEmpty()
+
+            val request = ClientRegisterRequest(
+                firstName = firstName,
+                lastName = lastName,
                 email = email,
                 password = password,
-                role = 1 // 1: Danışan
+                weight = 0.0,
+                height = 0.0,
+                targetCalories = 2000,
+                dietitianId = null
             )
 
             lifecycleScope.launch {

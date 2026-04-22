@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; 
-import axios from "axios"; 
+import { api } from "../../api/http";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -15,25 +15,32 @@ export function Login() {
     setLoading(true);
 
     try {
-      // KRİTİK DÜZELTME: 5173 olan portu 5231 (Backend portu) olarak güncelledik
-      const response = await axios.post("http://localhost:5231/api/auth/login", {
+      const response = await api.post("/api/auth/login", {
         email: email.trim(), // Gereksiz boşlukları temizler
         password: password
       });
 
       // Başarılı giriş: Verileri tarayıcı hafızasına al
-      const { token, role, userName } = response.data;
+      const { token, role } = response.data;
       
       localStorage.setItem("token", token);
       localStorage.setItem("userRole", role);
-      localStorage.setItem("userName", userName);
+      localStorage.setItem("userName", email.split("@")[0]);
 
       // Role göre yönlendirme
-      if (role === "admin") {
+      if (role === "Admin") {
         navigate("/admin");
-      } else if (role === "dietitian") {
+      } else if (role === "Dietitian") {
         navigate("/dietitian");
       } else {
+        try {
+          const profileResponse = await api.get("/api/client/profile");
+          const storedTheme = profileResponse.data?.themePreference === "dark" ? "dark" : "light";
+          localStorage.setItem("theme", storedTheme);
+          document.documentElement.classList.toggle("dark", storedTheme === "dark");
+        } catch (profileError) {
+          console.error("Client tema bilgisi alinamadi", profileError);
+        }
         navigate("/client"); 
       }
 
