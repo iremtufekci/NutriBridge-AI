@@ -1,7 +1,6 @@
 package com.example.nightbrate
 
 data class LoginResponse(
-    val message: String,
-    val username: String,
+    val token: String,
     val role: String
 )

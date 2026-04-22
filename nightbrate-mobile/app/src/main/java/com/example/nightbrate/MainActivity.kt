@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,9 +55,16 @@ class MainActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val userResponse = response.body()
                     val role = userResponse?.role?.lowercase() ?: ""
-                    val username = userResponse?.username ?: "Kullanıcı"
+                    val token = userResponse?.token.orEmpty()
 
-                    Toast.makeText(this@MainActivity, "Hoş geldin $username!", Toast.LENGTH_SHORT).show()
+                    getSharedPreferences("auth", MODE_PRIVATE)
+                        .edit()
+                        .putString("token", token)
+                        .putString("role", role)
+                        .putString("email", email)
+                        .apply()
+
+                    Toast.makeText(this@MainActivity, "Giris basarili!", Toast.LENGTH_SHORT).show()
 
                     val intent = when (role) {
                         "admin" -> Intent(this@MainActivity, AdminDashboardActivity::class.java)
@@ -64,11 +72,24 @@ class MainActivity : AppCompatActivity() {
                         else -> Intent(this@MainActivity, ClientDashboardActivity::class.java)
                     }
                     
-                    intent.putExtra("USERNAME", username)
+                    intent.putExtra("USERNAME", email.substringBefore("@"))
                     startActivity(intent)
                     finish()
                 } else {
-                    Toast.makeText(this@MainActivity, "Giriş Başarısız: Email veya şifre hatalı!", Toast.LENGTH_SHORT).show()
+                    val errorBody = response.errorBody()?.string()
+                    val backendMessage = try {
+                        JSONObject(errorBody ?: "{}").optString("message")
+                    } catch (_: Exception) {
+                        ""
+                    }
+
+                    val message = if (backendMessage.isNotBlank()) {
+                        backendMessage
+                    } else {
+                        "Giriş Başarısız: Email veya şifre hatalı!"
+                    }
+
+                    Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
                 Toast.makeText(this@MainActivity, "Bağlantı Hatası: Sunucuya ulaşılamıyor.", Toast.LENGTH_LONG).show()

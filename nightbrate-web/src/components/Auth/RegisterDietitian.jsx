@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Upload, AlertCircle } from "lucide-react";
+import { api } from "../../api/http";
 
 export function RegisterDietitian() {
   const navigate = useNavigate();
@@ -42,23 +43,14 @@ export function RegisterDietitian() {
 
     try {
       // CMD'de gördüğümüz 5231 portuna ve yeni oluşturduğumuz diyetisyen endpointine istek atıyoruz
-      const response = await fetch("http://localhost:5231/api/Auth/register-dietitian", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        alert("Kayıt Başarılı! " + result.message);
+      const response = await api.post("/api/Auth/register-dietitian", payload);
+      if (response.status >= 200 && response.status < 300) {
+        alert("Kayıt Başarılı! " + (response.data?.message || ""));
         navigate("/");
-      } else {
-        alert("Hata: " + result.message);
       }
     } catch (error) {
       console.error("Bağlantı Hatası:", error);
-      alert("Backend sunucusuna bağlanılamadı! Portun 5231 olduğundan ve Backend'in çalıştığından emin olun.");
+      alert("Kayıt işlemi başarısız: " + (error.response?.data?.message || "Sunucuya ulaşılamadı."));
     }
   };
 

@@ -1,30 +1,70 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Nightbrate.API.Middleware;
+using Nightbrate.Application.Interfaces;
+using Nightbrate.Application.Services;
 using Nightbrate.Infrastructure.Data;
+using Nightbrate.Infrastructure.Repositories;
+using Nightbrate.Infrastructure.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- 1. SERVİS AYARLARI (builder.Build'den önce) ---
-
-// CORS Politikasını Tanımla
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("ClientApps", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins(
+                "http://localhost:3000",
+                "http://127.0.0.1:3000",
+                "http://10.0.2.2:3000",
+                "http://localhost:5173",
+                "http://127.0.0.1:5173",
+                "http://10.0.2.2:5173")
               .AllowAnyMethod()
               .AllowAnyHeader();
     });
 });
 
+var jwtKey = builder.Configuration["Jwt:Key"] ?? "NutriBridge-Dev-Key-AtLeast-64-Characters-Long-For-HS512-2026-Safe";
+var issuer = builder.Configuration["Jwt:Issuer"] ?? "NutriBridge.Api";
+var audience = builder.Configuration["Jwt:Audience"] ?? "NutriBridge.Clients";
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = issuer,
+            ValidAudience = audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Veritabanı Bağlantısı
 builder.Services.AddSingleton<MongoDbContext>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
+builder.Services.AddScoped<IDietitianRepository, DietitianRepository>();
+builder.Services.AddScoped<IMealLogRepository, MealLogRepository>();
+builder.Services.AddScoped<IDietProgramRepository, DietProgramRepository>();
+builder.Services.AddScoped<IWaterLogRepository, WaterLogRepository>();
+builder.Services.AddScoped<IWeightLogRepository, WeightLogRepository>();
+
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IDietitianService, DietitianService>();
+builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
 var app = builder.Build();
-
-// --- 2. MIDDLEWARE YAPILANDIRMASI (Sıralama Çok Önemli!) ---
 
 if (app.Environment.IsDevelopment())
 {
@@ -32,16 +72,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// 1. Önce CORS (Her şeyden önce gelmeli)
-app.UseCors("AllowAll");
-
-// 2. Varsa HTTPS yönlendirmesi (Geliştirme aşamasında bazen sorun çıkarabilir, kapalı tutabilirsin)
-// app.UseHttpsRedirection(); 
-
-// 3. Auth işlemleri (Controller'lardan önce gelmeli)
+app.UseMiddleware<ExceptionMiddleware>();
+app.UseCors("ClientApps");
+app.UseAuthentication();
 app.UseAuthorization();
-
-// 4. En son rotalar
 app.MapControllers();
 
 app.Run();

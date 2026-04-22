@@ -7,6 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
+    // Android emulator icin localhost yerine 10.0.2.2 kullanilir.
     private const val BASE_URL = "http://10.0.2.2:5231/"
 
     private val logging = HttpLoggingInterceptor().apply {
@@ -14,6 +15,7 @@ object RetrofitClient {
     }
 
     private val client = OkHttpClient.Builder()
+        .addInterceptor(AuthInterceptor())
         .addInterceptor(logging)
         .connectTimeout(30, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)

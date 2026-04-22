@@ -14,3 +14,5 @@ C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\obj\Debug\
 C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\obj\Debug\net8.0\Nightbrate.Infrastructure.pdb
 C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\obj\Debug\net8.0\ref\Nightbrate.Infrastructure.dll
 C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\obj\Debug\net8.0\Nightbrate.Infrastructure.sourcelink.json
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\bin\Debug\net8.0\Nightbrate.Application.dll
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\bin\Debug\net8.0\Nightbrate.Application.pdb
