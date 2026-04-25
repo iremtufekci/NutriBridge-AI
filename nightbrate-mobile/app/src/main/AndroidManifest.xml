@@ -56,6 +56,21 @@
             android:theme="@style/Theme.Nightbrate.NoActionBar" />
 
         <activity
+            android:name=".DietitianProfileActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+
+        <activity
+            android:name=".AdminSettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+
+        <activity
+            android:name=".AdminDietitianApprovalsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+
+        <activity
             android:name=".ClientPlaceholderActivity"
             android:exported="false"
             android:theme="@style/Theme.Nightbrate.NoActionBar" />

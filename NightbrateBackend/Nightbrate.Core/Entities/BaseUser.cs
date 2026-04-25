@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace Nightbrate.Core.Entities;
 
 [BsonDiscriminator(RootClass = true)]
-[BsonKnownTypes(typeof(Dietitian), typeof(Client))]
+[BsonKnownTypes(typeof(Dietitian), typeof(Client), typeof(Admin))]
 public abstract class BaseUser
 {
     [BsonId]

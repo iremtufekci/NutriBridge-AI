@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "eFWYgPGrBto=",
+  "dgSpecHash": "WFsH4NaapD4=",
   "success": true,
-  "projectFilePath": "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\Nightbrate.API.csproj",
+  "projectFilePath": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\Nightbrate.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\tufek\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
     "C:\\Users\\tufek\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.18\\microsoft.aspnetcore.authentication.jwtbearer.8.0.18.nupkg.sha512",

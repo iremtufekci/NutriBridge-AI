@@ -9,4 +9,6 @@ public interface IClientService
     Task AddWeightAsync(string clientId, AddWeightDto dto);
     Task<ClientProfileDto> GetProfileAsync(string clientId);
     Task UpdateThemePreferenceAsync(string clientId, string themePreference);
+    Task<ConnectToDietitianResultDto> ConnectToDietitianAsync(string clientId, ConnectToDietitianRequestDto dto);
+    Task<PreviewDietitianByCodeResultDto> PreviewDietitianByCodeAsync(ConnectToDietitianRequestDto dto);
 }

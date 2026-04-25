@@ -2,18 +2,21 @@ import { useEffect, useMemo, useState } from "react";
 import { Check, Download, Eye, X } from "lucide-react";
 import { SidebarLayout } from "../../components/SidebarLayout";
 import { api } from "../../api/http";
+import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
 
 type PendingDietitian = {
   id?: string;
   firstName?: string;
   lastName?: string;
+  email?: string;
   diplomaNo?: string;
   clinicName?: string;
   createdAt?: string;
+  isApproved?: boolean;
 };
 
 export function AdminApprovals() {
-  const adminName = localStorage.getItem("userName") || "Admin User";
+  const adminName = useAuthProfileDisplayName();
   const [pending, setPending] = useState<PendingDietitian[]>([]);
   const [loading, setLoading] = useState(true);
   const [detailLoading, setDetailLoading] = useState(false);
@@ -41,7 +44,7 @@ export function AdminApprovals() {
     if (!dietitianId) return;
     try {
       await api.post(`/api/admin/approve-dietitian/${dietitianId}`);
-      setPending((prev) => prev.filter((item) => item.id !== dietitianId));
+      await loadPending();
     } catch (error) {
       alert("Onaylama basarisiz: " + ((error as any)?.response?.data?.message || "Bilinmeyen hata"));
     }
@@ -65,8 +68,8 @@ export function AdminApprovals() {
     if (!id) return;
     try {
       await api.post(`/api/admin/approve-dietitian/${id}`);
-      setPending((prev) => prev.filter((item) => item.id !== id));
       setSelected(null);
+      await loadPending();
     } catch (error) {
       alert("Onaylama basarisiz: " + ((error as any)?.response?.data?.message || "Bilinmeyen hata"));
     }
@@ -91,6 +94,7 @@ export function AdminApprovals() {
               <thead className="bg-slate-50 dark:bg-slate-800/60">
                 <tr className="text-left text-sm text-slate-500 dark:text-slate-300">
                   <th className="p-4">Ad Soyad</th>
+                  <th className="p-4">E-posta</th>
                   <th className="p-4">Diploma No</th>
                   <th className="p-4">Klinik</th>
                   <th className="p-4">Kayit Tarihi</th>
@@ -101,7 +105,7 @@ export function AdminApprovals() {
               <tbody>
                 {loading && (
                   <tr>
-                    <td colSpan={6} className="p-6 text-center text-slate-500">
+                    <td colSpan={7} className="p-6 text-center text-slate-500">
                       Yukleniyor...
                     </td>
                   </tr>
@@ -109,7 +113,7 @@ export function AdminApprovals() {
 
                 {!loading && pending.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="p-6 text-center text-slate-500">
+                    <td colSpan={7} className="p-6 text-center text-slate-500">
                       Onay bekleyen diyetisyen bulunmuyor.
                     </td>
                   </tr>
@@ -127,6 +131,9 @@ export function AdminApprovals() {
                             Dr. {item.firstName} {item.lastName}
                           </span>
                         </div>
+                      </td>
+                      <td className="p-4 text-slate-600 dark:text-slate-300 text-sm break-all">
+                        {item.email || "—"}
                       </td>
                       <td className="p-4 text-slate-600 dark:text-slate-300">{item.diplomaNo || "-"}</td>
                       <td className="p-4 text-slate-600 dark:text-slate-300">{item.clinicName || "-"}</td>

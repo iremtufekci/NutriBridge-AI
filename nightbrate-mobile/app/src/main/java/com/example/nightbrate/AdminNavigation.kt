@@ -45,6 +45,25 @@ object AdminTabNav {
                 Intent(activity, AdminDashboardActivity::class.java)
                     .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             )
+            if (activity is AdminDietitianApprovalsActivity) activity.finish()
+            if (activity is AdminSettingsActivity) activity.finish()
+            if (activity is AdminPlaceholderActivity) activity.finish()
+            return
+        }
+        if (index == 2) {
+            if (activity is AdminDietitianApprovalsActivity) return
+            activity.startActivity(Intent(activity, AdminDietitianApprovalsActivity::class.java))
+            if (activity is AdminPlaceholderActivity) activity.finish()
+            if (activity is AdminSettingsActivity) activity.finish()
+            if (activity !is AdminDashboardActivity) activity.finish()
+            return
+        }
+        if (index == 4) {
+            if (activity is AdminSettingsActivity) return
+            activity.startActivity(Intent(activity, AdminSettingsActivity::class.java))
+            if (activity is AdminPlaceholderActivity) activity.finish()
+            if (activity is AdminDietitianApprovalsActivity) activity.finish()
+            if (activity !is AdminDashboardActivity) activity.finish()
             return
         }
         if (activity is AdminPlaceholderActivity) {
@@ -53,9 +72,7 @@ object AdminTabNav {
         }
         val (title, body) = when (index) {
             1 -> "Kullanıcı yönetimi" to "Web’deki kullanıcı listesi ve işlemler burada sunulacak."
-            2 -> "Diyetisyen onayları" to "Bekleyen onaylar ve inceleme (web AdminApprovals) buraya bağlanacak."
             3 -> "Sistem analitiği" to "Grafikler ve raporlar eklenecek."
-            4 -> "Ayarlar" to "Sistem ve hesap ayarları."
             else -> return
         }
         activity.startActivity(
@@ -65,5 +82,7 @@ object AdminTabNav {
                 .putExtra(AdminPlaceholderActivity.EXTRA_MESSAGE, body)
         )
         if (activity is AdminPlaceholderActivity) activity.finish()
+        if (activity is AdminSettingsActivity) activity.finish()
+        if (activity is AdminDietitianApprovalsActivity) activity.finish()
     }
 }

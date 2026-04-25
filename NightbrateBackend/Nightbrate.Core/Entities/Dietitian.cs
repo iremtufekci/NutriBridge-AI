@@ -8,4 +8,7 @@ public class Dietitian : BaseUser
     public string ClinicName { get; set; } = string.Empty;
     public string? DiplomaDocumentUrl { get; set; }
     public bool IsApproved { get; set; } = false;
+
+    /// <summary>Onay sonrasi: 6 hane, büyük harf + rakam, sistemde eşi olmaz; danışan eşleşmesi için.</summary>
+    public string? ConnectionCode { get; set; }
 }

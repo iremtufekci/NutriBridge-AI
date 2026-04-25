@@ -54,7 +54,11 @@ class RegisterDietitianActivity : AppCompatActivity() {
                 try {
                     val response = RetrofitClient.instance.registerDietitian(request)
                     if (response.isSuccessful) {
-                        Toast.makeText(this@RegisterDietitianActivity, "Başvuru Alındı!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@RegisterDietitianActivity,
+                            "Başvurunuz alındı. Yönetici onayından sonra giriş yapabilirsiniz.",
+                            Toast.LENGTH_LONG
+                        ).show()
                         finish()
                     } else {
                         Toast.makeText(this@RegisterDietitianActivity, "Hata: ${response.code()}", Toast.LENGTH_SHORT).show()

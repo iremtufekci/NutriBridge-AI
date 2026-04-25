@@ -2,9 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import { SidebarLayout } from "../../components/SidebarLayout";
 import { Users, BookOpen, CheckSquare, AlertTriangle, ChevronRight } from "lucide-react";
 import { api } from "../../api/http";
+import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
 
 export function DietitianDashboard() {
-  const dietitianName = localStorage.getItem("userName") || "Dr. Ayşe Kaya";
+  const dietitianName = useAuthProfileDisplayName();
   const [clients, setClients] = useState<any[]>([]);
 
   useEffect(() => {

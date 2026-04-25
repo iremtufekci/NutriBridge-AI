@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Microsoft.Extensions.Configuration;
 using Nightbrate.Core.Entities;
@@ -14,6 +15,12 @@ namespace Nightbrate.Infrastructure.Data
         public IMongoCollection<WaterLog> WaterLogs => _database.GetCollection<WaterLog>("WaterLogs");
         public IMongoCollection<WeightLog> WeightLogs => _database.GetCollection<WeightLog>("WeightLogs");
         public IMongoCollection<DietProgram> DietPrograms => _database.GetCollection<DietProgram>("DietPrograms");
+        public IMongoCollection<ActivityLog> ActivityLogs => _database.GetCollection<ActivityLog>("ActivityLogs");
+
+        /// <summary>BSON anahtar adlari (Pascal / camel) farkli olabilen alanlar icin ham okuma.</summary>
+        public IMongoCollection<BsonDocument> DietitiansBson => _database.GetCollection<BsonDocument>("Dietitians");
+
+        public IMongoCollection<BsonDocument> UsersBson => _database.GetCollection<BsonDocument>("Users");
 
         public MongoDbContext(IConfiguration configuration)
         {

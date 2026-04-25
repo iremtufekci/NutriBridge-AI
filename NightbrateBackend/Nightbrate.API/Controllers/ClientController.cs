@@ -49,4 +49,15 @@ public class ClientController(IClientService clientService) : ControllerBase
         await clientService.AddWeightAsync(clientId, dto);
         return Ok(new { message = "Kilo girisi kaydedildi." });
     }
+
+    [HttpPost("preview-dietitian-by-code")]
+    public async Task<IActionResult> PreviewDietitianByCode([FromBody] ConnectToDietitianRequestDto dto) =>
+        Ok(await clientService.PreviewDietitianByCodeAsync(dto));
+
+    [HttpPost("connect-to-dietitian")]
+    public async Task<IActionResult> ConnectToDietitian([FromBody] ConnectToDietitianRequestDto dto)
+    {
+        var clientId = User.FindFirstValue("UserId") ?? string.Empty;
+        return Ok(await clientService.ConnectToDietitianAsync(clientId, dto));
+    }
 }

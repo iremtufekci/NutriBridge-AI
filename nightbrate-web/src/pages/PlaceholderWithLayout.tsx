@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { SidebarLayout } from "../components/SidebarLayout";
+import { useAuthProfileDisplayName } from "../hooks/useAuthProfileDisplayName";
 
 const dashboardPath: Record<"admin" | "dietitian" | "client", string> = {
   admin: "/admin/dashboard",
@@ -8,14 +9,14 @@ const dashboardPath: Record<"admin" | "dietitian" | "client", string> = {
 };
 
 function resolveRole(): "admin" | "dietitian" | "client" {
-  const r = localStorage.getItem("userRole");
+  const r = localStorage.getItem("userRole")?.toLowerCase();
   if (r === "admin" || r === "dietitian" || r === "client") return r;
   return "client";
 }
 
 export function PlaceholderWithLayout() {
   const userRole = resolveRole();
-  const userName = localStorage.getItem("userName")?.trim() || "Kullanıcı";
+  const userName = useAuthProfileDisplayName();
 
   return (
     <SidebarLayout userRole={userRole} userName={userName}>

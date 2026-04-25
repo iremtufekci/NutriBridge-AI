@@ -20,4 +20,16 @@ public class ClientRepository(MongoDbContext context) : IClientRepository
 
     public Task<long> GetTotalAsync() =>
         context.Clients.CountDocumentsAsync(Builders<Client>.Filter.Empty);
+
+    public async Task<bool> TryAssignDietitianIfUnassignedAsync(string clientId, string dietitianId)
+    {
+        var hasNoDietitian = Builders<Client>.Filter.Or(
+            Builders<Client>.Filter.Eq(c => c.DietitianId, (string?)null),
+            Builders<Client>.Filter.Eq(c => c.DietitianId, string.Empty)
+        );
+        var filter = Builders<Client>.Filter.Eq(c => c.Id, clientId) & hasNoDietitian;
+        var update = Builders<Client>.Update.Set(c => c.DietitianId, dietitianId);
+        var result = await context.Clients.UpdateOneAsync(filter, update);
+        return result.ModifiedCount == 1;
+    }
 }

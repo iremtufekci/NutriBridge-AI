@@ -8,7 +8,9 @@ namespace Nightbrate.Application.Services;
 public class DietitianService(
     IClientRepository clientRepository,
     IMealLogRepository mealLogRepository,
-    IDietProgramRepository dietProgramRepository) : IDietitianService
+    IDietProgramRepository dietProgramRepository,
+    IDietitianRepository dietitianRepository,
+    IActivityLogService activityLogService) : IDietitianService
 {
     public async Task<object> GetClientsWithLastMealAsync(string dietitianId)
     {
@@ -62,5 +64,12 @@ public class DietitianService(
         model.UpdatedAt = DateTime.UtcNow;
 
         await dietProgramRepository.UpsertAsync(model);
+
+        var d = await dietitianRepository.GetByIdAsync(dietitianId);
+        if (d is not null)
+        {
+            var name = $"Dr. {d.FirstName} {d.LastName}".Trim();
+            await activityLogService.LogAsync(dietitianId, name, "Diyet programı güncelledi");
+        }
     }
 }

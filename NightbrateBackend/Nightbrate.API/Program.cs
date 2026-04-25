@@ -1,4 +1,6 @@
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Nightbrate.API.Middleware;
@@ -45,7 +47,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(o =>
+    {
+        o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -57,8 +64,11 @@ builder.Services.AddScoped<IMealLogRepository, MealLogRepository>();
 builder.Services.AddScoped<IDietProgramRepository, DietProgramRepository>();
 builder.Services.AddScoped<IWaterLogRepository, WaterLogRepository>();
 builder.Services.AddScoped<IWeightLogRepository, WeightLogRepository>();
+builder.Services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IActivityLogService, ActivityLogService>();
+builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IDietitianService, DietitianService>();
 builder.Services.AddScoped<IClientService, ClientService>();
