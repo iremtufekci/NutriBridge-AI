@@ -14,6 +14,8 @@ import { DietitianPrograms } from "./pages/dietitian/DietitianPrograms";
 import { ClientHome } from "./pages/client/ClientHome";
 import { ClientProfile } from "./pages/client/ClientProfile";
 import { PlaceholderWithLayout } from "./pages/PlaceholderWithLayout";
+import { RoleAccountProfile } from "./pages/RoleAccountProfile";
+import { AdminSettings } from "./pages/admin/AdminSettings";
 
 function NotFoundRedirect() {
   return <Navigate to="/login" replace />;
@@ -37,14 +39,15 @@ function App() {
         <Route path="/admin/users" element={<PlaceholderWithLayout />} />
         <Route path="/admin/approvals" element={<AdminApprovals />} />
         <Route path="/admin/analytics" element={<PlaceholderWithLayout />} />
-        <Route path="/admin/settings" element={<PlaceholderWithLayout />} />
+        <Route path="/admin/profile" element={<Navigate to="/admin/settings" replace />} />
+        <Route path="/admin/settings" element={<AdminSettings />} />
         <Route path="/dietitian" element={<DietitianDashboard />} />
         <Route path="/dietitian/dashboard" element={<DietitianDashboard />} />
         <Route path="/dietitian/clients" element={<PlaceholderWithLayout />} />
         <Route path="/dietitian/programs" element={<DietitianPrograms />} />
         <Route path="/dietitian/ai-review" element={<PlaceholderWithLayout />} />
         <Route path="/dietitian/alerts" element={<PlaceholderWithLayout />} />
-        <Route path="/dietitian/profile" element={<PlaceholderWithLayout />} />
+        <Route path="/dietitian/profile" element={<RoleAccountProfile appRole="dietitian" />} />
         <Route path="/client" element={<ClientHome />} />
         <Route path="/client/home" element={<ClientHome />} />
         <Route path="/client/journal" element={<PlaceholderWithLayout />} />

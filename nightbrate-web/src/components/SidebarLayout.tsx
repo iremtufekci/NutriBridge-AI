@@ -153,7 +153,7 @@ export function SidebarLayout({ children, userRole, userName }: SidebarProps) {
     <div className="flex w-full min-w-0 min-h-svh flex-1 flex-col bg-[#F8FAF7] text-slate-900 transition-colors md:min-h-screen md:flex-row dark:bg-slate-950 dark:text-slate-100">
       <aside className="hidden md:flex w-64 border-r border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 flex-col">
         <div className="p-6 border-b border-slate-200 dark:border-slate-800">
-          <h2 className="text-3xl font-bold text-emerald-500">NutriBridge AI</h2>
+          <h2 className="text-3xl font-bold text-emerald-500">NutriBridge</h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {userRole === "client" ? "Danışan Paneli" : userRole === "dietitian" ? "Diyetisyen Paneli" : "Yönetim Paneli"}
           </p>
@@ -212,7 +212,7 @@ export function SidebarLayout({ children, userRole, userName }: SidebarProps) {
       <main className="min-h-0 flex-1 overflow-y-auto pb-[calc(5.25rem+env(safe-area-inset-bottom,0px))] md:pb-0">
         <div className="md:hidden sticky top-0 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-b border-slate-200 dark:border-slate-800 px-4 py-3">
           <div className="flex items-center justify-between">
-            <p className="text-base font-bold text-emerald-500">NutriBridge AI</p>
+            <p className="text-base font-bold text-emerald-500">NutriBridge</p>
             <button
               onClick={() => setIsDark((prev) => !prev)}
               className="p-2 rounded-lg text-slate-500 dark:text-slate-300 border border-slate-200 dark:border-slate-700"

@@ -109,7 +109,7 @@ export function RegisterClient() {
 
       <div className="w-full max-w-md bg-[#1E293B] rounded-2xl p-8 border border-slate-700 shadow-2xl">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-[#22C55E] mb-2">NutriBridge AI</h1>
+          <h1 className="text-3xl font-bold text-[#22C55E] mb-2">NutriBridge</h1>
           <div className="flex justify-center gap-2 mt-4">
             <div className={`w-8 h-1 rounded-full ${step >= 1 ? 'bg-[#22C55E]' : 'bg-slate-600'}`} />
             <div className={`w-8 h-1 rounded-full ${step >= 2 ? 'bg-[#22C55E]' : 'bg-slate-600'}`} />

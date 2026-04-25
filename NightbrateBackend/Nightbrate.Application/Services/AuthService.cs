@@ -10,7 +10,8 @@ public class AuthService(
     IUserRepository userRepository,
     IClientRepository clientRepository,
     IDietitianRepository dietitianRepository,
-    IJwtTokenService jwtTokenService) : IAuthService
+    IJwtTokenService jwtTokenService,
+    IActivityLogService activityLogService) : IAuthService
 {
     public async Task RegisterClientAsync(ClientRegisterDto dto)
     {
@@ -35,6 +36,11 @@ public class AuthService(
 
         await clientRepository.AddAsync(client);
         await userRepository.AddAsync(client);
+
+        var saved = await userRepository.GetByEmailAsync(email);
+        var display = $"{client.FirstName} {client.LastName}".Trim();
+        if (display.Length == 0) display = email.Split('@')[0];
+        await activityLogService.LogAsync(saved?.Id, display, "Hesap oluşturdu");
     }
 
     public async Task RegisterDietitianAsync(DietitianRegisterDto dto)
@@ -59,6 +65,10 @@ public class AuthService(
 
         await dietitianRepository.AddAsync(dietitian);
         await userRepository.AddAsync(dietitian);
+
+        var savedD = await userRepository.GetByEmailAsync(email);
+        var dName = $"Dr. {dietitian.FirstName} {dietitian.LastName}".Trim();
+        await activityLogService.LogAsync(savedD?.Id, dName, "Diyetisyen başvurusu gönderdi");
     }
 
     public async Task<(string Token, string Role)> LoginAsync(LoginDto dto)

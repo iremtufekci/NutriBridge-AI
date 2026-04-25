@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nightbrate.Application.DTOs;
 using Nightbrate.Application.Interfaces;
@@ -9,7 +11,13 @@ namespace Nightbrate.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        public AuthController(IAuthService authService) => _authService = authService;
+        private readonly IUserProfileService _userProfileService;
+
+        public AuthController(IAuthService authService, IUserProfileService userProfileService)
+        {
+            _authService = authService;
+            _userProfileService = userProfileService;
+        }
 
         [HttpPost("register-client")]
         public async Task<IActionResult> RegisterClient([FromBody] ClientRegisterDto request)
@@ -30,6 +38,15 @@ namespace Nightbrate.API.Controllers
         {
             var result = await _authService.LoginAsync(request);
             return Ok(new { token = result.Token, role = result.Role });
+        }
+
+        [HttpGet("profile")]
+        [Authorize]
+        public async Task<IActionResult> GetCurrentProfile()
+        {
+            var userId = User.FindFirstValue("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+            return Ok(await _userProfileService.GetByUserIdAsync(userId));
         }
     }
 }

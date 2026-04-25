@@ -150,11 +150,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Application\\Nightbrate.Application.csproj",
+      "projectUniqueName": "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Application\\Nightbrate.Application.csproj",
       "projectName": "Nightbrate.Application",
-      "projectPath": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Application\\Nightbrate.Application.csproj",
+      "projectPath": "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Application\\Nightbrate.Application.csproj",
       "packagesPath": "C:\\Users\\tufek\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Application\\obj\\",
+      "outputPath": "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Application\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\DevExpress 24.2\\Components\\Offline Packages",

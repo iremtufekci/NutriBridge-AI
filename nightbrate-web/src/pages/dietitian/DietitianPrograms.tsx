@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { SidebarLayout } from "../../components/SidebarLayout";
 import { api } from "../../api/http";
+import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
 
 const DAYS = ["Pazartesi", "Sali", "Carsamba", "Persembe", "Cuma", "Cumartesi", "Pazar"];
 
 type ClientItem = { id?: string; firstName?: string; lastName?: string };
 
 export function DietitianPrograms() {
-  const dietitianName = localStorage.getItem("userName") || "Diyetisyen";
+  const dietitianName = useAuthProfileDisplayName();
   const [clients, setClients] = useState<ClientItem[]>([]);
   const [selectedClientId, setSelectedClientId] = useState("");
   const [selectedDay, setSelectedDay] = useState(DAYS[0]);

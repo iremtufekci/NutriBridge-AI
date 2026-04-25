@@ -47,6 +47,13 @@ object DietitianTabNav {
             )
             return
         }
+        if (index == 5) {
+            if (activity is DietitianProfileActivity) return
+            activity.startActivity(Intent(activity, DietitianProfileActivity::class.java))
+            if (activity is DietitianPlaceholderActivity) activity.finish()
+            if (activity !is DietitianDashboardActivity) activity.finish()
+            return
+        }
         if (activity is DietitianPlaceholderActivity) {
             val t = activity.intent.getIntExtra(DietitianPlaceholderActivity.EXTRA_INDEX, -1)
             if (t == index) return
@@ -56,7 +63,6 @@ object DietitianTabNav {
             2 -> "Diyet Programları" to "Program oluşturma ve atama (web) burada açılacak."
             3 -> "AI Denetimi" to "Web’deki AI denetim ekranı buraya taşınacak."
             4 -> "Kritik Uyarılar" to "Uyarı listesi ve bildirimler eklenecek."
-            5 -> "Profil" to "Diyetisyen profil ayarları web ile eşitlenecek."
             else -> return
         }
         activity.startActivity(
@@ -66,5 +72,6 @@ object DietitianTabNav {
                 .putExtra(DietitianPlaceholderActivity.EXTRA_MESSAGE, body)
         )
         if (activity is DietitianPlaceholderActivity) activity.finish()
+        if (activity is DietitianProfileActivity) activity.finish()
     }
 }

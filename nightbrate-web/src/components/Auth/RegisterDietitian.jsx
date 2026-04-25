@@ -45,7 +45,9 @@ export function RegisterDietitian() {
       // CMD'de gördüğümüz 5231 portuna ve yeni oluşturduğumuz diyetisyen endpointine istek atıyoruz
       const response = await api.post("/api/Auth/register-dietitian", payload);
       if (response.status >= 200 && response.status < 300) {
-        alert("Kayıt Başarılı! " + (response.data?.message || ""));
+        alert(
+          "Kaydınız alındı. Yönetici onayından sonra aynı e-posta ve şifreyle giriş yapabilirsiniz."
+        );
         navigate("/");
       }
     } catch (error) {

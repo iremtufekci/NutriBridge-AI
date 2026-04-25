@@ -1657,11 +1657,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\Nightbrate.API.csproj",
+      "projectUniqueName": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\Nightbrate.API.csproj",
       "projectName": "Nightbrate.API",
-      "projectPath": "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\Nightbrate.API.csproj",
+      "projectPath": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\Nightbrate.API.csproj",
       "packagesPath": "C:\\Users\\tufek\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\obj\\",
+      "outputPath": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\DevExpress 24.2\\Components\\Offline Packages",
@@ -1691,8 +1691,8 @@
             "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Application\\Nightbrate.Application.csproj": {
               "projectPath": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Application\\Nightbrate.Application.csproj"
             },
-            "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\Nightbrate.Infrastructure.csproj": {
-              "projectPath": "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\Nightbrate.Infrastructure.csproj"
+            "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\Nightbrate.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\Nightbrate.Infrastructure.csproj"
             }
           }
         }

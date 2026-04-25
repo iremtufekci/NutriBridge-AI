@@ -22,15 +22,25 @@ export function Login() {
 
       // Başarılı giriş: Verileri tarayıcı hafızasına al
       const { token, role } = response.data;
+      const userRole = typeof role === "string" ? role.toLowerCase() : "client";
       
       localStorage.setItem("token", token);
-      localStorage.setItem("userRole", role);
-      localStorage.setItem("userName", email.split("@")[0]);
+      localStorage.setItem("userRole", userRole);
+
+      try {
+        const me = await api.get("/api/Auth/profile");
+        const d = (me.data?.displayName || "").trim();
+        if (d) localStorage.setItem("userName", d);
+        else localStorage.setItem("userName", email.split("@")[0]);
+      } catch (meErr) {
+        console.error("Oturum profili alinamadi", meErr);
+        localStorage.setItem("userName", email.split("@")[0]);
+      }
 
       // Role göre yönlendirme
-      if (role === "Admin") {
+      if (userRole === "admin") {
         navigate("/admin");
-      } else if (role === "Dietitian") {
+      } else if (userRole === "dietitian") {
         navigate("/dietitian");
       } else {
         try {
@@ -63,7 +73,7 @@ export function Login() {
         <div className="bg-[#1E293B] rounded-2xl p-8 border border-[#334155] shadow-2xl">
           
           <div className="text-center mb-10">
-            <h1 className="text-4xl font-extrabold text-[#22C55E] mb-2">NightBrate</h1>
+            <h1 className="text-4xl font-extrabold text-[#22C55E] mb-2">NutriBridge</h1>
             <p className="text-[#94A3B8] text-sm">Akıllı Beslenme Platformu</p>
           </div>
 

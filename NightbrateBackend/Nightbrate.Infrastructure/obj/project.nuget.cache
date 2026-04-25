@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "d1dDiBpDH7U=",
+  "dgSpecHash": "F3JVKYm46U8=",
   "success": true,
-  "projectFilePath": "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\Nightbrate.Infrastructure.csproj",
+  "projectFilePath": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\Nightbrate.Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\tufek\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
     "C:\\Users\\tufek\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\10.0.5\\microsoft.extensions.configuration.abstractions.10.0.5.nupkg.sha512",

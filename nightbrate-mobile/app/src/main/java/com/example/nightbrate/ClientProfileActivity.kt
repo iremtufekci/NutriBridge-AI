@@ -2,9 +2,12 @@ package com.example.nightbrate
 
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -14,6 +17,7 @@ import java.util.TimeZone
 
 class ClientProfileActivity : AppCompatActivity() {
     private var currentTheme: String = "light"
+    private var pendingDietCode: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,11 +37,99 @@ class ClientProfileActivity : AppCompatActivity() {
         btnAbout.setOnClickListener {
             showInfo(
                 tvInfo,
-                "NutriBridge AI, danisan ve diyetisyen surecini kolaylastirmak icin gelistirilmistir."
+                "NutriBridge, danisan ve diyetisyen surecini kolaylastirmak icin gelistirilmistir."
             )
         }
         btnTheme.setOnClickListener { toggleTheme() }
+        setupDietitianConnect()
         loadProfile(btnTheme)
+    }
+
+    private fun setupDietitianConnect() {
+        val card = findViewById<CardView>(R.id.cardConnectDietitian)
+        val et = findViewById<EditText>(R.id.etDietCode)
+        val btnVerify = findViewById<TextView>(R.id.btnVerifyDietCode)
+        val btnConfirm = findViewById<TextView>(R.id.btnConfirmDietCode)
+        val tvPreview = findViewById<TextView>(R.id.tvDietCodePreview)
+
+        fun resetPreview() {
+            tvPreview.visibility = View.GONE
+            btnConfirm.visibility = View.GONE
+            tvPreview.text = ""
+            pendingDietCode = null
+        }
+
+        btnVerify.setOnClickListener {
+            val code = et.text.toString().trim().uppercase(Locale.ROOT)
+            if (code.length != 6) {
+                Toast.makeText(this, "6 hane girin (harf ve rakam)", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            resetPreview()
+            lifecycleScope.launch {
+                try {
+                    val r = RetrofitClient.instance.previewDietitianByCode(ConnectToDietitianRequest(code))
+                    if (r.isSuccessful) {
+                        val b = r.body()
+                        val name = b?.displayName ?: "Dr. ${b?.firstName} ${b?.lastName}"
+                        tvPreview.text = "Bulundu: $name"
+                        tvPreview.visibility = View.VISIBLE
+                        btnConfirm.visibility = View.VISIBLE
+                        pendingDietCode = code
+                    } else {
+                        Toast.makeText(
+                            this@ClientProfileActivity,
+                            "Kod gecerli degil (onayli diyetisyen gerekir)",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        this@ClientProfileActivity,
+                        e.message ?: "Baglanti hatasi",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+
+        btnConfirm.setOnClickListener {
+            val code = pendingDietCode
+            if (code.isNullOrBlank()) return@setOnClickListener
+            val display = tvPreview.text.toString().removePrefix("Bulundu: ").trim()
+            AlertDialog.Builder(this@ClientProfileActivity)
+                .setTitle("Eşleştirme onayı")
+                .setMessage("Veritabanına kayıt edilecektir.\n\n$display\n\nOnaylıyor musunuz?")
+                .setNegativeButton("Hayır", null)
+                .setPositiveButton("Evet") { _, _ ->
+                    lifecycleScope.launch {
+                        try {
+                            val r = RetrofitClient.instance.connectToDietitian(ConnectToDietitianRequest(code))
+                            if (r.isSuccessful) {
+                                val msg = r.body()?.message ?: "Eslesti"
+                                Toast.makeText(this@ClientProfileActivity, msg, Toast.LENGTH_LONG).show()
+                                et.setText("")
+                                resetPreview()
+                                loadProfile(findViewById(R.id.btnTheme))
+                            } else {
+                                Toast.makeText(
+                                    this@ClientProfileActivity,
+                                    "Eslestirme basarisiz (${r.code()})",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        } catch (e: Exception) {
+                            Toast.makeText(
+                                this@ClientProfileActivity,
+                                e.message ?: "Hata",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                }
+                .show()
+        }
+
     }
 
     private fun showInfo(tv: TextView, text: String) {
@@ -51,6 +143,10 @@ class ClientProfileActivity : AppCompatActivity() {
                 val r = RetrofitClient.instance.getClientProfile()
                 if (r.isSuccessful) {
                     val p = r.body() ?: return@launch
+                    val cardConnect = findViewById<CardView>(R.id.cardConnectDietitian)
+                    val dName = p.dietitianName?.trim().orEmpty()
+                    cardConnect.visibility =
+                        if (dName.isEmpty() || dName == "Atanmadi") View.VISIBLE else View.GONE
                     val first = p.firstName?.trim().orEmpty()
                     val last = p.lastName?.trim().orEmpty()
                     val name = listOf(first, last).filter { it.isNotEmpty() }.joinToString(" ")

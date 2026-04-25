@@ -14,10 +14,11 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../api/http";
+import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
 
 export function ClientHome() {
   const navigate = useNavigate();
-  const userName = localStorage.getItem("userName") || "Danışan";
+  const userName = useAuthProfileDisplayName();
 
   const addWater = async () => {
     const ml = Number(window.prompt("Kac ml su ictiniz?", "250"));
