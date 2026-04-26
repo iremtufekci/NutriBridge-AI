@@ -24,7 +24,7 @@ export function PlaceholderWithLayout() {
         <h1 className="mb-2 text-lg font-semibold text-slate-800 dark:text-slate-200">
           Sayfa hazırlanıyor
         </h1>
-        <p className="mb-6 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mb-6 text-sm text-slate-500 dark:text-[#9CA3AF]">
           Bu bölüm yakında aktif olacak. Alttaki menüden diğer sayfalara gidebilir veya panele dönebilirsiniz.
         </p>
         <Link

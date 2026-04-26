@@ -13,7 +13,7 @@ export function useAuthProfileDisplayName() {
 
   useEffect(() => {
     if (!localStorage.getItem("token")) return;
-    (async () => {
+    void (async () => {
       try {
         const { data } = await api.get<{ displayName?: string }>("/api/Auth/profile");
         const d = (data?.displayName || "").trim() || localStorage.getItem("userName") || FALLBACK;

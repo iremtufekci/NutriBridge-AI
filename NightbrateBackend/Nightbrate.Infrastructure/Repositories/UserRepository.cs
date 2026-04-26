@@ -108,4 +108,99 @@ public class UserRepository(MongoDbContext context) : IUserRepository
         }
         return null;
     }
+
+    public async Task UpdateThemePreferenceAllStoresAsync(string userId, string themePreference)
+    {
+        if (string.IsNullOrWhiteSpace(userId)) return;
+
+        var t = string.Equals(themePreference, "dark", StringComparison.OrdinalIgnoreCase) ? "dark" : "light";
+
+        var f = Builders<BaseUser>.Filter.Eq(x => x.Id, userId);
+        var u = Builders<BaseUser>.Update.Set(x => x.ThemePreference, t);
+        await context.Users.UpdateOneAsync(f, u);
+
+        _ = await context.Clients.UpdateOneAsync(
+            Builders<Client>.Filter.Eq(c => c.Id, userId),
+            Builders<Client>.Update.Set(c => c.ThemePreference, t));
+
+        _ = await context.Dietitians.UpdateOneAsync(
+            Builders<Dietitian>.Filter.Eq(d => d.Id, userId),
+            Builders<Dietitian>.Update.Set(d => d.ThemePreference, t));
+    }
+
+    public Task<List<BaseUser>> GetAllUsersForAdminAsync() =>
+        context.Users.Find(_ => true).ToListAsync()!;
+
+    public async Task SetUserSuspensionAllStoresAsync(string userId, bool isSuspended, string? message, DateTime? suspendedAt)
+    {
+        if (string.IsNullOrWhiteSpace(userId)) return;
+
+        var fU = Builders<BaseUser>.Filter.Eq(x => x.Id, userId);
+        var uU = Builders<BaseUser>.Update
+            .Set(x => x.IsSuspended, isSuspended)
+            .Set(x => x.SuspensionMessage, isSuspended ? message : null)
+            .Set(x => x.SuspendedAt, suspendedAt);
+        await context.Users.UpdateOneAsync(fU, uU);
+
+        _ = await context.Clients.UpdateOneAsync(
+            Builders<Client>.Filter.Eq(c => c.Id, userId),
+            Builders<Client>.Update
+                .Set(c => c.IsSuspended, isSuspended)
+                .Set(c => c.SuspensionMessage, isSuspended ? message : null)
+                .Set(c => c.SuspendedAt, suspendedAt));
+
+        _ = await context.Dietitians.UpdateOneAsync(
+            Builders<Dietitian>.Filter.Eq(d => d.Id, userId),
+            Builders<Dietitian>.Update
+                .Set(d => d.IsSuspended, isSuspended)
+                .Set(d => d.SuspensionMessage, isSuspended ? message : null)
+                .Set(d => d.SuspendedAt, suspendedAt));
+    }
+
+    public Task UpdateClientProfileInUsersCollectionAsync(
+        string clientId,
+        string firstName,
+        string lastName,
+        double weight,
+        double height,
+        int targetCalories)
+    {
+        if (string.IsNullOrWhiteSpace(clientId)) return Task.CompletedTask;
+        var f = Builders<BaseUser>.Filter.And(
+            Builders<BaseUser>.Filter.Eq(x => x.Id, clientId),
+            Builders<BaseUser>.Filter.Eq(x => x.Role, UserRole.Client));
+        var u = Builders<BaseUser>.Update
+            .Set(nameof(Client.FirstName), firstName)
+            .Set(nameof(Client.LastName), lastName)
+            .Set(nameof(Client.Weight), weight)
+            .Set(nameof(Client.Height), height)
+            .Set(nameof(Client.TargetCalories), targetCalories);
+        return context.Users.UpdateOneAsync(f, u);
+    }
+
+    public async Task<(string? FirstName, string? LastName)> GetAdminNameFromUsersBsonAsync(string userId)
+    {
+        if (string.IsNullOrWhiteSpace(userId) || !MongoDB.Bson.ObjectId.TryParse(userId, out var oid))
+            return (null, null);
+        var doc = await context.UsersBson
+            .Find(Builders<BsonDocument>.Filter.Eq("_id", oid))
+            .FirstOrDefaultAsync();
+        if (doc is null) return (null, null);
+
+        static string? GetString(BsonDocument d, params string[] keys)
+        {
+            foreach (var key in keys)
+            {
+                if (!d.Contains(key)) continue;
+                var v = d[key];
+                if (v is null || v.IsBsonNull) continue;
+                if (v.IsString) return v.AsString;
+            }
+            return null;
+        }
+
+        return (
+            GetString(doc, "firstName", "FirstName", "givenName", "ad"),
+            GetString(doc, "lastName", "LastName", "familyName", "surname", "soyad"));
+    }
 }

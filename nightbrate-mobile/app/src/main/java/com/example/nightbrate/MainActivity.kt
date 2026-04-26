@@ -2,7 +2,7 @@ package com.example.nightbrate
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -19,10 +19,11 @@ class MainActivity : AppCompatActivity() {
 
         val etEmail = findViewById<EditText>(R.id.etEmail)
         val etPassword = findViewById<EditText>(R.id.etPassword)
-        val btnLogin = findViewById<Button>(R.id.btnLogin)
-        
-        val tvGoToRegisterClient = findViewById<TextView>(R.id.tvGoToRegisterClient)
-        val tvGoToRegisterDietitian = findViewById<TextView>(R.id.tvGoToRegisterDietitian)
+        val btnLogin = findViewById<com.google.android.material.button.MaterialButton>(R.id.btnLogin)
+        val tvForgotPassword = findViewById<TextView>(R.id.tvForgotPassword)
+
+        val llRegisterClient = findViewById<LinearLayout>(R.id.llRegisterClient)
+        val llRegisterDietitian = findViewById<LinearLayout>(R.id.llRegisterDietitian)
 
         btnLogin.setOnClickListener {
             val email = etEmail.text.toString().trim()
@@ -36,14 +37,20 @@ class MainActivity : AppCompatActivity() {
             performLogin(email, password)
         }
 
-        tvGoToRegisterClient.setOnClickListener {
-            val intent = Intent(this, RegisterClientActivity::class.java)
-            startActivity(intent)
+        tvForgotPassword.setOnClickListener {
+            Toast.makeText(
+                this,
+                "Şifre sıfırlama yakında eklenecek.",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
-        tvGoToRegisterDietitian.setOnClickListener {
-            val intent = Intent(this, RegisterDietitianActivity::class.java)
-            startActivity(intent)
+        llRegisterClient.setOnClickListener {
+            startActivity(Intent(this, RegisterClientActivity::class.java))
+        }
+
+        llRegisterDietitian.setOnClickListener {
+            startActivity(Intent(this, RegisterDietitianActivity::class.java))
         }
     }
 
@@ -57,12 +64,23 @@ class MainActivity : AppCompatActivity() {
                     val role = userResponse?.role?.lowercase() ?: ""
                     val token = userResponse?.token.orEmpty()
 
-                    getSharedPreferences("auth", MODE_PRIVATE)
-                        .edit()
+                    val authPrefs = getSharedPreferences(ThemeUtils.PREF_NAME, MODE_PRIVATE)
+                    authPrefs.edit()
                         .putString("token", token)
                         .putString("role", role)
                         .putString("email", email)
                         .apply()
+
+                    try {
+                        val pr = RetrofitClient.instance.getCurrentUserProfile()
+                        if (pr.isSuccessful) {
+                            val th = pr.body()?.themePreference
+                            ThemeUtils.applyAndPersist(
+                                authPrefs,
+                                ThemeUtils.fromProfile(th)
+                            )
+                        }
+                    } catch (_: Exception) { }
 
                     Toast.makeText(this@MainActivity, "Giris basarili!", Toast.LENGTH_SHORT).show()
 

@@ -53,10 +53,26 @@
         <activity
             android:name=".ClientProfileActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+
+        <activity
+            android:name=".ClientDietProgramActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+
+        <activity
+            android:name=".ClientDietProgramHistoryActivity"
+            android:exported="false"
             android:theme="@style/Theme.Nightbrate.NoActionBar" />
 
         <activity
             android:name=".DietitianProfileActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+
+        <activity
+            android:name=".DietitianProgramsActivity"
             android:exported="false"
             android:theme="@style/Theme.Nightbrate.NoActionBar" />
 
@@ -82,6 +98,16 @@
 
         <activity
             android:name=".AdminPlaceholderActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+
+        <activity
+            android:name=".AdminSystemAnalyticsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+
+        <activity
+            android:name=".AdminUserManagementActivity"
             android:exported="false"
             android:theme="@style/Theme.Nightbrate.NoActionBar" />
 

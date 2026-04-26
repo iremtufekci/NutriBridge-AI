@@ -1,11 +1,17 @@
 @import "tailwindcss";
+
+/* Koyu mod referans: ana alan ~#0D1117 (Tailwind slate-950 yalnizca dark: ile) */
+@theme {
+  --color-slate-950: #0d1117;
+}
+
 @layer components {
   .input-style {
-    @apply w-full p-3 bg-[#0F172A] border border-slate-700 rounded-xl text-white focus:border-[#22C55E] outline-none transition-all;
+    @apply w-full p-3 bg-[#111827] border border-slate-700 rounded-xl text-white focus:border-[#2ECC71] outline-none transition-all;
   }
   
   .btn-primary {
-    @apply w-full py-3 bg-[#22C55E] text-white font-bold rounded-xl hover:bg-[#16A34A] transition-all transform hover:scale-[1.02];
+    @apply w-full py-3 bg-[#2ECC71] text-white font-bold rounded-xl hover:brightness-95 transition-all transform hover:scale-[1.02];
   }
 }
 :root {
@@ -40,24 +46,9 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+/* Tema hesap tercihi ile (html.dark); isletim sistemi koyu modu tek basina uygulanmaz */
+html.dark {
+  color-scheme: dark;
 }
 
 body {

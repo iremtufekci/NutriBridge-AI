@@ -80,6 +80,14 @@ public class AuthService(
         var verified = PasswordHasher.VerifyPasswordHash(dto.Password, user.PasswordHash, user.PasswordSalt);
         if (!verified) throw new AppException("E-posta veya şifre hatalı.");
 
+        if (user.IsSuspended)
+        {
+            var msg = string.IsNullOrWhiteSpace(user.SuspensionMessage)
+                ? "Hesabınız yönetici tarafından askıya alındı. Giriş yapamazsınız."
+                : user.SuspensionMessage.Trim();
+            throw new AppException(msg);
+        }
+
         if (user is Dietitian dietitian && !dietitian.IsApproved)
         {
             throw new AppException("Diyetisyen hesabı henüz onaylanmadı.");

@@ -31,7 +31,7 @@ class AdminSettingsActivity : AppCompatActivity() {
                 val p = r.body() ?: return@launch
                 val name = p.displayName?.trim().orEmpty().ifEmpty { p.email.orEmpty() }
                 findViewById<TextView>(R.id.aaName).text = name
-                findViewById<TextView>(R.id.aaEmail).text = "E-posta: ${p.email.orEmpty()}"
+                findViewById<TextView>(R.id.aaEmail).text = p.email.orEmpty()
                 val local = p.email?.substringBefore("@")?.take(2)?.uppercase(Locale.ROOT).orEmpty()
                 val avatar = if (local.isNotEmpty()) local else (name.filter { it.isLetter() }).take(2)
                     .uppercase(Locale.ROOT)

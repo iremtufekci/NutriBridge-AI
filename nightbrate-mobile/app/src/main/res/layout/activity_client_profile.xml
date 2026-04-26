@@ -260,11 +260,14 @@
             </androidx.cardview.widget.CardView>
 
             <TextView
+                android:id="@+id/btnEditProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/custom_input_bg"
+                android:clickable="true"
+                android:focusable="true"
                 android:padding="16dp"
-                android:text="Kisisel bilgileri duzenle (yakinda)"
+                android:text="Kisisel bilgileri duzenle"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
@@ -307,16 +310,6 @@
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
-            <TextView
-                android:id="@+id/tvInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="#152238"
-                android:padding="12dp"
-                android:textColor="@color/primary_green"
-                android:textSize="12sp"
-                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 

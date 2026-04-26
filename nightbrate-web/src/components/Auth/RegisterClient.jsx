@@ -74,13 +74,13 @@ export function RegisterClient() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0F172A] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#0D1117] flex items-center justify-center p-4">
       <style dangerouslySetInnerHTML={{ __html: `
         .input-style {
           width: 100%;
           padding: 0.75rem;
-          background-color: #0F172A;
-          border: 1px solid #334155;
+          background-color: #0D1117;
+          border: 1px solid #2D3748;
           border-radius: 0.75rem;
           color: white;
           outline: none;
@@ -107,7 +107,7 @@ export function RegisterClient() {
         }
       `}} />
 
-      <div className="w-full max-w-md bg-[#1E293B] rounded-2xl p-8 border border-slate-700 shadow-2xl">
+      <div className="w-full max-w-md bg-[#1F2937] rounded-2xl p-8 border border-slate-700 shadow-2xl">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-[#22C55E] mb-2">NutriBridge</h1>
           <div className="flex justify-center gap-2 mt-4">
@@ -155,7 +155,7 @@ export function RegisterClient() {
             </select>
             <input name="birthDate" type="date" className="input-style" onChange={handleChange} required />
             <div className="flex gap-4">
-              <button type="button" onClick={() => setStep(1)} className="btn-primary" style={{backgroundColor: '#334155', flex: 1}}>Geri</button>
+              <button type="button" onClick={() => setStep(1)} className="btn-primary" style={{backgroundColor: '#2D3748', flex: 1}}>Geri</button>
               <button type="submit" className="btn-primary" style={{flex: 2}}>Kaydı Tamamla</button>
             </div>
           </form>

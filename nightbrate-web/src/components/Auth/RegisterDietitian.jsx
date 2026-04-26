@@ -57,23 +57,23 @@ export function RegisterDietitian() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0F172A] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#0D1117] flex items-center justify-center p-4">
       <style dangerouslySetInnerHTML={{ __html: `
         .input-style {
           width: 100%;
           padding: 0.75rem;
-          background-color: #0F172A;
-          border: 1px solid #334155;
+          background-color: #0D1117;
+          border: 1px solid #2D3748;
           border-radius: 0.75rem;
           color: white;
           outline: none;
           transition: all 0.2s;
         }
         .input-style:focus { border-color: #22C55E; }
-        .label-style { display: block; color: #94A3B8; font-size: 0.875rem; margin-bottom: 0.5rem; margin-left: 0.25rem; }
+        .label-style { display: block; color: #9CA3AF; font-size: 0.875rem; margin-bottom: 0.5rem; margin-left: 0.25rem; }
       `}} />
 
-      <div className="w-full max-w-2xl bg-[#1E293B] rounded-2xl p-8 border border-slate-700 shadow-2xl">
+      <div className="w-full max-w-2xl bg-[#1F2937] rounded-2xl p-8 border border-slate-700 shadow-2xl">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-[#22C55E] mb-2">Diyetisyen Kaydı</h1>
           <p className="text-slate-400">Platforma katılmak için bilgilerinizi eksiksiz doldurun</p>

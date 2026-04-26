@@ -6,4 +6,6 @@ public interface IActivityLogService
 {
     Task LogAsync(string? userId, string actorDisplayName, string description);
     Task<IReadOnlyList<ActivityItemDto>> GetRecentAsync(int take);
+    Task<IReadOnlyList<ActivityItemDto>> GetByUserIdAsync(string userId, int take);
+    Task<Dictionary<string, DateTime>> GetLastActivityByUserIdsAsync(IReadOnlyList<string> userIds);
 }

@@ -1,4 +1,5 @@
 using MongoDB.Driver;
+using Nightbrate.Application.Exceptions;
 using Nightbrate.Application.Interfaces;
 using Nightbrate.Core.Entities;
 using Nightbrate.Infrastructure.Data;
@@ -12,8 +13,13 @@ public class ClientRepository(MongoDbContext context) : IClientRepository
     public Task<Client?> GetByIdAsync(string id) =>
         context.Clients.Find(x => x.Id == id).FirstOrDefaultAsync()!;
 
-    public Task UpdateAsync(Client client) =>
-        context.Clients.ReplaceOneAsync(x => x.Id == client.Id, client);
+    public async Task UpdateAsync(Client client)
+    {
+        if (string.IsNullOrWhiteSpace(client.Id)) throw new AppException("Gecerli danisan profili yok (Id).");
+        var r = await context.Clients.ReplaceOneAsync(x => x.Id == client.Id, client);
+        if (r.MatchedCount == 0)
+            throw new AppException("Danisan profili guncellenemedi: veritabaninda 'Clients' kaydi bulunamadi. Lutfen destekle iletisin.");
+    }
 
     public Task<List<Client>> GetByDietitianIdAsync(string dietitianId) =>
         context.Clients.Find(x => x.DietitianId == dietitianId).ToListAsync();
