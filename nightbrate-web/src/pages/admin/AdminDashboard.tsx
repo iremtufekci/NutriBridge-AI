@@ -170,7 +170,7 @@ export function AdminDashboard() {
       value: String(statsData.activeUsers),
       icon: Users,
       iconWrap: "bg-emerald-100 dark:bg-emerald-900/50",
-      iconColor: "text-emerald-600 dark:text-emerald-400",
+      iconColor: "text-emerald-600 dark:text-[#2ECC71]",
       trend: null,
     },
     {
@@ -201,10 +201,10 @@ export function AdminDashboard() {
 
   return (
     <SidebarLayout userRole="admin" userName={adminName}>
-      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-[#F4F6F8] dark:bg-[#0F172A] min-h-screen text-slate-900 dark:text-white transition-colors pb-24 md:pb-8">
+      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-[#F4F6F8] dark:bg-[#0D1117] min-h-screen text-slate-900 dark:text-white transition-colors pb-24 md:pb-8">
         <div>
           <h1 className="text-3xl sm:text-5xl font-bold mb-1">Admin Dashboard</h1>
-          <p className="text-slate-500 dark:text-slate-400">Sistem genel görünümü ve istatistikler</p>
+          <p className="text-slate-500 dark:text-[#9CA3AF]">Sistem genel görünümü ve istatistikler</p>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -213,10 +213,10 @@ export function AdminDashboard() {
             return (
               <div
                 key={item.title}
-                className="rounded-3xl bg-white dark:bg-[#1E293B] border border-slate-200 dark:border-slate-700 p-4 sm:p-5 shadow-sm"
+                className="rounded-3xl bg-white dark:bg-[#1F2937] border border-slate-200 dark:border-slate-700 p-4 sm:p-5 shadow-sm"
               >
                 <div className="flex items-start justify-between gap-2">
-                  <p className="text-sm text-slate-500 dark:text-slate-400 leading-tight pr-1">{item.title}</p>
+                  <p className="text-sm text-slate-500 dark:text-[#9CA3AF] leading-tight pr-1">{item.title}</p>
                   <div
                     className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${item.iconWrap}`}
                   >
@@ -233,7 +233,7 @@ export function AdminDashboard() {
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
-          <div className="xl:col-span-2 bg-white dark:bg-[#1E293B] rounded-3xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
+          <div className="xl:col-span-2 bg-white dark:bg-[#1F2937] rounded-3xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
             <h3 className="text-2xl font-bold mb-4">Aylık Kayıt Trendi</h3>
             {monthlyData.length === 0 ? (
               <p className="text-slate-500 text-sm">Henüz kayıt yok veya dönemde veri yok.</p>
@@ -246,11 +246,11 @@ export function AdminDashboard() {
                       <stop offset="95%" stopColor="#22C55E" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#94A3B8" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#9CA3AF" />
                   <XAxis dataKey="month" stroke="#64748B" fontSize={12} />
                   <YAxis allowDecimals={false} stroke="#64748B" fontSize={12} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: "8px", color: "#0F172A" }}
+                    contentStyle={{ backgroundColor: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: "8px", color: "#0D1117" }}
                   />
                   <Area
                     type="monotone"
@@ -265,7 +265,7 @@ export function AdminDashboard() {
             )}
           </div>
 
-          <div className="bg-white dark:bg-[#1E293B] rounded-3xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
+          <div className="bg-white dark:bg-[#1F2937] rounded-3xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
             <h3 className="text-2xl font-bold mb-4">Kullanıcı Rol Dağılımı</h3>
             {roleDistribution.length === 0 || roleDistribution.every((d) => d.value === 0) ? (
               <p className="text-slate-500 text-sm">Veri yok.</p>
@@ -284,30 +284,30 @@ export function AdminDashboard() {
                       <Cell key={index} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip contentStyle={{ backgroundColor: "#FFFFFF", border: "1px solid #E2E8F0", color: "#0F172A" }} />
+                  <Tooltip contentStyle={{ backgroundColor: "#FFFFFF", border: "1px solid #E2E8F0", color: "#0D1117" }} />
                 </PieChart>
               </ResponsiveContainer>
             )}
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#1E293B] rounded-3xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
+        <div className="bg-white dark:bg-[#1F2937] rounded-3xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
           <h3 className="text-2xl font-bold mb-4">Onay bekleyen diyetisyenler</h3>
           <div className="space-y-3">
             {pendingDietitians.length === 0 && (
-              <p className="text-sm text-slate-500 dark:text-slate-400">Şu anda onay bekleyen diyetisyen yok.</p>
+              <p className="text-sm text-slate-500 dark:text-[#9CA3AF]">Şu anda onay bekleyen diyetisyen yok.</p>
             )}
 
             {pendingDietitians.map((dietitian) => (
               <div
                 key={dietitian.id}
-                className="flex items-center justify-between p-3 sm:p-4 bg-slate-50 dark:bg-[#0F172A] rounded-2xl border border-slate-200 dark:border-slate-800"
+                className="flex items-center justify-between p-3 sm:p-4 bg-slate-50 dark:bg-[#0D1117] rounded-2xl border border-slate-200 dark:border-slate-800"
               >
                 <div>
                   <p className="font-semibold">
                     {dietitian.firstName} {dietitian.lastName}
                   </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs text-slate-500 dark:text-[#9CA3AF]">
                     {dietitian.email} - {dietitian.clinicName}
                   </p>
                 </div>
@@ -322,16 +322,16 @@ export function AdminDashboard() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#1E293B] rounded-3xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
+        <div className="bg-white dark:bg-[#1F2937] rounded-3xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
           <h3 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">Son Aktiviteler</h3>
           <div className="space-y-3">
             {activities.length === 0 && (
-              <p className="text-sm text-slate-500 dark:text-slate-400">Henüz kayıtlı aktivite yok.</p>
+              <p className="text-sm text-slate-500 dark:text-[#9CA3AF]">Henüz kayıtlı aktivite yok.</p>
             )}
             {activities.map((a) => (
               <div
                 key={a.id || `${a.actorDisplayName}-${a.createdAt}`}
-                className="flex items-center justify-between gap-3 p-3 sm:p-4 bg-slate-50 dark:bg-[#0F172A] rounded-2xl border border-slate-200 dark:border-slate-800"
+                className="flex items-center justify-between gap-3 p-3 sm:p-4 bg-slate-50 dark:bg-[#0D1117] rounded-2xl border border-slate-200 dark:border-slate-800"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold text-sm flex-shrink-0">
@@ -341,10 +341,10 @@ export function AdminDashboard() {
                     <p className="font-semibold text-slate-900 dark:text-slate-100 truncate">
                       {a.actorDisplayName || "—"}
                     </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{a.description}</p>
+                    <p className="text-xs text-slate-500 dark:text-[#9CA3AF] truncate">{a.description}</p>
                   </div>
                 </div>
-                <span className="text-xs text-slate-500 dark:text-slate-400 flex-shrink-0 whitespace-nowrap">
+                <span className="text-xs text-slate-500 dark:text-[#9CA3AF] flex-shrink-0 whitespace-nowrap">
                   {formatTimeAgoTr(a.createdAt)}
                 </span>
               </div>

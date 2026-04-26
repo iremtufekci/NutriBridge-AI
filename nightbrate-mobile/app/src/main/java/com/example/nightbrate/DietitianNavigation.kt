@@ -47,6 +47,17 @@ object DietitianTabNav {
             )
             return
         }
+        if (index == 2) {
+            if (activity is DietitianProgramsActivity) return
+            activity.startActivity(
+                Intent(activity, DietitianProgramsActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            )
+            if (activity is DietitianPlaceholderActivity) activity.finish()
+            if (activity is DietitianProfileActivity) activity.finish()
+            if (activity !is DietitianDashboardActivity) activity.finish()
+            return
+        }
         if (index == 5) {
             if (activity is DietitianProfileActivity) return
             activity.startActivity(Intent(activity, DietitianProfileActivity::class.java))

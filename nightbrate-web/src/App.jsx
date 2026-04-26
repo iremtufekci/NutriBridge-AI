@@ -13,9 +13,14 @@ import { DietitianDashboard } from "./pages/dietitian/DietitianDashboard";
 import { DietitianPrograms } from "./pages/dietitian/DietitianPrograms";
 import { ClientHome } from "./pages/client/ClientHome";
 import { ClientProfile } from "./pages/client/ClientProfile";
+import { ClientDietProgram } from "./pages/client/ClientDietProgram";
+import { ClientDietProgramHistory } from "./pages/client/ClientDietProgramHistory";
 import { PlaceholderWithLayout } from "./pages/PlaceholderWithLayout";
 import { RoleAccountProfile } from "./pages/RoleAccountProfile";
 import { AdminSettings } from "./pages/admin/AdminSettings";
+import { AdminSystemAnalytics } from "./pages/admin/AdminSystemAnalytics";
+import { AdminUserManagement } from "./pages/admin/AdminUserManagement";
+import { ThemeBootstrap } from "./components/ThemeBootstrap";
 
 function NotFoundRedirect() {
   return <Navigate to="/login" replace />;
@@ -24,6 +29,7 @@ function NotFoundRedirect() {
 function App() {
   return (
     <BrowserRouter>
+      <ThemeBootstrap />
       <Routes>
         {/* Uygulama açıldığında ilk durak Login olsun */}
         <Route path="/" element={<Login />} />
@@ -36,9 +42,9 @@ function App() {
         {/* Dashboard Sayfaları */}
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/users" element={<PlaceholderWithLayout />} />
+        <Route path="/admin/users" element={<AdminUserManagement />} />
         <Route path="/admin/approvals" element={<AdminApprovals />} />
-        <Route path="/admin/analytics" element={<PlaceholderWithLayout />} />
+        <Route path="/admin/analytics" element={<AdminSystemAnalytics />} />
         <Route path="/admin/profile" element={<Navigate to="/admin/settings" replace />} />
         <Route path="/admin/settings" element={<AdminSettings />} />
         <Route path="/dietitian" element={<DietitianDashboard />} />
@@ -50,7 +56,9 @@ function App() {
         <Route path="/dietitian/profile" element={<RoleAccountProfile appRole="dietitian" />} />
         <Route path="/client" element={<ClientHome />} />
         <Route path="/client/home" element={<ClientHome />} />
-        <Route path="/client/journal" element={<PlaceholderWithLayout />} />
+        <Route path="/client/journal" element={<Navigate to="/client/diet-program" replace />} />
+        <Route path="/client/diet-program" element={<ClientDietProgram />} />
+        <Route path="/client/diet-program-history" element={<ClientDietProgramHistory />} />
         <Route path="/client/food-scan" element={<PlaceholderWithLayout />} />
         <Route path="/client/ai-chef" element={<PlaceholderWithLayout />} />
         <Route path="/client/profile" element={<ClientProfile />} />

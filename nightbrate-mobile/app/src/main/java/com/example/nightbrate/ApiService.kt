@@ -24,11 +24,29 @@ interface ApiService {
         @Body request: ClientRegisterRequest
     ): Response<Unit>
 
+    @GET("api/Client/diet-programs")
+    suspend fun getMyDietPrograms(): Response<List<ClientDietProgramDayResponse>>
+
+    @POST("api/Client/diet-program/meal-completed")
+    suspend fun markMealCompleted(
+        @Body body: SetMealCompletedRequest
+    ): Response<Unit>
+
     @GET("api/Client/profile")
     suspend fun getClientProfile(): Response<ClientProfileResponse>
 
+    @POST("api/Client/profile")
+    suspend fun updateClientProfile(
+        @Body body: UpdateClientProfileRequest
+    ): Response<Unit>
+
     @POST("api/Client/theme")
     suspend fun updateClientTheme(
+        @Body request: UpdateThemeRequest
+    ): Response<Unit>
+
+    @POST("api/Auth/theme")
+    suspend fun updateAuthTheme(
         @Body request: UpdateThemeRequest
     ): Response<Unit>
 
@@ -56,8 +74,57 @@ interface ApiService {
         @Query("take") take: Int = 15
     ): Response<List<ActivityItemDto>>
 
+    @GET("api/Admin/system-analytics")
+    suspend fun getSystemAnalytics(): Response<SystemAnalyticsResponse>
+
+    @GET("api/Admin/user-management/stats")
+    suspend fun getUserManagementStats(): Response<UserManagementStatsResponse>
+
+    @GET("api/Admin/user-management/users")
+    suspend fun getUserManagementUsers(
+        @Query("q") q: String? = null,
+        @Query("role") role: String? = null,
+        @Query("status") status: String? = null
+    ): Response<List<AdminUserRowItem>>
+
+    @GET("api/Admin/user-management/{userId}/activity-logs")
+    suspend fun getUserActivityLogs(
+        @Path("userId") userId: String,
+        @Query("take") take: Int = 30
+    ): Response<List<ActivityItemDto>>
+
+    @POST("api/Admin/user-management/{userId}/suspend")
+    suspend fun suspendUser(
+        @Path("userId") userId: String,
+        @Body body: SetUserSuspensionRequest
+    ): Response<Unit>
+
+    @POST("api/Admin/user-management/{userId}/unsuspend")
+    suspend fun unsuspendUser(
+        @Path("userId") userId: String
+    ): Response<Unit>
+
     @POST("api/Admin/approve-dietitian/{dietitianId}")
     suspend fun approveDietitian(
         @Path("dietitianId") dietitianId: String
+    ): Response<Unit>
+
+    @GET("api/Dietitian/clients-with-last-meal")
+    suspend fun getClientsWithLastMeal(): Response<List<ClientWithLastMealItem>>
+
+    @GET("api/Dietitian/diet-program-dates")
+    suspend fun getDietProgramDates(
+        @Query("clientId") clientId: String
+    ): Response<List<String>>
+
+    @GET("api/Dietitian/diet-program")
+    suspend fun getDietProgram(
+        @Query("clientId") clientId: String,
+        @Query("programDate") programDate: String
+    ): Response<DietProgramViewResponse>
+
+    @POST("api/Dietitian/diet-program")
+    suspend fun saveDietProgram(
+        @Body body: SaveDietProgramRequest
     ): Response<Unit>
 }

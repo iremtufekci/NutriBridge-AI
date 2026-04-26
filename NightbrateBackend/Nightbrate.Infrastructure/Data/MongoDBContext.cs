@@ -15,6 +15,7 @@ namespace Nightbrate.Infrastructure.Data
         public IMongoCollection<WaterLog> WaterLogs => _database.GetCollection<WaterLog>("WaterLogs");
         public IMongoCollection<WeightLog> WeightLogs => _database.GetCollection<WeightLog>("WeightLogs");
         public IMongoCollection<DietProgram> DietPrograms => _database.GetCollection<DietProgram>("DietPrograms");
+        public IMongoCollection<DietProgramHistory> DietProgramHistories => _database.GetCollection<DietProgramHistory>("DietProgramHistories");
         public IMongoCollection<ActivityLog> ActivityLogs => _database.GetCollection<ActivityLog>("ActivityLogs");
 
         /// <summary>BSON anahtar adlari (Pascal / camel) farkli olabilen alanlar icin ham okuma.</summary>

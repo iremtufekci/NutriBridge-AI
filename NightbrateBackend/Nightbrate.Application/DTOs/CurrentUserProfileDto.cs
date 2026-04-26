@@ -14,4 +14,6 @@ public class CurrentUserProfileDto
 
     [JsonPropertyName("connectionCode")]
     public string? ConnectionCode { get; set; }
+
+    public string ThemePreference { get; set; } = "light";
 }

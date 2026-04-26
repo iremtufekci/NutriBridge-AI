@@ -16,11 +16,14 @@ public class JwtTokenService(IConfiguration configuration) : IJwtTokenService
         var issuer = configuration["Jwt:Issuer"] ?? "NutriBridge.Api";
         var audience = configuration["Jwt:Audience"] ?? "NutriBridge.Clients";
 
+        var role = user.Role.ToString();
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, user.Id ?? string.Empty),
             new("UserId", user.Id ?? string.Empty),
-            new(ClaimTypes.Role, user.Role.ToString()),
+            new(ClaimTypes.Role, role),
+            // [Authorize(Roles = "Admin")] JWT tarafında çoğu kurulum "role" claim'ini bekler
+            new("role", role),
             new(JwtRegisteredClaimNames.Email, user.Email)
         };
 

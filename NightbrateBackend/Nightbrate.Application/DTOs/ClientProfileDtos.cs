@@ -17,3 +17,12 @@ public class UpdateThemePreferenceDto
 {
     public string ThemePreference { get; set; } = "light";
 }
+
+public class UpdateClientProfileDto
+{
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public double Weight { get; set; }
+    public double Height { get; set; }
+    public int TargetCalories { get; set; } = 2000;
+}

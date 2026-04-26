@@ -24,7 +24,34 @@ public class UserProfileService(IUserRepository userRepository, IDietitianReposi
                 Role = c.Role.ToString(),
                 FirstName = c.FirstName,
                 LastName = c.LastName,
-                DisplayName = BuildName(c.FirstName, c.LastName, c.Email)
+                DisplayName = BuildName(c.FirstName, c.LastName, c.Email),
+                ThemePreference = NormalizeTheme(c.ThemePreference)
+            };
+        }
+
+        if (user.Role == UserRole.Admin)
+        {
+            var fn = string.Empty;
+            var ln = string.Empty;
+            if (user is Admin adm)
+            {
+                fn = (adm.FirstName ?? string.Empty).Trim();
+                ln = (adm.LastName ?? string.Empty).Trim();
+            }
+            if (string.IsNullOrEmpty(fn) && string.IsNullOrEmpty(ln))
+            {
+                var fromBson = await userRepository.GetAdminNameFromUsersBsonAsync(userId);
+                fn = (fromBson.FirstName ?? string.Empty).Trim();
+                ln = (fromBson.LastName ?? string.Empty).Trim();
+            }
+            return new CurrentUserProfileDto
+            {
+                Email = user.Email,
+                Role = user.Role.ToString(),
+                FirstName = fn,
+                LastName = ln,
+                DisplayName = BuildName(fn, ln, user.Email),
+                ThemePreference = NormalizeTheme(user.ThemePreference)
             };
         }
 
@@ -76,7 +103,8 @@ public class UserProfileService(IUserRepository userRepository, IDietitianReposi
                     d.Email),
                 ClinicName = fromDb?.ClinicName ?? d.ClinicName,
                 DiplomaNo = fromDb?.DiplomaNo ?? d.DiplomaNo,
-                ConnectionCode = string.IsNullOrWhiteSpace(code) ? null : code.Trim()
+                ConnectionCode = string.IsNullOrWhiteSpace(code) ? null : code.Trim(),
+                ThemePreference = NormalizeTheme(d.ThemePreference)
             };
         }
 
@@ -86,11 +114,13 @@ public class UserProfileService(IUserRepository userRepository, IDietitianReposi
             Role = user.Role.ToString(),
             FirstName = string.Empty,
             LastName = string.Empty,
-            DisplayName = user.Role == UserRole.Admin
-                ? user.Email
-                : BuildName(string.Empty, string.Empty, user.Email)
+            DisplayName = BuildName(string.Empty, string.Empty, user.Email),
+            ThemePreference = NormalizeTheme(user.ThemePreference)
         };
     }
+
+    private static string NormalizeTheme(string? raw) =>
+        string.Equals(raw, "dark", StringComparison.OrdinalIgnoreCase) ? "dark" : "light";
 
     private static string BuildName(string first, string last, string email)
     {

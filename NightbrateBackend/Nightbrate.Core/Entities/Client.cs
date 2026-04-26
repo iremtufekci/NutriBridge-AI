@@ -8,6 +8,5 @@ namespace Nightbrate.Core.Entities
         public double Height { get; set; }
         public int TargetCalories { get; set; }
         public string? DietitianId { get; set; }
-        public string ThemePreference { get; set; } = "light";
     }
 }

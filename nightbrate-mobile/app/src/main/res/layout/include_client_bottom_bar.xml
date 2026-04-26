@@ -69,9 +69,41 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="2"
-            android:text="Diyet Programım"
+            android:text="Diyet"
             android:textColor="@color/nav_item_inactive"
-            android:textSize="9sp" />
+            android:textSize="8sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tabPast"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="2dp"
+        android:paddingVertical="4dp">
+
+        <TextView
+            android:id="@+id/iconPast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📜"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/labelPast"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:text="Gecmiş"
+            android:textColor="@color/nav_item_inactive"
+            android:textSize="8sp" />
     </LinearLayout>
 
     <LinearLayout

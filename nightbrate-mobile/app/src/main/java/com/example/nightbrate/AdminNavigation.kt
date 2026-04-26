@@ -47,14 +47,38 @@ object AdminTabNav {
             )
             if (activity is AdminDietitianApprovalsActivity) activity.finish()
             if (activity is AdminSettingsActivity) activity.finish()
+            if (activity is AdminSystemAnalyticsActivity) activity.finish()
             if (activity is AdminPlaceholderActivity) activity.finish()
+            if (activity is AdminUserManagementActivity) activity.finish()
+            return
+        }
+        if (index == 1) {
+            if (activity is AdminUserManagementActivity) return
+            activity.startActivity(Intent(activity, AdminUserManagementActivity::class.java))
+            if (activity is AdminPlaceholderActivity) activity.finish()
+            if (activity is AdminDietitianApprovalsActivity) activity.finish()
+            if (activity is AdminSystemAnalyticsActivity) activity.finish()
+            if (activity is AdminSettingsActivity) activity.finish()
+            if (activity !is AdminDashboardActivity) activity.finish()
             return
         }
         if (index == 2) {
             if (activity is AdminDietitianApprovalsActivity) return
             activity.startActivity(Intent(activity, AdminDietitianApprovalsActivity::class.java))
             if (activity is AdminPlaceholderActivity) activity.finish()
+            if (activity is AdminSystemAnalyticsActivity) activity.finish()
             if (activity is AdminSettingsActivity) activity.finish()
+            if (activity is AdminUserManagementActivity) activity.finish()
+            if (activity !is AdminDashboardActivity) activity.finish()
+            return
+        }
+        if (index == 3) {
+            if (activity is AdminSystemAnalyticsActivity) return
+            activity.startActivity(Intent(activity, AdminSystemAnalyticsActivity::class.java))
+            if (activity is AdminPlaceholderActivity) activity.finish()
+            if (activity is AdminSettingsActivity) activity.finish()
+            if (activity is AdminDietitianApprovalsActivity) activity.finish()
+            if (activity is AdminUserManagementActivity) activity.finish()
             if (activity !is AdminDashboardActivity) activity.finish()
             return
         }
@@ -63,6 +87,8 @@ object AdminTabNav {
             activity.startActivity(Intent(activity, AdminSettingsActivity::class.java))
             if (activity is AdminPlaceholderActivity) activity.finish()
             if (activity is AdminDietitianApprovalsActivity) activity.finish()
+            if (activity is AdminSystemAnalyticsActivity) activity.finish()
+            if (activity is AdminUserManagementActivity) activity.finish()
             if (activity !is AdminDashboardActivity) activity.finish()
             return
         }
@@ -70,19 +96,5 @@ object AdminTabNav {
             val t = activity.intent.getIntExtra(AdminPlaceholderActivity.EXTRA_INDEX, -1)
             if (t == index) return
         }
-        val (title, body) = when (index) {
-            1 -> "Kullanıcı yönetimi" to "Web’deki kullanıcı listesi ve işlemler burada sunulacak."
-            3 -> "Sistem analitiği" to "Grafikler ve raporlar eklenecek."
-            else -> return
-        }
-        activity.startActivity(
-            Intent(activity, AdminPlaceholderActivity::class.java)
-                .putExtra(AdminPlaceholderActivity.EXTRA_INDEX, index)
-                .putExtra(AdminPlaceholderActivity.EXTRA_TITLE, title)
-                .putExtra(AdminPlaceholderActivity.EXTRA_MESSAGE, body)
-        )
-        if (activity is AdminPlaceholderActivity) activity.finish()
-        if (activity is AdminSettingsActivity) activity.finish()
-        if (activity is AdminDietitianApprovalsActivity) activity.finish()
     }
 }

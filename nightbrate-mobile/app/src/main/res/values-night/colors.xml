@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="admin_page_bg">#0D1117</color>
+    <color name="admin_card_bg">#1F2937</color>
+    <color name="admin_card_header_grad_end">#1F2937</color>
+    <color name="admin_row_surface">#0D1117</color>
+    <color name="admin_row_stroke">#374151</color>
+    <color name="admin_icon_tile_bg">#1F2937</color>
+    <color name="admin_muted">#9CA3AF</color>
+    <color name="admin_brand">#2ECC71</color>
+    <color name="admin_strong">#FFFFFF</color>
+    <color name="admin_hero_sub">#E5E7EB</color>
+    <color name="admin_role_pill_bg">#14532D</color>
+</resources>

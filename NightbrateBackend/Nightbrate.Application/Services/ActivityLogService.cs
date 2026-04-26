@@ -27,6 +27,15 @@ public class ActivityLogService(IActivityLogRepository repository) : IActivityLo
         return list.Select(Map).ToList();
     }
 
+    public async Task<IReadOnlyList<ActivityItemDto>> GetByUserIdAsync(string userId, int take)
+    {
+        var list = await repository.GetByUserIdAsync(userId, take);
+        return list.Select(Map).ToList();
+    }
+
+    public Task<Dictionary<string, DateTime>> GetLastActivityByUserIdsAsync(IReadOnlyList<string> userIds) =>
+        repository.GetLastActivityByUserIdsAsync(userIds);
+
     private static ActivityItemDto Map(ActivityLog x)
     {
         var name = x.ActorDisplayName ?? "";

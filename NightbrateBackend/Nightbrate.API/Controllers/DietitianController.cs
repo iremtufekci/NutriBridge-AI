@@ -18,6 +18,20 @@ public class DietitianController(IDietitianService dietitianService) : Controlle
         return Ok(await dietitianService.GetClientsWithLastMealAsync(dietitianId));
     }
 
+    [HttpGet("diet-program-dates")]
+    public async Task<IActionResult> GetDietProgramDates([FromQuery] string clientId)
+    {
+        var dietitianId = User.FindFirstValue("UserId") ?? string.Empty;
+        return Ok(await dietitianService.GetDietProgramDatesAsync(dietitianId, clientId));
+    }
+
+    [HttpGet("diet-program")]
+    public async Task<IActionResult> GetDietProgram([FromQuery] string clientId, [FromQuery] string programDate)
+    {
+        var dietitianId = User.FindFirstValue("UserId") ?? string.Empty;
+        return Ok(await dietitianService.GetDietProgramAsync(dietitianId, clientId, programDate));
+    }
+
     [HttpPost("diet-program")]
     public async Task<IActionResult> SaveDietProgram([FromBody] SaveDietProgramDto dto)
     {

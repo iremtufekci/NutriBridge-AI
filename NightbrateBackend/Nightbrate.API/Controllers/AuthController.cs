@@ -12,11 +12,16 @@ namespace Nightbrate.API.Controllers
     {
         private readonly IAuthService _authService;
         private readonly IUserProfileService _userProfileService;
+        private readonly IUserRepository _userRepository;
 
-        public AuthController(IAuthService authService, IUserProfileService userProfileService)
+        public AuthController(
+            IAuthService authService,
+            IUserProfileService userProfileService,
+            IUserRepository userRepository)
         {
             _authService = authService;
             _userProfileService = userProfileService;
+            _userRepository = userRepository;
         }
 
         [HttpPost("register-client")]
@@ -47,6 +52,16 @@ namespace Nightbrate.API.Controllers
             var userId = User.FindFirstValue("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
             return Ok(await _userProfileService.GetByUserIdAsync(userId));
+        }
+
+        [HttpPost("theme")]
+        [Authorize]
+        public async Task<IActionResult> UpdateTheme([FromBody] UpdateThemePreferenceDto dto)
+        {
+            var userId = User.FindFirstValue("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+            await _userRepository.UpdateThemePreferenceAllStoresAsync(userId, dto.ThemePreference);
+            return Ok();
         }
     }
 }
