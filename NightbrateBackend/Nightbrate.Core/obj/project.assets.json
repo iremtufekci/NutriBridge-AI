@@ -132,11 +132,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Core\\Nightbrate.Core.csproj",
+      "projectUniqueName": "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Core\\Nightbrate.Core.csproj",
       "projectName": "Nightbrate.Core",
-      "projectPath": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Core\\Nightbrate.Core.csproj",
+      "projectPath": "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Core\\Nightbrate.Core.csproj",
       "packagesPath": "C:\\Users\\tufek\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Core\\obj\\",
+      "outputPath": "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Core\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\DevExpress 24.2\\Components\\Offline Packages",
@@ -166,12 +166,15 @@
         }
       },
       "warningProperties": {
+        "noWarn": [
+          "NU1900"
+        ],
         "warnAsError": [
           "NU1605"
         ]
       },
       "restoreAuditProperties": {
-        "enableAudit": "true",
+        "enableAudit": "false",
         "auditLevel": "low",
         "auditMode": "direct"
       }

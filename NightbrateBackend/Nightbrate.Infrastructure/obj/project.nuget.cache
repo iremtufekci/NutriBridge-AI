@@ -1,13 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "F3JVKYm46U8=",
+  "dgSpecHash": "9UTXYjOy9dM=",
   "success": true,
-  "projectFilePath": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\Nightbrate.Infrastructure.csproj",
+  "projectFilePath": "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\Nightbrate.Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\tufek\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
     "C:\\Users\\tufek\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\10.0.5\\microsoft.extensions.configuration.abstractions.10.0.5.nupkg.sha512",
     "C:\\Users\\tufek\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
     "C:\\Users\\tufek\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.0\\microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\tufek\\.nuget\\packages\\microsoft.extensions.options\\8.0.2\\microsoft.extensions.options.8.0.2.nupkg.sha512",
     "C:\\Users\\tufek\\.nuget\\packages\\microsoft.extensions.primitives\\10.0.5\\microsoft.extensions.primitives.10.0.5.nupkg.sha512",
     "C:\\Users\\tufek\\.nuget\\packages\\microsoft.identitymodel.abstractions\\8.14.0\\microsoft.identitymodel.abstractions.8.14.0.nupkg.sha512",
     "C:\\Users\\tufek\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\8.14.0\\microsoft.identitymodel.jsonwebtokens.8.14.0.nupkg.sha512",

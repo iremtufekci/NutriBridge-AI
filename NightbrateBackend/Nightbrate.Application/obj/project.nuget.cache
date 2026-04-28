@@ -1,9 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "it43mlYKJMg=",
+  "dgSpecHash": "dOioTmNgifA=",
   "success": true,
   "projectFilePath": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Application\\Nightbrate.Application.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\tufek\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\tufek\\.nuget\\packages\\microsoft.extensions.options\\8.0.2\\microsoft.extensions.options.8.0.2.nupkg.sha512",
+    "C:\\Users\\tufek\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
     "C:\\Users\\tufek\\.nuget\\packages\\mongodb.bson\\3.7.1\\mongodb.bson.3.7.1.nupkg.sha512",
     "C:\\Users\\tufek\\.nuget\\packages\\system.memory\\4.5.5\\system.memory.4.5.5.nupkg.sha512",
     "C:\\Users\\tufek\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"

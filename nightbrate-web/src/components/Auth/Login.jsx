@@ -67,7 +67,9 @@ export function Login() {
       className="min-h-svh w-full flex flex-col items-center justify-center px-4 py-8 sm:px-6"
       style={{
         background: "#F0F0F0",
-        fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+        fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+        paddingTop: "max(2rem, env(safe-area-inset-top, 0px))",
+        paddingBottom: "max(2rem, env(safe-area-inset-bottom, 0px))"
       }}
     >
       <div className="w-full max-w-[450px] flex flex-col gap-4">

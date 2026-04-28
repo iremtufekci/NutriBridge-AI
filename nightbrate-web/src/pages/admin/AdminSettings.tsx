@@ -8,7 +8,7 @@ export function AdminSettings() {
 
   return (
     <SidebarLayout userRole="admin" userName={adminName}>
-      <div className="min-h-full bg-[#F4F6F8] dark:bg-[#0D1117] px-4 py-6 pb-24 transition-colors sm:px-6 sm:py-8 md:pb-8">
+      <div className="min-h-full bg-[#F4F6F8] dark:bg-[#0D1117] px-4 py-6 pb-24 transition-colors sm:px-6 sm:py-8 lg:pb-8">
         <div className="mx-auto max-w-2xl">
           <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-white/90 px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm dark:border-[#374151] dark:bg-[#1F2937] dark:text-[#9CA3AF]">
             <Shield className="h-3.5 w-3.5 text-[#2ECC71]" strokeWidth={2.5} />

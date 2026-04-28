@@ -1,52 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark"
+    android:background="@color/client_scaffold"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:fillViewport="true">
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingBottom="88dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Diyet programım"
-                android:textColor="@color/primary_green"
-                android:textSize="12sp" />
+            android:paddingHorizontal="16dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="16dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:text="Diyet takvimi"
-                android:textColor="@color/white"
-                android:textSize="22sp"
+                android:text="Diyet Programım"
+                android:textColor="@color/text_primary"
+                android:textSize="28sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvClientDietSubtitle"
+                android:id="@+id/tvClientDietIntro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:text="Bugün ve ileri 14 gün arasından seçin; diyetisyeninizin atadığı günler burada."
-                android:textColor="@color/text_gray"
+                android:layout_marginTop="6dp"
+                android:lineSpacingExtra="2dp"
+                android:textColor="@color/text_muted"
                 android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Diyet takvimi"
+                android:textColor="@color/text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Bugün ve sonrası (14 gün) — soldan sağa kaydırın"
+                android:textColor="@color/text_muted"
+                android:textSize="12sp" />
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginTop="10dp"
+                android:clipToPadding="false"
+                android:paddingBottom="6dp"
                 android:scrollbars="none">
 
                 <LinearLayout
@@ -56,21 +72,47 @@
                     android:orientation="horizontal" />
             </HorizontalScrollView>
 
+            <LinearLayout
+                android:id="@+id/rowClientDietLoading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Yükleniyor…"
+                    android:textColor="@color/text_muted"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/tvClientDietEmpty"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/client_diet_empty_dashed"
                 android:gravity="center"
-                android:padding="16dp"
-                android:text=""
-                android:textColor="@color/text_gray"
+                android:lineSpacingExtra="3dp"
+                android:padding="28dp"
+                android:textColor="@color/text_muted"
+                android:textSize="14sp"
                 android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/clientDietMealsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
                 android:orientation="vertical"
                 android:visibility="gone" />
 
@@ -80,19 +122,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:text=""
-                android:textColor="@color/text_gray"
-                android:textSize="13sp"
+                android:lineSpacingExtra="3dp"
+                android:textColor="@color/text_muted"
+                android:textSize="14sp"
                 android:visibility="gone" />
 
             <ProgressBar
                 android:id="@+id/progressClientDiet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="24dp" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="32dp"
+                android:visibility="gone" />
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <include layout="@layout/include_client_bottom_bar" />
 </LinearLayout>

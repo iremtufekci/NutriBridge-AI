@@ -1,107 +1,236 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark"
+    android:background="@color/admin_page_bg"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:fillViewport="true">
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingBottom="88dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:text="Diyet programi"
-                android:textColor="@color/primary_green"
-                android:textSize="12sp" />
+            android:padding="16dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Listeden arayip secin; secili isim burada gorunur."
-                android:textColor="@color/white"
-                android:textSize="20sp"
+                android:text="Diyet Programı"
+                android:textColor="@color/admin_strong"
+                android:textSize="32sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvDietSelectedClient"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/custom_input_bg"
-                android:backgroundTint="#14532D"
-                android:padding="12dp"
-                android:text="Secili danisan: —\nArayip listeden secin"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:layout_marginTop="8dp"
+                android:lineSpacingExtra="3dp"
+                android:text="Danışanı seçin; yeni atama için bugün veya ileri bir tarih seçin. Daha önce atadığınız tarihleri alttan seçerek düzenleyebilirsiniz; takvimle geçmiş bir tarih de açılabilir (sadece mevcut kayıt güncellemek için)."
+                android:textColor="@color/admin_muted"
+                android:textSize="14sp" />
 
-            <EditText
-                android:id="@+id/etDietClientSearch"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardDietSelectedBanner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/custom_input_bg"
-                android:hint="Danisan adi ile ara"
-                android:inputType="text"
-                android:padding="12dp"
-                android:textColor="@color/white"
-                android:textColorHint="@color/text_gray" />
-
-            <ListView
-                android:id="@+id/lvDietClients"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/custom_input_bg"
-                android:divider="@color/text_gray"
-                android:dividerHeight="1px" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:text="Bu danisana atadiginiz tarihler (duzenleme) — yatay kaydirin"
-                android:textColor="@color/primary_green"
-                android:textSize="12sp" />
-
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:scrollbars="none">
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="#E8F8F0"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#6622C55E"
+                app:strokeWidth="2dp">
 
                 <LinearLayout
-                    android:id="@+id/dietAssignedRow"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal" />
-            </HorizontalScrollView>
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:letterSpacing="0.05"
+                        android:text="SEÇİLİ DANIŞAN"
+                        android:textAllCaps="true"
+                        android:textColor="#15803D"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvDietSelectedClientName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/admin_strong"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="@color/admin_card_bg"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/admin_row_stroke"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/etDietClientSearch"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/custom_input_bg"
+                            android:hint="Danışan adı ile ara…"
+                            android:inputType="text"
+                            android:padding="14dp"
+                            android:textColor="@color/admin_strong"
+                            android:textColorHint="@color/text_gray"
+                            android:textSize="15sp" />
+
+                        <ProgressBar
+                            android:id="@+id/dietListProgress"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginStart="8dp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                    <ListView
+                        android:id="@+id/lvDietClients"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/custom_input_bg"
+                        android:divider="@color/admin_row_stroke"
+                        android:dividerHeight="1dp"
+                        android:nestedScrollingEnabled="true" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardAssignedDates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="#FFF7ED"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#FCD34D"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Bu danışana atadığınız tarihler"
+                        android:textColor="#92400E"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvAssignedDatesStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:textColor="#B45309"
+                        android:textSize="12sp" />
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:id="@+id/dietAssignedRow"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal" />
+                    </HorizontalScrollView>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:text="Tarih: onumuzdeki 60 gun (yeni) veya yukaridan atadiginiz gun"
-                android:textColor="@color/text_gray"
+                android:layout_marginTop="16dp"
+                android:text="Tarih seçimi (yeni veya düzenleme)"
+                android:textColor="@color/admin_strong"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDietPickDate"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Takvim"
+                    android:textAllCaps="false"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="@color/admin_row_stroke" />
+
+                <TextView
+                    android:id="@+id/tvDietCalendarValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/admin_strong"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Hızlı: önümüzdeki 60 gün (yeni atama)"
+                android:textColor="@color/admin_muted"
                 android:textSize="12sp" />
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginTop="8dp"
                 android:scrollbars="none">
 
                 <LinearLayout
@@ -109,247 +238,387 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal" />
+                    android:orientation="horizontal"
+                    android:paddingVertical="4dp" />
             </HorizontalScrollView>
 
             <LinearLayout
+                android:id="@+id/rowProgramLoading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Kahvalti"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                <ProgressBar
+                    android:id="@+id/dietProgramProgress"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="6dp"
-                    android:text="kcal"
-                    android:textColor="@color/text_gray"
-                    android:textSize="12sp" />
-
-                <EditText
-                    android:id="@+id/etDietBreakfastKcal"
-                    android:layout_width="64dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/custom_input_bg"
-                    android:gravity="end|center_vertical"
-                    android:hint="0"
-                    android:inputType="number"
-                    android:padding="8dp"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/text_gray"
+                    android:layout_marginStart="8dp"
+                    android:text="Program yükleniyor…"
+                    android:textColor="@color/admin_muted"
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <EditText
-                android:id="@+id/etDietBreakfast"
+            <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/custom_input_bg"
-                android:gravity="top|start"
-                android:hint="Kahvalti notu"
-                android:inputType="textMultiLine|textCapSentences"
-                android:minLines="3"
-                android:padding="12dp"
-                android:textColor="@color/white"
-                android:textColorHint="@color/text_gray" />
+                android:layout_marginTop="12dp"
+                android:columnCount="2">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Ogle"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:layout_columnWeight="1"
+                    android:layout_margin="6dp"
+                    app:cardBackgroundColor="@color/admin_card_bg"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/admin_row_stroke"
+                    app:strokeWidth="1dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="6dp"
-                    android:text="kcal"
-                    android:textColor="@color/text_gray"
-                    android:textSize="12sp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="220dp"
+                        android:orientation="vertical"
+                        android:padding="12dp">
 
-                <EditText
-                    android:id="@+id/etDietLunchKcal"
-                    android:layout_width="64dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/custom_input_bg"
-                    android:gravity="end|center_vertical"
-                    android:hint="0"
-                    android:inputType="number"
-                    android:padding="8dp"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/text_gray"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/etDietLunch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/custom_input_bg"
-                android:gravity="top|start"
-                android:hint="Ogle notu"
-                android:inputType="textMultiLine|textCapSentences"
-                android:minLines="3"
-                android:padding="12dp"
-                android:textColor="@color/white"
-                android:textColorHint="@color/text_gray" />
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Kahvaltı"
+                                android:textColor="@color/admin_strong"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="kcal"
+                                android:textColor="@color/admin_muted"
+                                android:textSize="11sp" />
 
-                <TextView
+                            <EditText
+                                android:id="@+id/etDietBreakfastKcal"
+                                android:layout_width="56dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:background="@drawable/custom_input_bg"
+                                android:gravity="end"
+                                android:hint="0"
+                                android:inputType="number"
+                                android:padding="8dp"
+                                android:textColor="@color/admin_strong"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <EditText
+                            android:id="@+id/etDietBreakfast"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/custom_input_bg"
+                            android:gravity="top|start"
+                            android:hint="Öğün içeriği ve besin önerileri…"
+                            android:inputType="textMultiLine|textCapSentences"
+                            android:minLines="5"
+                            android:padding="10dp"
+                            android:textColor="@color/admin_strong"
+                            android:textColorHint="@color/text_gray"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Aksam"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:layout_columnWeight="1"
+                    android:layout_margin="6dp"
+                    app:cardBackgroundColor="@color/admin_card_bg"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/admin_row_stroke"
+                    app:strokeWidth="1dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="6dp"
-                    android:text="kcal"
-                    android:textColor="@color/text_gray"
-                    android:textSize="12sp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="220dp"
+                        android:orientation="vertical"
+                        android:padding="12dp">
 
-                <EditText
-                    android:id="@+id/etDietDinnerKcal"
-                    android:layout_width="64dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/custom_input_bg"
-                    android:gravity="end|center_vertical"
-                    android:hint="0"
-                    android:inputType="number"
-                    android:padding="8dp"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/text_gray"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/etDietDinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/custom_input_bg"
-                android:gravity="top|start"
-                android:hint="Aksam notu"
-                android:inputType="textMultiLine|textCapSentences"
-                android:minLines="3"
-                android:padding="12dp"
-                android:textColor="@color/white"
-                android:textColorHint="@color/text_gray" />
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Öğle Yemeği"
+                                android:textColor="@color/admin_strong"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="kcal"
+                                android:textColor="@color/admin_muted"
+                                android:textSize="11sp" />
 
-                <TextView
+                            <EditText
+                                android:id="@+id/etDietLunchKcal"
+                                android:layout_width="56dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:background="@drawable/custom_input_bg"
+                                android:gravity="end"
+                                android:hint="0"
+                                android:inputType="number"
+                                android:padding="8dp"
+                                android:textColor="@color/admin_strong"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <EditText
+                            android:id="@+id/etDietLunch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/custom_input_bg"
+                            android:gravity="top|start"
+                            android:hint="Öğün içeriği ve besin önerileri…"
+                            android:inputType="textMultiLine|textCapSentences"
+                            android:minLines="5"
+                            android:padding="10dp"
+                            android:textColor="@color/admin_strong"
+                            android:textColorHint="@color/text_gray"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Ara ogun"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:layout_columnWeight="1"
+                    android:layout_margin="6dp"
+                    app:cardBackgroundColor="@color/admin_card_bg"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/admin_row_stroke"
+                    app:strokeWidth="1dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="220dp"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Akşam Yemeği"
+                                android:textColor="@color/admin_strong"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="kcal"
+                                android:textColor="@color/admin_muted"
+                                android:textSize="11sp" />
+
+                            <EditText
+                                android:id="@+id/etDietDinnerKcal"
+                                android:layout_width="56dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:background="@drawable/custom_input_bg"
+                                android:gravity="end"
+                                android:hint="0"
+                                android:inputType="number"
+                                android:padding="8dp"
+                                android:textColor="@color/admin_strong"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <EditText
+                            android:id="@+id/etDietDinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/custom_input_bg"
+                            android:gravity="top|start"
+                            android:hint="Öğün içeriği ve besin önerileri…"
+                            android:inputType="textMultiLine|textCapSentences"
+                            android:minLines="5"
+                            android:padding="10dp"
+                            android:textColor="@color/admin_strong"
+                            android:textColorHint="@color/text_gray"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="6dp"
-                    android:text="kcal"
-                    android:textColor="@color/text_gray"
-                    android:textSize="12sp" />
+                    android:layout_columnWeight="1"
+                    android:layout_margin="6dp"
+                    app:cardBackgroundColor="@color/admin_card_bg"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/admin_row_stroke"
+                    app:strokeWidth="1dp">
 
-                <EditText
-                    android:id="@+id/etDietSnackKcal"
-                    android:layout_width="64dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="220dp"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Ara Öğün"
+                                android:textColor="@color/admin_strong"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="kcal"
+                                android:textColor="@color/admin_muted"
+                                android:textSize="11sp" />
+
+                            <EditText
+                                android:id="@+id/etDietSnackKcal"
+                                android:layout_width="56dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:background="@drawable/custom_input_bg"
+                                android:gravity="end"
+                                android:hint="0"
+                                android:inputType="number"
+                                android:padding="8dp"
+                                android:textColor="@color/admin_strong"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <EditText
+                            android:id="@+id/etDietSnack"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/custom_input_bg"
+                            android:gravity="top|start"
+                            android:hint="Öğün içeriği ve besin önerileri…"
+                            android:inputType="textMultiLine|textCapSentences"
+                            android:minLines="4"
+                            android:padding="10dp"
+                            android:textColor="@color/admin_strong"
+                            android:textColorHint="@color/text_gray"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </GridLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="#E8F8F0"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#BBF7D0"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/custom_input_bg"
-                    android:gravity="end|center_vertical"
-                    android:hint="0"
-                    android:inputType="number"
-                    android:padding="8dp"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/text_gray"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="18dp">
 
-            <EditText
-                android:id="@+id/etDietSnack"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/custom_input_bg"
-                android:gravity="top|start"
-                android:hint="Ara ogun notu"
-                android:inputType="textMultiLine|textCapSentences"
-                android:minLines="2"
-                android:padding="12dp"
-                android:textColor="@color/white"
-                android:textColorHint="@color/text_gray" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:text="Gunluk toplam (ogun toplamı, otomatik)"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Günlük toplam (öğün toplamı)"
+                            android:textColor="@color/admin_muted"
+                            android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/tvDietTotalKcal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/custom_input_bg"
-                android:padding="12dp"
-                android:text="0 kcal"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
+                        <TextView
+                            android:id="@+id/tvDietTotalKcal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="0 kcal"
+                            android:textColor="@color/admin_strong"
+                            android:textSize="28sp"
+                            android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/btnDietSaveProgram"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/primary_green"
-                android:text="Programi kaydet"
-                android:textAllCaps="false"
-                android:textColor="@color/white" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Otomatik: dört öğünün kalori girdisinin toplamı."
+                            android:textColor="@color/admin_muted"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDietSaveProgram"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Programı Kaydet"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/white"
+                        app:backgroundTint="#22C55E"
+                        app:cornerRadius="16dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <include layout="@layout/include_dietitian_bottom_bar" />
 </LinearLayout>

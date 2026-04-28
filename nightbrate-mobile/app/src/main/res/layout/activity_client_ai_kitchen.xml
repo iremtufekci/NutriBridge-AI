@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/client_scaffold"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🍳  AI Mutfak Şefi"
+                android:textColor="@color/text_primary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Malzeme, tercih ve hedef kaloriye göre tarif üretir"
+                android:textColor="@color/text_muted"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Elinizdeki Malzemeler *"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etAiKitchenIngredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="top|start"
+                android:hint="Tavuk, krema, mantar, pirinç…"
+                android:inputType="textCapSentences|textMultiLine"
+                android:minLines="4"
+                android:padding="12dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Tercih (birini seçin) *"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/rgAiKitchenPreference"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/rbPractical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tag="practical"
+                    android:text="Pratik" />
+
+                <RadioButton
+                    android:id="@+id/rbLowKcal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tag="low_calorie"
+                    android:text="Düşük Kalori" />
+
+                <RadioButton
+                    android:id="@+id/rbVeg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tag="vegetarian"
+                    android:text="Vejetaryen" />
+
+                <RadioButton
+                    android:id="@+id/rbProtein"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tag="high_protein"
+                    android:text="Protein" />
+
+                <RadioButton
+                    android:id="@+id/rbVegan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tag="vegan"
+                    android:text="Vegan" />
+
+                <RadioButton
+                    android:id="@+id/rbGluten"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tag="gluten_free"
+                    android:text="Gluten Free" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Hedef kalori (kcal) *"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etAiKitchenKcal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="200–5000 arası, örn. 500"
+                android:inputType="number"
+                android:maxLength="4"
+                android:padding="12dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAiKitchenGenerate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:minHeight="52dp"
+                android:text="Tarif Oluştur" />
+
+            <ProgressBar
+                android:id="@+id/progressAiKitchen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tvAiKitchenError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="#1AFFCDD2"
+                android:padding="12dp"
+                android:textColor="#B00020"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tvAiKitchenSource"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/llAiKitchenResults"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <include layout="@layout/include_client_bottom_bar" />
+</LinearLayout>

@@ -58,4 +58,18 @@ public class DietProgramRepository(MongoDbContext context) : IDietProgramReposit
 
         await context.DietPrograms.ReplaceOneAsync(filter, dietProgram, new ReplaceOptions { IsUpsert = true });
     }
+
+    public async Task<List<DietProgram>> GetByDietitianClientsAndProgramDatesAsync(
+        string dietitianId,
+        IReadOnlyCollection<string> clientIds,
+        IReadOnlyCollection<string> programDates,
+        CancellationToken cancellationToken = default)
+    {
+        if (clientIds.Count == 0 || programDates.Count == 0) return new List<DietProgram>();
+        var f =
+            Builders<DietProgram>.Filter.Eq(x => x.DietitianId, dietitianId)
+            & Builders<DietProgram>.Filter.In(x => x.ClientId, clientIds)
+            & Builders<DietProgram>.Filter.In(x => x.ProgramDate, programDates);
+        return await context.DietPrograms.Find(f).ToListAsync(cancellationToken);
+    }
 }

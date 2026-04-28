@@ -236,7 +236,7 @@ export function ClientProfile() {
 
   return (
     <SidebarLayout userRole="client" userName={userName}>
-      <div className="min-h-screen bg-[#F4F6F8] dark:bg-slate-950 px-4 py-6 sm:px-6 lg:px-8 pb-24 md:pb-8">
+      <div className="min-h-screen bg-[#F4F6F8] dark:bg-slate-950 px-4 py-6 sm:px-6 lg:px-8 pb-24 lg:pb-8">
         <div className="mx-auto max-w-5xl space-y-5">
           <div>
             <h1 className="text-3xl sm:text-5xl font-bold text-slate-900 dark:text-slate-100">Profil & Ayarlar</h1>

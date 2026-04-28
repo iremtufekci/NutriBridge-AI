@@ -160,7 +160,7 @@ export function ClientDietProgram() {
 
   return (
     <SidebarLayout userRole="client" userName={userName}>
-      <div className="min-h-full bg-[#F8FAF7] dark:bg-slate-950 px-4 py-6 pb-28 md:pb-8 transition-colors">
+      <div className="min-h-full bg-[#F8FAF7] dark:bg-slate-950 px-4 py-6 pb-28 lg:pb-8 transition-colors">
         <div className="mx-auto max-w-3xl">
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Diyet Programım</h1>
           <p className="text-slate-500 dark:text-[#9CA3AF] text-sm mt-1">

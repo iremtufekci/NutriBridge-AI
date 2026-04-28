@@ -17,6 +17,9 @@ namespace Nightbrate.Infrastructure.Data
         public IMongoCollection<DietProgram> DietPrograms => _database.GetCollection<DietProgram>("DietPrograms");
         public IMongoCollection<DietProgramHistory> DietProgramHistories => _database.GetCollection<DietProgramHistory>("DietProgramHistories");
         public IMongoCollection<ActivityLog> ActivityLogs => _database.GetCollection<ActivityLog>("ActivityLogs");
+        public IMongoCollection<KitchenChefRecipeLog> KitchenChefRecipeLogs => _database.GetCollection<KitchenChefRecipeLog>("KitchenChefRecipeLogs");
+        public IMongoCollection<CriticalAlertAcknowledgment> CriticalAlertAcknowledgments => _database.GetCollection<CriticalAlertAcknowledgment>("CriticalAlertAcknowledgments");
+        public IMongoCollection<DietitianDailyTask> DietitianDailyTasks => _database.GetCollection<DietitianDailyTask>("DietitianDailyTasks");
 
         /// <summary>BSON anahtar adlari (Pascal / camel) farkli olabilen alanlar icin ham okuma.</summary>
         public IMongoCollection<BsonDocument> DietitiansBson => _database.GetCollection<BsonDocument>("Dietitians");

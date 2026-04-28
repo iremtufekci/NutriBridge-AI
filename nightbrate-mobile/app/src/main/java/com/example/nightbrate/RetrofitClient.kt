@@ -7,8 +7,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
-    // Android emulator icin localhost yerine 10.0.2.2 kullanilir.
-    private const val BASE_URL = "http://10.0.2.2:5231/"
+    /** Önizleme URL'leri için (ör. /uploads/meals/...). */
+    const val API_BASE_URL = "http://10.0.2.2:5231/"
+    private const val BASE_URL = API_BASE_URL
 
     private val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
@@ -18,7 +19,9 @@ object RetrofitClient {
         .addInterceptor(AuthInterceptor())
         .addInterceptor(logging)
         .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(120, TimeUnit.SECONDS)
+        .writeTimeout(120, TimeUnit.SECONDS)
+        .callTimeout(200, TimeUnit.SECONDS)
         .build()
 
     val instance: ApiService by lazy {
