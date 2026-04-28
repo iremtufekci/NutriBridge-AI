@@ -180,7 +180,7 @@ export function AdminSystemAnalytics() {
 
   return (
     <SidebarLayout userRole="admin" userName={name}>
-      <div className="min-h-full bg-slate-100/80 dark:bg-slate-950 px-3 sm:px-6 py-4 sm:py-6 pb-24 md:pb-8">
+      <div className="min-h-full bg-slate-100/80 dark:bg-slate-950 px-3 sm:px-6 py-4 sm:py-6 pb-24 lg:pb-8">
         <div className="mx-auto max-w-7xl space-y-5 sm:space-y-6">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Sistem Analitiği</h1>

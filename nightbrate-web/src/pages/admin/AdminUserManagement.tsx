@@ -208,7 +208,7 @@ export function AdminUserManagement() {
 
   return (
     <SidebarLayout userRole="admin" userName={adminName}>
-      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-[#F4F6F8] dark:bg-[#0D1117] min-h-screen text-slate-900 dark:text-white transition-colors pb-24 md:pb-8">
+      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-[#F4F6F8] dark:bg-[#0D1117] min-h-screen text-slate-900 dark:text-white transition-colors pb-24 lg:pb-8">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Kullanıcı Yönetimi</h1>
           <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm sm:text-base">

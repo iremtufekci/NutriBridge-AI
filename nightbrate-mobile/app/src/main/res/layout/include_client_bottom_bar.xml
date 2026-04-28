@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/nav_bar_bg"
+    android:background="@drawable/bg_bottom_nav"
     android:elevation="10dp"
     android:gravity="center"
     android:minHeight="56dp"
@@ -168,6 +168,38 @@
             android:text="AI Mutfak"
             android:textColor="@color/nav_item_inactive"
             android:textSize="9sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tabShares"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="2dp"
+        android:paddingVertical="4dp">
+
+        <TextView
+            android:id="@+id/iconShares"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📤"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/labelShares"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:text="Paylaştığım"
+            android:textColor="@color/nav_item_inactive"
+            android:textSize="8sp" />
     </LinearLayout>
 
     <LinearLayout

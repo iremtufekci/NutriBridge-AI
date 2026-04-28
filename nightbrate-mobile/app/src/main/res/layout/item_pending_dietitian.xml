@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    app:cardBackgroundColor="@color/card_dark"
+    app:cardBackgroundColor="@color/admin_card_bg"
     app:cardCornerRadius="16dp">
 
     <LinearLayout
@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Ad Soyad"
-            android:textColor="@color/white"
+            android:textColor="@color/admin_strong"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:text="Diploma"
-            android:textColor="@color/white"
+            android:textColor="@color/admin_strong"
             android:textSize="14sp" />
 
         <TextView
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="Klinik"
-            android:textColor="@color/white"
+            android:textColor="@color/admin_strong"
             android:textSize="14sp" />
 
         <TextView

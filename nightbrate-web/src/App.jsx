@@ -11,11 +11,17 @@ import { AdminDashboard } from "./pages/admin/AdminDashboard";
 import { AdminApprovals } from "./pages/admin/AdminApprovals";
 import { DietitianDashboard } from "./pages/dietitian/DietitianDashboard";
 import { DietitianPrograms } from "./pages/dietitian/DietitianPrograms";
+import { DietitianAiReview } from "./pages/dietitian/DietitianAiReview";
+import { DietitianCriticalAlerts } from "./pages/dietitian/DietitianCriticalAlerts";
+import { DietitianTasks } from "./pages/dietitian/DietitianTasks";
 import { ClientHome } from "./pages/client/ClientHome";
 import { ClientProfile } from "./pages/client/ClientProfile";
 import { ClientDietProgram } from "./pages/client/ClientDietProgram";
 import { ClientDietProgramHistory } from "./pages/client/ClientDietProgramHistory";
 import { PlaceholderWithLayout } from "./pages/PlaceholderWithLayout";
+import { ClientMealAnalysis } from "./pages/client/ClientMealAnalysis";
+import { ClientAiKitchenChef } from "./pages/client/ClientAiKitchenChef";
+import { ClientAiKitchenShares } from "./pages/client/ClientAiKitchenShares";
 import { RoleAccountProfile } from "./pages/RoleAccountProfile";
 import { AdminSettings } from "./pages/admin/AdminSettings";
 import { AdminSystemAnalytics } from "./pages/admin/AdminSystemAnalytics";
@@ -51,16 +57,18 @@ function App() {
         <Route path="/dietitian/dashboard" element={<DietitianDashboard />} />
         <Route path="/dietitian/clients" element={<PlaceholderWithLayout />} />
         <Route path="/dietitian/programs" element={<DietitianPrograms />} />
-        <Route path="/dietitian/ai-review" element={<PlaceholderWithLayout />} />
-        <Route path="/dietitian/alerts" element={<PlaceholderWithLayout />} />
+        <Route path="/dietitian/ai-review" element={<DietitianAiReview />} />
+        <Route path="/dietitian/tasks" element={<DietitianTasks />} />
+        <Route path="/dietitian/alerts" element={<DietitianCriticalAlerts />} />
         <Route path="/dietitian/profile" element={<RoleAccountProfile appRole="dietitian" />} />
         <Route path="/client" element={<ClientHome />} />
         <Route path="/client/home" element={<ClientHome />} />
         <Route path="/client/journal" element={<Navigate to="/client/diet-program" replace />} />
         <Route path="/client/diet-program" element={<ClientDietProgram />} />
         <Route path="/client/diet-program-history" element={<ClientDietProgramHistory />} />
-        <Route path="/client/food-scan" element={<PlaceholderWithLayout />} />
-        <Route path="/client/ai-chef" element={<PlaceholderWithLayout />} />
+        <Route path="/client/food-scan" element={<ClientMealAnalysis />} />
+        <Route path="/client/ai-chef" element={<ClientAiKitchenChef />} />
+        <Route path="/client/ai-chef-shares" element={<ClientAiKitchenShares />} />
         <Route path="/client/profile" element={<ClientProfile />} />
         <Route path="*" element={<NotFoundRedirect />} />
       </Routes>

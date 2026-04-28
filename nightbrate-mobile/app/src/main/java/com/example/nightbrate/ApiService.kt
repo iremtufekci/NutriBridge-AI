@@ -1,9 +1,12 @@
 package com.example.nightbrate
 
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.PATCH
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -27,10 +30,22 @@ interface ApiService {
     @GET("api/Client/diet-programs")
     suspend fun getMyDietPrograms(): Response<List<ClientDietProgramDayResponse>>
 
+    /** Tek gün programı (web ClientHome takvim seçimi). */
+    @GET("api/Client/diet-program")
+    suspend fun getMyDietProgramForDate(
+        @Query("programDate") programDate: String
+    ): Response<ClientDietProgramDayResponse>
+
     @POST("api/Client/diet-program/meal-completed")
     suspend fun markMealCompleted(
         @Body body: SetMealCompletedRequest
     ): Response<Unit>
+
+    @Multipart
+    @POST("api/Meal/upload-meal-photo")
+    suspend fun uploadMealPhoto(
+        @Part photo: MultipartBody.Part
+    ): Response<MealPhotoAnalysisResponse>
 
     @GET("api/Client/profile")
     suspend fun getClientProfile(): Response<ClientProfileResponse>
@@ -68,6 +83,11 @@ interface ApiService {
 
     @GET("api/Admin/pending-dietitians")
     suspend fun getPendingDietitians(): Response<List<PendingDietitianItem>>
+
+    @GET("api/Admin/dietitian/{dietitianId}")
+    suspend fun getAdminDietitianDetail(
+        @Path("dietitianId") dietitianId: String
+    ): Response<AdminDietitianDetailDto>
 
     @GET("api/Admin/recent-activities")
     suspend fun getRecentActivities(
@@ -109,6 +129,18 @@ interface ApiService {
         @Path("dietitianId") dietitianId: String
     ): Response<Unit>
 
+    @GET("api/Dietitian/critical-alerts")
+    suspend fun getDietitianCriticalAlerts(): Response<List<DietitianCriticalAlertStub>>
+
+    @GET("api/Dietitian/daily-tasks/today")
+    suspend fun getTodayDailyTasks(): Response<DietitianTodayTasksBundleDto>
+
+    @PATCH("api/Dietitian/daily-tasks/{taskId}/complete")
+    suspend fun setDailyTaskComplete(
+        @Path("taskId") taskId: String,
+        @Body body: SetDietitianTaskCompleteBody
+    ): Response<Unit>
+
     @GET("api/Dietitian/clients-with-last-meal")
     suspend fun getClientsWithLastMeal(): Response<List<ClientWithLastMealItem>>
 
@@ -123,8 +155,17 @@ interface ApiService {
         @Query("programDate") programDate: String
     ): Response<DietProgramViewResponse>
 
-    @POST("api/Dietitian/diet-program")
-    suspend fun saveDietProgram(
-        @Body body: SaveDietProgramRequest
-    ): Response<Unit>
-}
+    @POST("api/KitchenChef/generate")
+    suspend fun generateKitchenRecipes(
+        @Body body: KitchenChefGenerateRequest
+    ): Response<KitchenChefGenerateResponse>
+
+    @GET("api/KitchenChef/my-shares")
+    suspend fun getMyKitchenShares(
+        @Query("from") from: String? = null,
+        @Query("to") to: String? = null,
+        @Query("source") source: String? = null,
+        @Query("skip") skip: Int = 0,
+        @Query("take") take: Int = 50
+    ): Response<List<KitchenChefShareLogItem>>
+

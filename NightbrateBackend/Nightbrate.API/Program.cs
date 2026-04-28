@@ -2,17 +2,30 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.IdentityModel.Tokens;
 using Nightbrate.API.Middleware;
 using Nightbrate.API.Monitoring;
+using Nightbrate.API.Services;
 using Nightbrate.Application.Interfaces;
+using Nightbrate.Application.Options;
 using Nightbrate.Application.Services;
 using Nightbrate.Infrastructure.Data;
 using Nightbrate.Infrastructure.Monitoring;
 using Nightbrate.Infrastructure.Repositories;
 using Nightbrate.Infrastructure.Security;
+using Nightbrate.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 5 * 1024 * 1024;
+});
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 5 * 1024 * 1024;
+});
 
 builder.Services.AddCors(options =>
 {
@@ -68,6 +81,11 @@ builder.Services.AddScoped<IDietProgramHistoryRepository, DietProgramHistoryRepo
 builder.Services.AddScoped<IWaterLogRepository, WaterLogRepository>();
 builder.Services.AddScoped<IWeightLogRepository, WeightLogRepository>();
 builder.Services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
+builder.Services.AddScoped<IKitchenChefRecipeLogRepository, KitchenChefRecipeLogRepository>();
+builder.Services.AddScoped<ICriticalAlertAcknowledgmentRepository, CriticalAlertAcknowledgmentRepository>();
+builder.Services.AddScoped<IDietitianDailyTaskRepository, DietitianDailyTaskRepository>();
+builder.Services.AddScoped<ICriticalAlertService, CriticalAlertService>();
+builder.Services.AddScoped<IDietitianDailyTaskService, DietitianDailyTaskService>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IActivityLogService, ActivityLogService>();
@@ -80,6 +98,34 @@ builder.Services.AddScoped<IDietitianService, DietitianService>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
+builder.Services.Configure<MealUploadOptions>(o =>
+{
+    o.MealsDirectory = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "uploads", "meals");
+    o.PublicRelativePath = "/uploads/meals";
+});
+builder.Services.AddScoped<IMealPhotoStorage, LocalMealPhotoStorage>();
+
+builder.Services.Configure<GeminiMealAnalysisOptions>(builder.Configuration.GetSection("Gemini"));
+builder.Services.PostConfigure<GeminiMealAnalysisOptions>(o =>
+{
+    o.ApiKey = (o.ApiKey ?? string.Empty).Trim();
+    o.Model = string.IsNullOrWhiteSpace(o.Model) ? "gemini-2.5-flash" : o.Model.Trim();
+});
+
+var geminiKey = builder.Configuration["Gemini:ApiKey"]?.Trim();
+if (!string.IsNullOrWhiteSpace(geminiKey))
+{
+    builder.Services.AddHttpClient<IMealAnalysisService, GeminiMealAnalysisService>();
+    builder.Services.AddHttpClient<IKitchenChefService, GeminiKitchenChefService>();
+}
+else
+{
+    builder.Services.AddSingleton<IMealAnalysisService, MockMealAnalysisService>();
+    builder.Services.AddSingleton<IKitchenChefService, MockKitchenChefService>();
+}
+
+builder.Services.AddScoped<IMealPhotoAnalysisService, MealPhotoAnalysisService>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -90,6 +136,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors("ClientApps");
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<RequestMetricsMiddleware>();

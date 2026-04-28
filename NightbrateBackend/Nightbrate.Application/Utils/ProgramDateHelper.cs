@@ -39,4 +39,12 @@ public static class ProgramDateHelper
         var today = DateOnly.FromDateTime(DateTime.UtcNow.Date);
         return d < today;
     }
+
+    /// <summary>yyyy-MM-dd string → o günün UTC 00:00:00 anı.</summary>
+    public static DateTime UtcStartOfYmdString(string ymd)
+    {
+        if (!DateOnly.TryParseExact(ymd, JsonFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var d))
+            return DateTime.SpecifyKind(DateTime.UtcNow.Date, DateTimeKind.Utc);
+        return new DateTime(d.Year, d.Month, d.Day, 0, 0, 0, DateTimeKind.Utc);
+    }
 }

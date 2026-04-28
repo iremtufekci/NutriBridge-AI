@@ -201,7 +201,7 @@ export function AdminDashboard() {
 
   return (
     <SidebarLayout userRole="admin" userName={adminName}>
-      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-[#F4F6F8] dark:bg-[#0D1117] min-h-screen text-slate-900 dark:text-white transition-colors pb-24 md:pb-8">
+      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-[#F4F6F8] dark:bg-[#0D1117] min-h-screen text-slate-900 dark:text-white transition-colors pb-24 lg:pb-8">
         <div>
           <h1 className="text-3xl sm:text-5xl font-bold mb-1">Admin Dashboard</h1>
           <p className="text-slate-500 dark:text-[#9CA3AF]">Sistem genel görünümü ve istatistikler</p>
@@ -301,19 +301,19 @@ export function AdminDashboard() {
             {pendingDietitians.map((dietitian) => (
               <div
                 key={dietitian.id}
-                className="flex items-center justify-between p-3 sm:p-4 bg-slate-50 dark:bg-[#0D1117] rounded-2xl border border-slate-200 dark:border-slate-800"
+                className="flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4 bg-slate-50 dark:bg-[#0D1117] rounded-2xl border border-slate-200 dark:border-slate-800"
               >
-                <div>
+                <div className="min-w-0">
                   <p className="font-semibold">
                     {dietitian.firstName} {dietitian.lastName}
                   </p>
-                  <p className="text-xs text-slate-500 dark:text-[#9CA3AF]">
+                  <p className="text-xs text-slate-500 dark:text-[#9CA3AF] break-words">
                     {dietitian.email} - {dietitian.clinicName}
                   </p>
                 </div>
                 <button
                   onClick={() => approveDietitian(dietitian.id)}
-                  className="px-4 py-2 rounded-xl bg-emerald-500 text-white hover:bg-emerald-600 text-sm font-semibold"
+                  className="w-full shrink-0 px-4 py-2.5 rounded-xl bg-emerald-500 text-white hover:bg-emerald-600 text-sm font-semibold sm:w-auto min-h-[44px] sm:min-h-0"
                 >
                   Onayla
                 </button>

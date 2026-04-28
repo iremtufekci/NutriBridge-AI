@@ -17,6 +17,9 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  if (typeof FormData !== "undefined" && config.data instanceof FormData) {
+    delete config.headers["Content-Type"];
+  }
   return config;
 });
 
@@ -32,6 +35,7 @@ export function getApiErrorMessage(err) {
   const d = r.data;
   if (d && typeof d === "object") {
     if (typeof d.message === "string" && d.message.trim()) return d.message;
+    if (typeof d.detail === "string" && d.detail.trim()) return d.detail;
     if (typeof d.title === "string" && d.title.trim()) return d.title;
     if (d.errors && typeof d.errors === "object") {
       const parts = Object.values(d.errors).flat().filter((x) => typeof x === "string");

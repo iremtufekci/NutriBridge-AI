@@ -212,23 +212,26 @@ export function ClientHome() {
 
   return (
     <SidebarLayout userRole="client" userName={userName}>
-      <div className="min-h-full bg-[#F8FAF7] dark:bg-slate-950 px-4 py-6 pb-4 transition-colors sm:px-6 sm:pb-6 lg:px-8 md:pb-8">
+      <div className="min-h-full bg-[#F8FAF7] dark:bg-slate-950 px-4 py-6 pb-4 transition-colors sm:px-6 sm:pb-6 lg:px-8 lg:pb-8">
         <div className="mx-auto max-w-6xl space-y-6">
           {pageLoading && (
             <p className="flex items-center gap-2 text-slate-500 text-sm">
               <Loader2 className="w-4 h-4 animate-spin" /> Profil yükleniyor…
             </p>
           )}
-          <div className="flex items-start justify-between gap-3">
-            <header>
-              <h1 className="text-2xl sm:text-4xl font-bold text-slate-900 dark:text-slate-100">Günaydın, {greetingName} 🌞</h1>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <header className="min-w-0">
+              <h1 className="text-xl sm:text-4xl font-bold text-slate-900 dark:text-slate-100 break-words">Günaydın, {greetingName} 🌞</h1>
               <p className="text-slate-500 dark:text-[#9CA3AF] mt-1 text-sm sm:text-base">
                 {hasLiveDietitian
                   ? `${displayDietitianName} — ${isSelectedToday ? "Bugün" : "Seçili gün"} için öğünler ve günlük plan aşağıda.`
                   : "Diyetisyeninizle eşleştiğinizde planınız burada görünür."}
               </p>
             </header>
-            <button className="relative p-2.5 bg-white dark:bg-[#1F2937] border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-[#2D3748] transition-all">
+            <button
+              type="button"
+              className="relative shrink-0 self-start p-2.5 min-h-11 min-w-11 sm:min-h-0 sm:min-w-0 inline-flex items-center justify-center bg-white dark:bg-[#1F2937] border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-[#2D3748] transition-all"
+            >
               <Bell size={22} className="text-slate-500 dark:text-slate-300" />
               <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full" />
             </button>

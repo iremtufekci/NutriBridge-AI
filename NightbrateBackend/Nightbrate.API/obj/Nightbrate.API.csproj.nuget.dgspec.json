@@ -41,19 +41,22 @@
               "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Application\\Nightbrate.Application.csproj": {
                 "projectPath": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Application\\Nightbrate.Application.csproj"
               },
-              "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\Nightbrate.Infrastructure.csproj": {
-                "projectPath": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\Nightbrate.Infrastructure.csproj"
+              "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\Nightbrate.Infrastructure.csproj": {
+                "projectPath": "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\Nightbrate.Infrastructure.csproj"
               }
             }
           }
         },
         "warningProperties": {
+          "noWarn": [
+            "NU1900"
+          ],
           "warnAsError": [
             "NU1605"
           ]
         },
         "restoreAuditProperties": {
-          "enableAudit": "true",
+          "enableAudit": "false",
           "auditLevel": "low",
           "auditMode": "direct"
         }
@@ -139,12 +142,15 @@
           }
         },
         "warningProperties": {
+          "noWarn": [
+            "NU1900"
+          ],
           "warnAsError": [
             "NU1605"
           ]
         },
         "restoreAuditProperties": {
-          "enableAudit": "true",
+          "enableAudit": "false",
           "auditLevel": "low",
           "auditMode": "direct"
         }
@@ -152,6 +158,12 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.Extensions.Options": {
+              "target": "Package",
+              "version": "[8.0.2, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -209,12 +221,15 @@
           }
         },
         "warningProperties": {
+          "noWarn": [
+            "NU1900"
+          ],
           "warnAsError": [
             "NU1605"
           ]
         },
         "restoreAuditProperties": {
-          "enableAudit": "true",
+          "enableAudit": "false",
           "auditLevel": "low",
           "auditMode": "direct"
         }
@@ -248,14 +263,14 @@
         }
       }
     },
-    "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\Nightbrate.Infrastructure.csproj": {
+    "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\Nightbrate.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\Nightbrate.Infrastructure.csproj",
+        "projectUniqueName": "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\Nightbrate.Infrastructure.csproj",
         "projectName": "Nightbrate.Infrastructure",
-        "projectPath": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\Nightbrate.Infrastructure.csproj",
+        "projectPath": "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\Nightbrate.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\tufek\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\obj\\",
+        "outputPath": "c:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\DevExpress 24.2\\Components\\Offline Packages",
@@ -292,12 +307,15 @@
           }
         },
         "warningProperties": {
+          "noWarn": [
+            "NU1900"
+          ],
           "warnAsError": [
             "NU1605"
           ]
         },
         "restoreAuditProperties": {
-          "enableAudit": "true",
+          "enableAudit": "false",
           "auditLevel": "low",
           "auditMode": "direct"
         }
@@ -309,6 +327,10 @@
             "Microsoft.Extensions.Configuration.Abstractions": {
               "target": "Package",
               "version": "[10.0.5, )"
+            },
+            "Microsoft.Extensions.Options": {
+              "target": "Package",
+              "version": "[8.0.2, )"
             },
             "MongoDB.Driver": {
               "target": "Package",

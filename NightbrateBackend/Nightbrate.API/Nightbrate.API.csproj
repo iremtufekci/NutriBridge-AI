@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>nightbrate-api-7f3c2a91-4e8b-4d1c-9a6f-2b5e8c0d4a7f</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

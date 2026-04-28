@@ -12,4 +12,7 @@ public interface IDietProgramRepository
     Task<DietProgram?> GetCurrentByClientIdAndProgramDateAsync(string clientId, string programDate);
 
     Task UpsertAsync(DietProgram dietProgram);
+
+    /// <summary>Aynı danışan+gün için birden fazla kayıt dönebilir; çağıran en güncel UpdatedAt seçer.</summary>
+    Task<List<DietProgram>> GetByDietitianClientsAndProgramDatesAsync(string dietitianId, IReadOnlyCollection<string> clientIds, IReadOnlyCollection<string> programDates, CancellationToken cancellationToken = default);
 }

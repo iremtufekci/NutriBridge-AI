@@ -2,6 +2,7 @@ package com.example.nightbrate
 
 import android.graphics.Color
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
@@ -174,29 +175,32 @@ class AdminDashboardActivity : AppCompatActivity() {
         chart.legend.isEnabled = false
         chart.setDrawBorders(false)
         chart.axisRight.isEnabled = false
-        chart.axisLeft.textColor = Color.LTGRAY
+        val muted = ContextCompat.getColor(this, R.color.admin_muted)
+        val grid = ContextCompat.getColor(this, R.color.admin_row_stroke)
+        val brand = ContextCompat.getColor(this, R.color.admin_brand)
+        chart.axisLeft.textColor = muted
         chart.axisLeft.axisMinimum = 0f
         chart.xAxis.position = XAxis.XAxisPosition.BOTTOM
-        chart.xAxis.textColor = Color.LTGRAY
+        chart.xAxis.textColor = muted
         chart.xAxis.setDrawGridLines(true)
-        chart.xAxis.gridColor = Color.parseColor("#64748B")
+        chart.xAxis.gridColor = grid
         chart.xAxis.gridLineWidth = 0.5f
         chart.axisLeft.setDrawGridLines(true)
-        chart.axisLeft.gridColor = Color.parseColor("#94A3B8")
+        chart.axisLeft.gridColor = grid
         chart.axisLeft.gridLineWidth = 0.5f
 
         if (monthly.isEmpty()) {
             chart.clear()
             chart.setNoDataText("Kayıt yok")
-            chart.setNoDataTextColor(Color.GRAY)
+            chart.setNoDataTextColor(muted)
             return
         }
         val entries = monthly.mapIndexed { i, m -> Entry(i.toFloat(), m.count.toFloat()) }
         val set = LineDataSet(entries, "Yeni kayıt")
-        set.color = Color.parseColor("#22C55E")
+        set.color = brand
         set.setDrawCircles(true)
         set.setDrawFilled(true)
-        set.fillColor = Color.parseColor("#3322C55E")
+        set.fillColor = Color.argb(0x33, Color.red(brand), Color.green(brand), Color.blue(brand))
         set.lineWidth = 2f
         set.mode = LineDataSet.Mode.CUBIC_BEZIER
         chart.data = LineData(set)
@@ -214,7 +218,7 @@ class AdminDashboardActivity : AppCompatActivity() {
         chart.setDrawEntryLabels(false)
         chart.legend.isEnabled = false
         chart.setEntryLabelColor(Color.WHITE)
-        chart.setHoleColor(Color.parseColor("#152238"))
+        chart.setHoleColor(ContextCompat.getColor(this, R.color.admin_card_bg))
         chart.setTransparentCircleAlpha(0)
         chart.holeRadius = 52f
         chart.transparentCircleRadius = 56f
@@ -222,7 +226,7 @@ class AdminDashboardActivity : AppCompatActivity() {
         val list = roles.filter { it.count > 0 }
         if (list.isEmpty()) {
             chart.setNoDataText("Rol verisi yok")
-            chart.setNoDataTextColor(Color.GRAY)
+            chart.setNoDataTextColor(ContextCompat.getColor(this, R.color.admin_muted))
             return
         }
         val colors = listOf(

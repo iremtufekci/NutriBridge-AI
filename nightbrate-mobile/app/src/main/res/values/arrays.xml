@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="um_role_filter_labels">
+        <item>Tüm Roller</item>
+        <item>Yönetici</item>
+        <item>Diyetisyen</item>
+        <item>Danışan</item>
+    </string-array>
+    <string-array name="um_role_filter_values">
+        <item>all</item>
+        <item>admin</item>
+        <item>dietitian</item>
+        <item>client</item>
+    </string-array>
+    <string-array name="um_status_filter_labels">
+        <item>Tüm Durumlar</item>
+        <item>Aktif</item>
+        <item>Beklemede</item>
+        <item>Askıda</item>
+    </string-array>
+    <string-array name="um_status_filter_values">
+        <item>all</item>
+        <item>active</item>
+        <item>pending</item>
+        <item>suspended</item>
+    </string-array>
+</resources>

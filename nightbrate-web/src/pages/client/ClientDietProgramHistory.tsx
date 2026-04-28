@@ -91,7 +91,7 @@ export function ClientDietProgramHistory() {
 
   return (
     <SidebarLayout userRole="client" userName={userName}>
-      <div className="min-h-full bg-[#F8FAF7] dark:bg-slate-950 px-4 py-6 pb-28 md:pb-8 transition-colors">
+      <div className="min-h-full bg-[#F8FAF7] dark:bg-slate-950 px-4 py-6 pb-28 lg:pb-8 transition-colors">
         <div className="mx-auto max-w-3xl">
           <div className="flex items-start justify-between gap-3 flex-wrap">
             <div>

@@ -16,3 +16,15 @@ C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\obj\Debug\
 C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\obj\Debug\net8.0\Nightbrate.Infrastructure.sourcelink.json
 C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\bin\Debug\net8.0\Nightbrate.Application.dll
 C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.Infrastructure\bin\Debug\net8.0\Nightbrate.Application.pdb
+c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\DebugGemini\Nightbrate.Infrastructure.deps.json
+c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\DebugGemini\Nightbrate.Infrastructure.dll
+c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\DebugGemini\Nightbrate.Infrastructure.pdb
+c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\DebugGemini2\Nightbrate.Infrastructure.deps.json
+c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\DebugGemini2\Nightbrate.Infrastructure.dll
+c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\DebugGemini2\Nightbrate.Infrastructure.pdb
+c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\DebugQuotaFix\Nightbrate.Infrastructure.deps.json
+c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\DebugQuotaFix\Nightbrate.Infrastructure.dll
+c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\DebugQuotaFix\Nightbrate.Infrastructure.pdb
+c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\DebugModelFix\Nightbrate.Infrastructure.deps.json
+c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\DebugModelFix\Nightbrate.Infrastructure.dll
+c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\DebugModelFix\Nightbrate.Infrastructure.pdb

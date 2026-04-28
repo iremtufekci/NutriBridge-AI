@@ -13,6 +13,16 @@ export default defineConfig({
         target: "http://127.0.0.1:5231",
         changeOrigin: true,
         secure: false,
+        /** Uzun suren Gemini cok; varsayilan proxy kesmesin */
+        timeout: 300_000,
+        proxyTimeout: 300_000,
+      },
+      "/uploads": {
+        target: "http://127.0.0.1:5231",
+        changeOrigin: true,
+        secure: false,
+        timeout: 60_000,
+        proxyTimeout: 60_000,
       },
     },
   },

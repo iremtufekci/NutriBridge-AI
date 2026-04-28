@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark"
+    android:background="@color/admin_page_bg"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Profil &amp; ayarlar"
-                android:textColor="@color/white"
+                android:textColor="@color/admin_strong"
                 android:textSize="26sp"
                 android:textStyle="bold" />
 
@@ -38,7 +38,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/card_dark"
+                app:cardBackgroundColor="@color/admin_card_bg"
                 app:cardCornerRadius="20dp">
 
                 <LinearLayout
@@ -66,7 +66,7 @@
                         android:layout_marginTop="12dp"
                         android:gravity="center"
                         android:text="—"
-                        android:textColor="@color/white"
+                        android:textColor="@color/admin_strong"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -95,7 +95,7 @@
                         android:layout_marginTop="12dp"
                         android:gravity="center"
                         android:text="Klinik: —"
-                        android:textColor="@color/white"
+                        android:textColor="@color/admin_strong"
                         android:textSize="15sp" />
 
                     <TextView
@@ -105,14 +105,14 @@
                         android:layout_marginTop="8dp"
                         android:gravity="center"
                         android:text="Diploma no: —"
-                        android:textColor="@color/white"
+                        android:textColor="@color/admin_strong"
                         android:textSize="15sp" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginTop="20dp"
-                        android:background="#334155" />
+                        android:background="@color/border_subtle" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -132,7 +132,7 @@
                         android:gravity="center"
                         android:letterSpacing="0.12"
                         android:text="—"
-                        android:textColor="@color/white"
+                        android:textColor="@color/admin_strong"
                         android:textSize="24sp"
                         android:textStyle="bold" />
 

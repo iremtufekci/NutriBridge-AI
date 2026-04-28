@@ -183,7 +183,7 @@ export function RoleAccountProfile({ appRole }: Props) {
 
   return (
     <SidebarLayout userRole={appRole} userName={userName}>
-      <div className="mx-auto max-w-lg px-4 py-8">
+      <div className="mx-auto max-w-lg px-4 py-8 pb-24 lg:pb-8">
         <h1 className="mb-2 text-2xl font-bold text-slate-900 dark:text-slate-100 sm:text-3xl">
           {appRole === "dietitian" ? "Profil & ayarlar" : "Profil"}
         </h1>

@@ -12,6 +12,7 @@ public class DietitianService(
     IDietProgramRepository dietProgramRepository,
     IDietProgramHistoryRepository dietProgramHistoryRepository,
     IDietitianRepository dietitianRepository,
+    IKitchenChefRecipeLogRepository kitchenChefRecipeLogRepository,
     IActivityLogService activityLogService) : IDietitianService
 {
     public async Task<object> GetClientsWithLastMealAsync(string dietitianId)
@@ -155,5 +156,41 @@ public class DietitianService(
             var name = $"Dr. {d.FirstName} {d.LastName}".Trim();
             await activityLogService.LogAsync(dietitianId, name, "Diyet programı güncelledi");
         }
+    }
+
+    public async Task<IReadOnlyList<KitchenChefRecipeLogItemDto>> GetClientKitchenRecipeLogsAsync(
+        string dietitianId,
+        string clientId,
+        int take,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(clientId)) throw new AppException("Danisan secin.");
+        var client = await clientRepository.GetByIdAsync(clientId);
+        if (client is null) throw new AppException("Danisan bulunamadi.");
+        if (client.DietitianId != dietitianId)
+            throw new AppException("Sadece kendi danisaninizin AI Mutfak kayitlarini gorebilirsiniz.");
+
+        var rows = await kitchenChefRecipeLogRepository.GetByClientIdAsync(clientId, take, cancellationToken);
+        return rows.Select(KitchenChefRecipeLogMapping.ToItemDto).ToList();
+    }
+
+    public async Task<ClientBriefDto?> GetClientBriefAsync(string dietitianId, string clientId, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(clientId)) throw new AppException("Danisan secin.");
+        var client = await clientRepository.GetByIdAsync(clientId);
+        if (client is null) return null;
+        if (client.DietitianId != dietitianId)
+            throw new AppException("Sadece kendi danisaninizin bilgilerini gorebilirsiniz.");
+        return new ClientBriefDto
+        {
+            ClientId = client.Id!,
+            FirstName = client.FirstName,
+            LastName = client.LastName,
+            Email = client.Email,
+            TargetCalories = client.TargetCalories,
+            Weight = client.Weight,
+            Height = client.Height,
+            Phone = string.IsNullOrWhiteSpace(client.Phone) ? string.Empty : client.Phone.Trim()
+        };
     }
 }

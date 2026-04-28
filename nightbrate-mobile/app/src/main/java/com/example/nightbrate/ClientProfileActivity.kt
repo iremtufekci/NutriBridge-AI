@@ -26,7 +26,7 @@ class ClientProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_client_profile)
-        ClientBottomBarHelper.bind(this, 5)
+        ClientBottomBarHelper.bind(this, 6)
         val btnTheme = findViewById<TextView>(R.id.btnTheme)
         val btnPrivacy = findViewById<TextView>(R.id.btnPrivacy)
         val btnAbout = findViewById<TextView>(R.id.btnAbout)

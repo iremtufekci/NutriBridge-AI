@@ -2,13 +2,46 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="purple_500">#22C55E</color>
+
+    <!-- NutriBridge / web ile aynı marka yeşili -->
+    <color name="brand">#2ECC71</color>
+    <color name="primary_green">#2ECC71</color>
+    <color name="purple_500">#2ECC71</color>
+    <color name="teal_200">#2ECC71</color>
+    <color name="teal_700">#2ECC71</color>
+
+    <!-- Eski toolbar / varyant -->
     <color name="purple_700">#0F172A</color>
-    <color name="teal_200">#22C55E</color>
-    <color name="teal_700">#22C55E</color>
-    <color name="bg_dark">#0F172A</color>       <color name="card_dark">#1E293B</color>     <color name="primary_green">#22C55E</color> <color name="text_gray">#94A3B8</color>     <color name="input_border">#334155</color>  <color name="input_placeholder">#475569</color>     <color name="nav_bar_bg">#FF0A0A0A</color>
-    <color name="nav_item_active">#34D399</color>
-    <color name="nav_item_inactive">#A1A1AA</color>
+    <color name="bg_dark">#0F172A</color>
+
+    <!-- Web client: açık gövde #F8FAF7, kart #FFFFFF -->
+    <color name="client_scaffold">#F8FAF7</color>
+    <color name="card_surface">#FFFFFF</color>
+    <color name="text_primary">#0F172A</color>
+    <color name="text_muted">#64748B</color>
+    <color name="border_subtle">#E2E8F0</color>
+    <!-- Web ClientMealAnalysis: önizleme kutusu slate-100 -->
+    <color name="meal_preview_bg">#F1F5F9</color>
+    <color name="client_meal_done_bg">#ECFDF5</color>
+    <color name="client_meal_done_stroke">#A7F3D0</color>
+
+    <!-- Alt menü (web mobil: açık tema) -->
+    <color name="nav_bar_bg">#FFFFFF</color>
+    <color name="nav_item_active">#2ECC71</color>
+    <color name="nav_item_inactive">#64748B</color>
+
+    <!-- Kayıt ekranları: web’deki koyu sayfa -->
+    <color name="register_scaffold">#0D1117</color>
+    <color name="register_card">#1F2937</color>
+    <color name="register_input_border">#374151</color>
+
+    <!-- Genel kart (açık modda beyaz yüzey; gece modu values-night ile) -->
+    <color name="card_dark">#FFFFFF</color>
+    <color name="text_gray">#64748B</color>
+    <color name="input_border">#E2E8F0</color>
+    <color name="input_placeholder">#94A3B8</color>
+
+    <!-- Web admin / diyetisyen panel #F4F6F8 -->
     <color name="admin_page_bg">#F4F6F8</color>
     <color name="admin_card_bg">#FFFFFF</color>
     <color name="admin_card_header_grad_end">#F8FAFC</color>
@@ -20,4 +53,33 @@
     <color name="admin_strong">#0F172A</color>
     <color name="admin_hero_sub">#1F2937</color>
     <color name="admin_role_pill_bg">#DCFCE7</color>
+
+    <!-- Web ClientHome AI / promo kutusu -->
+    <color name="promo_mint_bg">#DDF3E7</color>
+    <color name="promo_mint_border">#CBEAD9</color>
+    <color name="ring_track">#C0D6AB</color>
+    <color name="client_ring_card_bg">#EAF3DE</color>
+    <color name="client_ring_card_border">#E1EBD3</color>
+
+    <!-- Web diyetisyen üst karşılama bandı -->
+    <color name="dietitian_hero_start">#DFF1EA</color>
+    <color name="dietitian_hero_end">#CCE6DC</color>
+    <color name="dietitian_hero_bg">#DFF1EA</color>
+    <color name="dietitian_hero_border">#CCE6DC</color>
+
+    <!-- Kullanıcı yönetimi / onay çipleri (açık tema) -->
+    <color name="um_chip_amber_bg">#FEF3C7</color>
+    <color name="um_chip_amber_text">#B45309</color>
+    <color name="um_chip_emerald_bg">#DCFCE7</color>
+    <color name="um_chip_emerald_text">#166534</color>
+    <color name="um_chip_red_bg">#FEE2E2</color>
+    <color name="um_chip_red_text">#B91C1C</color>
+    <color name="um_stat_muted">#64748B</color>
+    <color name="um_stat_amber">#D97706</color>
+    <color name="um_stat_emerald">#16A34A</color>
+    <color name="um_avatar_bg">#DCFCE7</color>
+    <color name="um_avatar_text">#166534</color>
+    <color name="um_filter_inactive_bg">#F1F5F9</color>
+    <color name="um_filter_inactive_text">#64748B</color>
+    <color name="um_suspend_btn">#DC2626</color>
 </resources>

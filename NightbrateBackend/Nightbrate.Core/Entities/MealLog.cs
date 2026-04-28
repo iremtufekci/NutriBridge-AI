@@ -12,6 +12,8 @@ public class MealLog
     public string ClientId { get; set; } = string.Empty;
     public string PhotoUrl { get; set; } = string.Empty;
     public int Calories { get; set; }
+    /// <summary>AI veya manuel analizde tespit edilen besin adlari.</summary>
+    public List<string> DetectedFoods { get; set; } = new();
     public MacroInfo Macros { get; set; } = new();
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 }
