@@ -10,10 +10,12 @@ object ClientBottomBarHelper {
         val active = ContextCompat.getColor(activity, R.color.nav_item_active)
         val inactive = ContextCompat.getColor(activity, R.color.nav_item_inactive)
         val icons = listOf(
-            R.id.iconHome, R.id.iconJournal, R.id.iconPast, R.id.iconFood, R.id.iconChef, R.id.iconShares, R.id.iconProfile
+            R.id.iconHome, R.id.iconJournal, R.id.iconPast, R.id.iconFood,
+            R.id.iconPdf, R.id.iconChef, R.id.iconShares, R.id.iconProfile
         )
         val labels = listOf(
-            R.id.labelHome, R.id.labelJournal, R.id.labelPast, R.id.labelFood, R.id.labelChef, R.id.labelShares, R.id.labelProfile
+            R.id.labelHome, R.id.labelJournal, R.id.labelPast, R.id.labelFood,
+            R.id.labelPdf, R.id.labelChef, R.id.labelShares, R.id.labelProfile
         )
         icons.forEachIndexed { i, id ->
             activity.findViewById<android.widget.TextView>(id)
@@ -28,7 +30,8 @@ object ClientBottomBarHelper {
     fun bind(activity: AppCompatActivity, selectedIndex: Int) {
         styleTabs(activity, selectedIndex)
         listOf(
-            R.id.tabHome, R.id.tabJournal, R.id.tabPast, R.id.tabFood, R.id.tabChef, R.id.tabShares, R.id.tabProfile
+            R.id.tabHome, R.id.tabJournal, R.id.tabPast, R.id.tabFood,
+            R.id.tabPdf, R.id.tabChef, R.id.tabShares, R.id.tabProfile
         ).forEachIndexed { index, viewId ->
             activity.findViewById<android.widget.LinearLayout>(viewId)
                 .setOnClickListener { ClientTabNav.go(activity, index) }
@@ -41,9 +44,10 @@ object ClientTabNav {
     private const val TAB_JOURNAL = 1
     private const val TAB_PAST = 2
     private const val TAB_FOOD = 3
-    private const val TAB_CHEF = 4
-    private const val TAB_SHARES = 5
-    private const val TAB_PROFILE = 6
+    private const val TAB_PDF = 4
+    private const val TAB_CHEF = 5
+    private const val TAB_SHARES = 6
+    private const val TAB_PROFILE = 7
 
     fun go(activity: AppCompatActivity, index: Int) {
         if (index == TAB_HOME) {
@@ -54,6 +58,8 @@ object ClientTabNav {
             )
             if (activity is ClientDietProgramHistoryActivity) activity.finish()
             if (activity is ClientAiKitchenActivity || activity is ClientAiKitchenSharesActivity) activity.finish()
+            if (activity is ClientMealAnalysisActivity) activity.finish()
+            if (activity is ClientPdfAnalysisActivity) activity.finish()
             return
         }
         if (index == TAB_CHEF) {
@@ -75,6 +81,7 @@ object ClientTabNav {
             if (activity is ClientProfileActivity) activity.finish()
             if (activity is ClientPlaceholderActivity) activity.finish()
             if (activity is ClientMealAnalysisActivity) activity.finish()
+            if (activity is ClientPdfAnalysisActivity) activity.finish()
             return
         }
         if (index == TAB_SHARES) {
@@ -89,6 +96,7 @@ object ClientTabNav {
             if (activity is ClientPlaceholderActivity) activity.finish()
             if (activity is ClientMealAnalysisActivity) activity.finish()
             if (activity is ClientAiKitchenActivity) activity.finish()
+            if (activity is ClientPdfAnalysisActivity) activity.finish()
             return
         }
         if (index == TAB_PROFILE) {
@@ -108,6 +116,8 @@ object ClientTabNav {
             if (activity is ClientPlaceholderActivity) activity.finish()
             if (activity is ClientAiKitchenActivity || activity is ClientAiKitchenSharesActivity) activity.finish()
             if (activity is ClientProfileActivity) activity.finish()
+            if (activity is ClientMealAnalysisActivity) activity.finish()
+            if (activity is ClientPdfAnalysisActivity) activity.finish()
             if (activity !is ClientDashboardActivity) activity.finish()
             return
         }
@@ -121,6 +131,8 @@ object ClientTabNav {
             if (activity is ClientPlaceholderActivity) activity.finish()
             if (activity is ClientProfileActivity) activity.finish()
             if (activity is ClientAiKitchenActivity || activity is ClientAiKitchenSharesActivity) activity.finish()
+            if (activity is ClientMealAnalysisActivity) activity.finish()
+            if (activity is ClientPdfAnalysisActivity) activity.finish()
             if (activity !is ClientDashboardActivity) activity.finish()
             return
         }
@@ -135,6 +147,21 @@ object ClientTabNav {
             if (activity is ClientProfileActivity) activity.finish()
             if (activity is ClientPlaceholderActivity) activity.finish()
             if (activity is ClientAiKitchenActivity || activity is ClientAiKitchenSharesActivity) activity.finish()
+            if (activity is ClientPdfAnalysisActivity) activity.finish()
+            return
+        }
+        if (index == TAB_PDF) {
+            if (activity is ClientPdfAnalysisActivity) return
+            activity.startActivity(
+                Intent(activity, ClientPdfAnalysisActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            )
+            if (activity is ClientDietProgramActivity) activity.finish()
+            if (activity is ClientDietProgramHistoryActivity) activity.finish()
+            if (activity is ClientProfileActivity) activity.finish()
+            if (activity is ClientPlaceholderActivity) activity.finish()
+            if (activity is ClientAiKitchenActivity || activity is ClientAiKitchenSharesActivity) activity.finish()
+            if (activity is ClientMealAnalysisActivity) activity.finish()
             return
         }
     }

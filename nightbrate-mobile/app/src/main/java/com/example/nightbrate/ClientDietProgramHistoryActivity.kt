@@ -125,7 +125,7 @@ class ClientDietProgramHistoryActivity : AppCompatActivity() {
                     }
                     val totalK = p.totalCalories ?: 0
                     val tTot = TextView(this@ClientDietProgramHistoryActivity).apply {
-                        text = "Gunluk toplam: $totalK kcal"
+                        text = "Günlük toplam: $totalK kkal"
                         setTextColor(ContextCompat.getColor(this@ClientDietProgramHistoryActivity, R.color.primary_green))
                         textSize = 14f
                         setTypeface(null, Typeface.BOLD)
@@ -147,15 +147,15 @@ class ClientDietProgramHistoryActivity : AppCompatActivity() {
                         if (totalK > 0) totalK / 4 else 0
                     }
                     val mealLines = listOf(
-                        Triple("Kahvalti", p.breakfast, 0),
-                        Triple("Ogle", p.lunch, 1),
-                        Triple("Aksam", p.dinner, 2),
-                        Triple("Ara ogun", p.snack, 3)
+                        Triple("Kahvaltı", p.breakfast, 0),
+                        Triple("Öğle", p.lunch, 1),
+                        Triple("Akşam", p.dinner, 2),
+                        Triple("Ara öğün", p.snack, 3)
                     )
                     for ((label, value, idx) in mealLines) {
                         val mk = kFor(idx)
                         if (value.isNullOrBlank() && mk == 0) continue
-                        val line = if (value.isNullOrBlank()) "Sadece $mk kcal" else "$label ($mk kcal): $value"
+                        val line = if (value.isNullOrBlank()) "Sadece $mk kkal" else "$label ($mk kkal): $value"
                         val row = TextView(this@ClientDietProgramHistoryActivity).apply {
                             text = line
                             setTextColor(ContextCompat.getColor(this@ClientDietProgramHistoryActivity, R.color.text_gray))
@@ -166,7 +166,7 @@ class ClientDietProgramHistoryActivity : AppCompatActivity() {
                     p.updatedAt?.let { u ->
                         if (u.isNotBlank()) {
                             val tU = TextView(this@ClientDietProgramHistoryActivity).apply {
-                                text = "Son guncelleme: $u"
+                                text = "Son güncelleme: $u"
                                 setTextColor(ContextCompat.getColor(this@ClientDietProgramHistoryActivity, R.color.text_gray))
                                 textSize = 11f
                             }

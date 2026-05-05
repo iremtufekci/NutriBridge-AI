@@ -47,6 +47,17 @@ object DietitianTabNav {
             )
             return
         }
+        if (index == 1) {
+            if (activity is DietitianClientsActivity) return
+            activity.startActivity(
+                Intent(activity, DietitianClientsActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            )
+            if (activity is DietitianPlaceholderActivity) activity.finish()
+            if (activity is DietitianProfileActivity) activity.finish()
+            if (activity !is DietitianDashboardActivity) activity.finish()
+            return
+        }
         if (index == 2) {
             if (activity is DietitianProgramsActivity) return
             activity.startActivity(
@@ -60,29 +71,35 @@ object DietitianTabNav {
         }
         if (index == 5) {
             if (activity is DietitianProfileActivity) return
-            activity.startActivity(Intent(activity, DietitianProfileActivity::class.java))
+            activity.startActivity(
+                Intent(activity, DietitianProfileActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            )
             if (activity is DietitianPlaceholderActivity) activity.finish()
             if (activity !is DietitianDashboardActivity) activity.finish()
             return
         }
-        if (activity is DietitianPlaceholderActivity) {
-            val t = activity.intent.getIntExtra(DietitianPlaceholderActivity.EXTRA_INDEX, -1)
-            if (t == index) return
+        if (index == 3) {
+            if (activity is DietitianAiReviewActivity) return
+            activity.startActivity(
+                Intent(activity, DietitianAiReviewActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            )
+            if (activity is DietitianPlaceholderActivity) activity.finish()
+            if (activity is DietitianProfileActivity) activity.finish()
+            if (activity !is DietitianDashboardActivity) activity.finish()
+            return
         }
-        val (title, body) = when (index) {
-            1 -> "Danışanlarım" to "Web ile aynı danışan listesi ve detaylar bu ekrana bağlanacak."
-            2 -> "Diyet Programları" to "Program oluşturma ve atama (web) burada açılacak."
-            3 -> "AI Denetimi" to "Web’deki AI denetim ekranı buraya taşınacak."
-            4 -> "Kritik Uyarılar" to "Uyarı listesi ve bildirimler eklenecek."
-            else -> return
+        if (index == 4) {
+            if (activity is DietitianCriticalAlertsActivity) return
+            activity.startActivity(
+                Intent(activity, DietitianCriticalAlertsActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            )
+            if (activity is DietitianPlaceholderActivity) activity.finish()
+            if (activity is DietitianProfileActivity) activity.finish()
+            if (activity !is DietitianDashboardActivity) activity.finish()
+            return
         }
-        activity.startActivity(
-            Intent(activity, DietitianPlaceholderActivity::class.java)
-                .putExtra(DietitianPlaceholderActivity.EXTRA_INDEX, index)
-                .putExtra(DietitianPlaceholderActivity.EXTRA_TITLE, title)
-                .putExtra(DietitianPlaceholderActivity.EXTRA_MESSAGE, body)
-        )
-        if (activity is DietitianPlaceholderActivity) activity.finish()
-        if (activity is DietitianProfileActivity) activity.finish()
     }
 }

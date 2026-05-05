@@ -7,13 +7,13 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.example.nightbrate.ActivityWindowHelper.applyStandardContentWindow
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -37,6 +37,7 @@ class ClientDashboardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        applyStandardContentWindow()
         setContentView(R.layout.activity_client_dashboard)
         ClientBottomBarHelper.bind(this, 0)
 
@@ -53,8 +54,8 @@ class ClientDashboardActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.btnAiChefTry).setOnClickListener {
             ClientTabNav.go(this, 4)
         }
-        findViewById<ImageButton>(R.id.btnClientBell).setOnClickListener {
-            Toast.makeText(this, "Bildirimler yakında.", Toast.LENGTH_SHORT).show()
+        findViewById<View>(R.id.btnClientProfile).setOnClickListener {
+            startActivity(Intent(this, ClientProfileActivity::class.java))
         }
         findViewById<TextView>(R.id.btnRefreshProgram).setOnClickListener {
             loadProgramForSelectedDate()
@@ -218,7 +219,7 @@ class ClientDashboardActivity : AppCompatActivity() {
         val chipTarget = findViewById<TextView>(R.id.tvChipTarget)
         if (targetKcal > 0) {
             chipTarget.visibility = View.VISIBLE
-            chipTarget.text = "$targetKcal kcal / gün"
+            chipTarget.text = "$targetKcal kkal / gün"
         } else {
             chipTarget.visibility = View.GONE
         }
@@ -257,7 +258,7 @@ class ClientDashboardActivity : AppCompatActivity() {
         }
         findViewById<TextView>(R.id.tvRingSubline).text =
             "${if (isToday) "Bugün" else "Seçili gün"} / " +
-                if (targetKcal > 0) "$targetKcal kcal hedef" else "hedef tanımlı değil"
+                if (targetKcal > 0) "$targetKcal kkal hedef" else "hedef tanımlı değil"
 
         findViewById<View>(R.id.rowDailyTotalLoading).visibility =
             if (programLoad) View.VISIBLE else View.GONE
@@ -265,7 +266,7 @@ class ClientDashboardActivity : AppCompatActivity() {
         tvDaily.visibility = if (programLoad) View.INVISIBLE else View.VISIBLE
         if (!programLoad) {
             tvDaily.text = if (dayProgram != null && planTotal > 0) {
-                "${nfTr.format(planTotal)} kcal"
+                "${nfTr.format(planTotal)} kkal"
             } else {
                 "—"
             }
@@ -391,9 +392,9 @@ class ClientDashboardActivity : AppCompatActivity() {
             title.text = span
             val kcalLine = v.findViewById<TextView>(R.id.tvMealKcalLine)
             kcalLine.text = when {
-                mr.kcal > 0 && dp != null && hasDetailKcal -> "${mr.kcal} kcal (diyetisyen)"
-                mr.kcal > 0 -> "~${mr.kcal} kcal (toplam/4, eski kayıt)"
-                else -> "0 kcal"
+                mr.kcal > 0 && dp != null && hasDetailKcal -> "${mr.kcal} kkal (diyetisyen)"
+                mr.kcal > 0 -> "~${mr.kcal} kkal (toplam/4, eski kayıt)"
+                else -> "0 kkal"
             }
             val tvText = v.findViewById<TextView>(R.id.tvMealText)
             if (mr.text.isNotEmpty()) {
@@ -408,9 +409,9 @@ class ClientDashboardActivity : AppCompatActivity() {
 
     private fun displayDietitianName(): String {
         val fromProgram = dayProgram?.dietitianName?.trim()
-        if (!fromProgram.isNullOrEmpty()) return fromProgram
+        if (!fromProgram.isNullOrEmpty() && fromProgram != "Atanmadi" && fromProgram != "Atanmadı") return fromProgram
         val d = profile?.dietitianName?.trim()
-        if (!d.isNullOrEmpty() && !d.equals("Atanmadi", ignoreCase = true)) return d
+        if (!d.isNullOrEmpty() && d != "Atanmadi" && d != "Atanmadı") return d
         return "Diyetisyen atanmadı"
     }
 
@@ -432,7 +433,7 @@ class ClientDashboardActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.tvDietitianInitials).text = initialsFromDietitianName(name)
         findViewById<TextView>(R.id.tvDietitianNameHome).text = name
         findViewById<TextView>(R.id.tvDietitianHintHome).text = if (hasLiveDietitian()) {
-            "Öğün listenin altında gün seçimi ve günlük toplam kcal. Tam takvim: Diyet Programım."
+            "Öğün listenin altında gün seçimi ve günlük toplam kkal. Tam takvim: Diyet Programım."
         } else {
             "Takip kodu ile diyetisyeninize bağlanın; profil sayfasından eşleştirme yapabilirsiniz."
         }

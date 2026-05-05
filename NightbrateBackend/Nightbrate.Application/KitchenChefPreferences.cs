@@ -27,10 +27,10 @@ public static class KitchenChefPreferences
 
     public static string LabelOrDefault(string? code) => (code?.Trim().ToLowerInvariant()) switch
     {
-        "practical" => "Pratik, cabuk hazirlanan",
-        "low_calorie" => "Dusuk kalorili",
+        "practical" => "Pratik, çabuk hazırlanan",
+        "low_calorie" => "Düşük kalorili",
         "vegetarian" => "Vejetaryen",
-        "high_protein" => "Yuksek protein",
+        "high_protein" => "Yüksek protein",
         "vegan" => "Vegan",
         "gluten_free" => "Glutensiz",
         _ => "Genel dengeli"

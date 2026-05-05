@@ -21,7 +21,7 @@ class DietitianProfileActivity : AppCompatActivity() {
             try {
                 val r = RetrofitClient.instance.getCurrentUserProfile()
                 if (!r.isSuccessful) {
-                    Toast.makeText(this@DietitianProfileActivity, "Profil yuklenemedi", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@DietitianProfileActivity, "Profil yüklenemedi", Toast.LENGTH_LONG).show()
                     return@launch
                 }
                 val p = r.body() ?: return@launch
@@ -55,7 +55,7 @@ class DietitianProfileActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Toast.makeText(
                     this@DietitianProfileActivity,
-                    e.message ?: "Baglanti hatasi",
+                    e.message ?: "Bağlantı hatası",
                     Toast.LENGTH_LONG
                 ).show()
             }

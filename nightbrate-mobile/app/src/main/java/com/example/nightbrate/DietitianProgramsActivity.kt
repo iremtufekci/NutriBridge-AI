@@ -239,7 +239,7 @@ class DietitianProgramsActivity : AppCompatActivity() {
             kcalFromEdit(R.id.etDietLunchKcal) +
             kcalFromEdit(R.id.etDietDinnerKcal) +
             kcalFromEdit(R.id.etDietSnackKcal)
-        findViewById<TextView>(R.id.tvDietTotalKcal).text = "$sum kcal"
+        findViewById<TextView>(R.id.tvDietTotalKcal).text = "$sum kkal"
     }
 
     private fun selectYmd(ymd: String) {

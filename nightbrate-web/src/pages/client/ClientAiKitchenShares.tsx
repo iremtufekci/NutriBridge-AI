@@ -11,7 +11,7 @@ const PREF_LABEL: Record<string, string> = {
   vegetarian: "Vejetaryen",
   high_protein: "Protein",
   vegan: "Vegan",
-  gluten_free: "Gluten Free",
+  gluten_free: "Glütensiz",
 };
 
 type Recipe = {
@@ -126,45 +126,45 @@ export function ClientAiKitchenShares() {
       <div className="mx-auto max-w-2xl px-4 py-6 pb-28 lg:pb-8">
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-emerald-200/60 dark:bg-[#1F2937] dark:ring-emerald-800/50">
-              <Share2 className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-emerald-200/60">
+              <Share2 className="h-6 w-6 text-emerald-600" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-slate-800 dark:text-slate-100">Diyetisyene paylaştıklarım</h1>
-              <p className="text-sm text-slate-600 dark:text-slate-400">AI Mutfak’ta seçip gönderdiğiniz tarifler</p>
+              <h1 className="text-lg font-bold text-slate-800">Diyetisyene paylaştıklarım</h1>
+              <p className="text-sm text-slate-600">Yapay zeka mutfak’ta seçip gönderdiğiniz tarifler</p>
             </div>
           </div>
           <Link
             to="/client/ai-chef"
-            className="inline-flex items-center justify-center gap-2 self-start rounded-2xl border border-emerald-200 bg-white px-4 py-2.5 text-sm font-semibold text-emerald-700 shadow-sm dark:border-emerald-800/50 dark:bg-[#1F2937] dark:text-emerald-300"
+            className="inline-flex items-center justify-center gap-2 self-start rounded-2xl border border-emerald-200 bg-white px-4 py-2.5 text-sm font-semibold text-emerald-700 shadow-sm"
           >
             <ChefHat className="h-4 w-4" />
             Yeni tarif
           </Link>
         </div>
 
-        <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-600 dark:bg-[#1F2937]">
-          <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-slate-200">
+        <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-800">
             <Filter className="h-4 w-4 text-emerald-600" />
             Filtrele
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            <label className="flex flex-col text-xs text-slate-500 dark:text-slate-400">
+            <label className="flex flex-col text-xs text-slate-500">
               Başlangıç (tarih)
               <input
                 type="date"
                 value={from}
                 onChange={(e) => setFrom(e.target.value)}
-                className="mt-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 dark:border-slate-600 dark:bg-[#0D1117] dark:text-slate-100"
+                className="mt-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800"
               />
             </label>
-            <label className="flex flex-col text-xs text-slate-500 dark:text-slate-400">
+            <label className="flex flex-col text-xs text-slate-500">
               Bitiş (tarih)
               <input
                 type="date"
                 value={to}
                 onChange={(e) => setTo(e.target.value)}
-                className="mt-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 dark:border-slate-600 dark:bg-[#0D1117] dark:text-slate-100"
+                className="mt-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800"
               />
             </label>
           </div>
@@ -173,21 +173,21 @@ export function ClientAiKitchenShares() {
             <button
               type="button"
               onClick={() => applyQuickRange(7)}
-              className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+              className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700"
             >
               Son 7 gün
             </button>
             <button
               type="button"
               onClick={() => applyQuickRange(30)}
-              className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+              className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700"
             >
               Son 30 gün
             </button>
             <button
               type="button"
               onClick={clearFilters}
-              className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200"
+              className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-900"
             >
               Sıfırla
             </button>
@@ -201,13 +201,13 @@ export function ClientAiKitchenShares() {
         )}
 
         {error && (
-          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200">
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
             {error}
           </div>
         )}
 
         {!loading && items.length === 0 && !error && (
-          <p className="text-center text-sm text-slate-500 dark:text-slate-400 py-8">
+          <p className="text-center text-sm text-slate-500 py-8">
             Bu kriterlere uyan paylaşım yok. Tarih aralığını değiştirip tekrar deneyin.
           </p>
         )}
@@ -226,45 +226,45 @@ export function ClientAiKitchenShares() {
             return (
               <li
                 key={key}
-                className="overflow-hidden rounded-2xl border border-emerald-200/80 bg-white shadow-sm dark:border-emerald-900/40 dark:bg-[#1F2937]"
+                className="overflow-hidden rounded-2xl border border-emerald-200/80 bg-white shadow-sm"
               >
-                <div className="border-b border-emerald-100 bg-emerald-50/50 px-4 py-3 dark:border-emerald-900/30 dark:bg-emerald-950/20">
+                <div className="border-b border-emerald-100 bg-emerald-50/50 px-4 py-3">
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">{when}</p>
-                      <p className="mt-0.5 text-sm font-semibold text-slate-800 dark:text-slate-100">
-                        Hedef {log.targetCalories} kcal · {pref}
+                      <p className="text-xs text-slate-500">{when}</p>
+                      <p className="mt-0.5 text-sm font-semibold text-slate-800">
+                        Hedef {log.targetCalories} kkal · {pref}
                       </p>
                     </div>
                     <span
                       className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
                         log.source === "gemini"
-                          ? "bg-blue-100 text-blue-800 dark:bg-blue-950/50 dark:text-blue-200"
-                          : "bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-200"
+                          ? "bg-blue-100 text-blue-800"
+                          : "bg-amber-100 text-amber-800"
                       }`}
                     >
-                      {log.source === "gemini" ? "Gemini" : "Mock"}
+                      {log.source === "gemini" ? "Yapay zeka" : "Örnek"}
                     </span>
                   </div>
-                  <p className="mt-2 text-xs text-slate-600 dark:text-slate-400 line-clamp-2">
+                  <p className="mt-2 text-xs text-slate-600 line-clamp-2">
                     <span className="font-medium">Malzemeler: </span>
                     {log.ingredients}
                   </p>
                 </div>
                 {log.selectedRecipes?.map((r, i) => (
-                  <div key={i + r.title} className="px-4 py-3 border-t border-slate-100 dark:border-slate-700/60">
-                    <p className="font-bold text-slate-900 dark:text-white">{r.title}</p>
+                  <div key={i + r.title} className="px-4 py-3 border-t border-slate-100">
+                    <p className="font-bold text-slate-900">{r.title}</p>
                     {r.description && (
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{r.description}</p>
+                      <p className="text-sm text-slate-600 mt-1">{r.description}</p>
                     )}
                     <p className="text-xs text-slate-500 mt-1">
-                      ~{r.estimatedCalories} kcal
+                      ~{r.estimatedCalories} kkal
                       {r.prepTimeMinutes != null && r.prepTimeMinutes > 0 ? ` · ${r.prepTimeMinutes} dk` : ""}
                     </p>
                     <button
                       type="button"
                       onClick={() => toggleExpand(key + "-" + i)}
-                      className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-emerald-600 dark:text-emerald-400"
+                      className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-emerald-600"
                     >
                       {expanded.has(key + "-" + i) ? (
                         <>
@@ -277,7 +277,7 @@ export function ClientAiKitchenShares() {
                       )}
                     </button>
                     {expanded.has(key + "-" + i) && (
-                      <div className="mt-2 space-y-2 text-sm text-slate-700 dark:text-slate-300">
+                      <div className="mt-2 space-y-2 text-sm text-slate-700">
                         {r.ingredients?.length > 0 && (
                           <ul className="list-inside list-disc text-xs">
                             {r.ingredients.map((x) => (
@@ -307,7 +307,7 @@ export function ClientAiKitchenShares() {
               type="button"
               disabled={loadingMore}
               onClick={() => void load(skip, true)}
-              className="inline-flex items-center gap-2 rounded-2xl border-2 border-emerald-500 bg-white px-5 py-2.5 text-sm font-semibold text-emerald-700 dark:bg-[#1F2937] dark:text-emerald-300"
+              className="inline-flex items-center gap-2 rounded-2xl border-2 border-emerald-500 bg-white px-5 py-2.5 text-sm font-semibold text-emerald-700"
             >
               {loadingMore ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
               Daha fazla yükle

@@ -3,9 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { api } from "../../api/http";
 
 const primary = "#2ECC71";
-const label = "#333333";
-const muted = "#777777";
-const inputBorder = "#DDE1E4";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -36,11 +33,10 @@ export function Login() {
         const d = (me.data?.displayName || "").trim();
         if (d) localStorage.setItem("userName", d);
         else localStorage.setItem("userName", email.split("@")[0]);
-        const storedTheme = me.data?.themePreference === "dark" ? "dark" : "light";
-        localStorage.setItem("theme", storedTheme);
-        document.documentElement.classList.toggle("dark", storedTheme === "dark");
+        localStorage.setItem("theme", "light");
+        document.documentElement.classList.remove("dark");
       } catch (meErr) {
-        console.error("Oturum profili alinamadi", meErr);
+        console.error("Oturum profili alınamadı", meErr);
         localStorage.setItem("userName", email.split("@")[0]);
       }
 
@@ -55,7 +51,7 @@ export function Login() {
       if (err.response) {
         setError(err.response.data.message || "Giriş başarısız.");
       } else {
-        setError("Sunucuya bağlanılamadı. Lütfen Backend'in (5231) çalıştığından emin olun.");
+        setError("Sunucuya bağlanılamadı. Sunucunun çalıştığından (ör. 5231) emin olun.");
       }
     } finally {
       setLoading(false);
@@ -64,42 +60,23 @@ export function Login() {
 
   return (
     <div
-      className="min-h-svh w-full flex flex-col items-center justify-center px-4 py-8 sm:px-6"
-      style={{
-        background: "#F0F0F0",
-        fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
-        paddingTop: "max(2rem, env(safe-area-inset-top, 0px))",
-        paddingBottom: "max(2rem, env(safe-area-inset-bottom, 0px))"
-      }}
+      className="flex min-h-svh w-full flex-col items-center justify-center bg-slate-50 px-4 py-8 pt-[max(2rem,env(safe-area-inset-top,0px))] pb-[max(2rem,env(safe-area-inset-bottom,0px))] font-[family-name:var(--font-inter,Inter),system-ui,sans-serif] sm:px-6"
     >
-      <div className="w-full max-w-[450px] flex flex-col gap-4">
-        <div
-          className="bg-white rounded-[24px] p-8 sm:p-10"
-          style={{
-            boxShadow: "0 8px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04)"
-          }}
-        >
+      <div className="flex w-full max-w-[450px] flex-col gap-4">
+        <div className="rounded-[24px] border border-slate-200/90 bg-white p-8 shadow-lg shadow-slate-300/35 sm:p-10">
           <div className="text-center mb-8 sm:mb-10">
             <h1
-              className="text-[1.75rem] sm:text-[2rem] font-bold leading-tight mb-2"
-              style={{ color: primary }}
+              className="text-[1.75rem] sm:text-[2rem] font-bold leading-tight mb-2 text-[#2ECC71]"
             >
-              NutriBridge AI
+              NutriBridge
             </h1>
-            <p className="text-sm sm:text-base" style={{ color: muted }}>
+            <p className="text-sm sm:text-base text-[#777777]">
               Akıllı Beslenme Platformu
             </p>
           </div>
 
           {error && (
-            <div
-              className="mb-6 p-3 rounded-xl text-sm text-center"
-              style={{
-                background: "rgba(231, 76, 60, 0.08)",
-                border: "1px solid rgba(231, 76, 60, 0.35)",
-                color: "#C0392B"
-              }}
-            >
+            <div className="mb-6 p-3 rounded-xl text-sm text-center bg-[rgba(231,76,60,0.08)] border border-[rgba(231,76,60,0.35)] text-[#C0392B]">
               {error}
             </div>
           )}
@@ -107,8 +84,7 @@ export function Login() {
           <form className="space-y-5 sm:space-y-6" onSubmit={handleLogin}>
             <div className="space-y-2">
               <label
-                className="text-sm font-bold block"
-                style={{ color: label }}
+                className="text-sm font-bold block text-[#333333]"
                 htmlFor="login-email"
               >
                 E-posta
@@ -117,15 +93,8 @@ export function Login() {
                 id="login-email"
                 type="email"
                 autoComplete="email"
-                placeholder="ornek@email.com"
-                className="w-full px-4 py-3.5 rounded-[14px] text-[#333] placeholder:text-[#999] outline-none transition-shadow focus:ring-2"
-                style={{
-                  background: "#fff",
-                  border: `1px solid ${inputBorder}`,
-                  boxShadow: "none"
-                }}
-                onFocus={(e) => (e.currentTarget.style.boxShadow = `0 0 0 3px ${primary}33`)}
-                onBlur={(e) => (e.currentTarget.style.boxShadow = "none")}
+                placeholder="örnek@ornek.com"
+                className="w-full px-4 py-3.5 rounded-[14px] bg-white border border-[#DDE1E4] text-[#333] placeholder:text-[#999] outline-none transition-shadow focus:ring-2 focus:ring-[#2ECC71]/40"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -134,8 +103,7 @@ export function Login() {
 
             <div className="space-y-2">
               <label
-                className="text-sm font-bold block"
-                style={{ color: label }}
+                className="text-sm font-bold block text-[#333333]"
                 htmlFor="login-password"
               >
                 Şifre
@@ -145,13 +113,7 @@ export function Login() {
                 type="password"
                 autoComplete="current-password"
                 placeholder="••••••••"
-                className="w-full px-4 py-3.5 rounded-[14px] text-[#333] placeholder:text-[#999] outline-none transition-shadow"
-                style={{
-                  background: "#fff",
-                  border: `1px solid ${inputBorder}`
-                }}
-                onFocus={(e) => (e.currentTarget.style.boxShadow = `0 0 0 3px ${primary}33`)}
-                onBlur={(e) => (e.currentTarget.style.boxShadow = "none")}
+                className="w-full px-4 py-3.5 rounded-[14px] bg-white border border-[#DDE1E4] text-[#333] placeholder:text-[#999] outline-none transition-shadow focus:ring-2 focus:ring-[#2ECC71]/40"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -161,8 +123,7 @@ export function Login() {
             <div className="-mt-1">
               <button
                 type="button"
-                className="text-sm font-medium bg-transparent border-0 p-0 cursor-pointer hover:underline"
-                style={{ color: primary }}
+                className="text-sm font-medium bg-transparent border-0 p-0 cursor-pointer hover:underline text-[#2ECC71]"
                 onClick={() => window.alert("Şifre sıfırlama yakında eklenecek.")}
               >
                 Şifremi Unuttum
@@ -172,56 +133,38 @@ export function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 text-white font-bold text-base sm:text-lg transition-opacity rounded-full"
-              style={{
-                background: primary,
-                opacity: loading ? 0.65 : 1
-              }}
+              className="w-full py-4 text-white font-bold text-base sm:text-lg transition-opacity rounded-full disabled:opacity-65"
+              style={{ background: primary }}
             >
               {loading ? "Giriş Yapılıyor…" : "Giriş Yap"}
             </button>
 
-            <p className="text-center text-xs sm:text-sm pt-1" style={{ color: muted }}>
+            <p className="text-center text-xs sm:text-sm pt-1 text-[#777777]">
               Sisteme rolünüze göre otomatik yönlendirilirsiniz.
             </p>
           </form>
 
           <div className="mt-8 sm:mt-10 pt-6 border-t border-[#ECECEC] text-center space-y-3">
-            <p className="text-sm" style={{ color: muted }}>
+            <p className="text-sm text-[#777777]">
               Hesabınız yok mu?{" "}
-              <Link
-                to="/register-client"
-                className="font-bold hover:underline"
-                style={{ color: primary }}
-              >
+              <Link to="/register-client" className="font-bold hover:underline text-[#2ECC71]">
                 Danışan Kaydı
               </Link>
             </p>
-            <p className="text-sm" style={{ color: muted }}>
+            <p className="text-sm text-[#777777]">
               Diyetisyen misiniz?{" "}
-              <Link
-                to="/register-dietitian"
-                className="font-bold hover:underline"
-                style={{ color: primary }}
-              >
+              <Link to="/register-dietitian" className="font-bold hover:underline text-[#2ECC71]">
                 Kayıt Olun
               </Link>
             </p>
           </div>
         </div>
 
-        <div
-          className="rounded-xl px-4 py-3 text-center text-xs sm:text-sm"
-          style={{
-            background: "#F5F5F5",
-            border: "1px solid #E0E0E0",
-            color: "#666"
-          }}
-        >
-          <span className="font-semibold" style={{ color: "#555" }}>
-            Demo:{" "}
+        <div className="rounded-xl border border-slate-200/80 bg-slate-50 px-4 py-3 text-center text-xs text-slate-600 sm:text-sm">
+          <span className="font-semibold text-[#555555]">
+            Örnek hesaplar:{" "}
           </span>
-          admin@nutribridge.ai | dietitian@nutribridge.ai | client@nutribridge.ai
+          yönetici: admin@nutribridge.ai · diyetisyen: dietitian@nutribridge.ai · danışan: client@nutribridge.ai
         </div>
       </div>
     </div>

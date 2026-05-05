@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="AI Mutfak’ta seçip gönderdiğiniz tarifler (tarih ile süzebilirsiniz)"
+                android:text="Yapay zeka mutfak’ta seçip gönderdiğiniz tarifler (tarih ile süzebilirsiniz)"
                 android:textColor="@color/text_muted"
                 android:textSize="14sp" />
 

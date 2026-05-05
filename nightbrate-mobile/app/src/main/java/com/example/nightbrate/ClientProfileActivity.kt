@@ -1,7 +1,11 @@
 package com.example.nightbrate
 
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.StyleSpan
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
@@ -11,40 +15,38 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import androidx.lifecycle.lifecycleScope
+import com.example.nightbrate.ActivityWindowHelper.applyStandardContentWindow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
 class ClientProfileActivity : AppCompatActivity() {
-    private var currentTheme: String = "light"
     private var pendingDietCode: String? = null
     private var lastProfile: ClientProfileResponse? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        applyStandardContentWindow()
         setContentView(R.layout.activity_client_profile)
-        ClientBottomBarHelper.bind(this, 6)
-        val btnTheme = findViewById<TextView>(R.id.btnTheme)
-        val btnPrivacy = findViewById<TextView>(R.id.btnPrivacy)
-        val btnAbout = findViewById<TextView>(R.id.btnAbout)
-        val btnEdit = findViewById<TextView>(R.id.btnEditProfile)
+        ClientBottomBarHelper.bind(this, 7)
+        val btnPrivacy = findViewById<View>(R.id.btnPrivacy)
+        val btnAbout = findViewById<View>(R.id.btnAbout)
+        val btnEdit = findViewById<View>(R.id.btnEditProfile)
 
         btnPrivacy.setOnClickListener {
             showLongTextDialog(
-                "Gizlilik politikasi",
+                "Gizlilik politikası",
                 getString(R.string.client_privacy_policy_text)
             )
         }
         btnAbout.setOnClickListener {
-            showLongTextDialog("Hakkinda", getString(R.string.client_about_text))
+            showLongTextDialog("Hakkında", getString(R.string.client_about_text))
         }
         btnEdit.setOnClickListener { showEditProfileDialog() }
-        btnTheme.setOnClickListener { toggleTheme() }
         setupDietitianConnect()
-        loadProfile(btnTheme)
+        loadProfile()
     }
 
     private fun showLongTextDialog(title: String, text: String) {
@@ -68,7 +70,7 @@ class ClientProfileActivity : AppCompatActivity() {
     private fun showEditProfileDialog() {
         val p = lastProfile
         if (p == null) {
-            Toast.makeText(this, "Once profil yuklensin", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Önce profil yüklensin", Toast.LENGTH_SHORT).show()
             return
         }
         val view = layoutInflater.inflate(R.layout.dialog_client_edit_profile, null, false)
@@ -77,19 +79,50 @@ class ClientProfileActivity : AppCompatActivity() {
         val etH = view.findViewById<EditText>(R.id.dlgEtHeight)
         val etW = view.findViewById<EditText>(R.id.dlgEtWeight)
         val etC = view.findViewById<EditText>(R.id.dlgEtCal)
+        val tvGoalHint = view.findViewById<TextView>(R.id.tvDlgGoalHint)
+        val btnP1600 = view.findViewById<TextView>(R.id.btnDlgPreset1600)
+        val btnP2000 = view.findViewById<TextView>(R.id.btnDlgPreset2000)
+        val btnP2500 = view.findViewById<TextView>(R.id.btnDlgPreset2500)
         etF.setText(p.firstName.orEmpty().trim())
         etL.setText(p.lastName.orEmpty().trim())
         if (p.height > 0) etH.setText(String.format(Locale.ROOT, "%.1f", p.height).trimEnd('0').trimEnd('.'))
         if (p.weight > 0) etW.setText(String.format(Locale.ROOT, "%.1f", p.weight).trimEnd('0').trimEnd('.'))
         etC.setText(p.targetCalories.toString())
+
+        fun refreshGoalHint() {
+            val cal = etC.text.toString().toIntOrNull() ?: p.targetCalories
+            tvGoalHint.text =
+                "Öneri: Hedef, girilen kaloriye göre gösterilir: ${resolveGoalLabelFromCalories(cal)}"
+        }
+        etC.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                refreshGoalHint()
+            }
+
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
+        btnP1600.setOnClickListener {
+            etC.setText("1600")
+            refreshGoalHint()
+        }
+        btnP2000.setOnClickListener {
+            etC.setText("2000")
+            refreshGoalHint()
+        }
+        btnP2500.setOnClickListener {
+            etC.setText("2500")
+            refreshGoalHint()
+        }
         val dlg = AlertDialog.Builder(this)
-            .setTitle("Kisisel bilgileri duzenle")
+            .setTitle("Kişisel bilgileri düzenle")
             .setView(view)
             .setNegativeButton("Iptal", null)
             .setPositiveButton("Kaydet", null)
             .create()
         dlg.setOnShowListener {
             dlg.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+            refreshGoalHint()
             etF.post {
                 etF.requestFocus()
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -124,12 +157,12 @@ class ClientProfileActivity : AppCompatActivity() {
                     !approxEq(w, p.weight) ||
                     cal != p.targetCalories
                 if (!changed) {
-                    Toast.makeText(this, "Degisiklik yok", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Değişiklik yok", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
                 AlertDialog.Builder(this@ClientProfileActivity)
-                    .setMessage("Bilgileri bu sekilde kaydetmek istediginize emin misiniz?")
-                    .setNegativeButton("Hayir", null)
+                    .setMessage("Bilgileri bu şekilde kaydetmek istediğinize emin misiniz?")
+                    .setNegativeButton("Hayır", null)
                     .setPositiveButton("Evet") { _, _ ->
                         dlg.dismiss()
                         lifecycleScope.launch {
@@ -146,17 +179,17 @@ class ClientProfileActivity : AppCompatActivity() {
                                 if (r.isSuccessful) {
                                     Toast.makeText(
                                         this@ClientProfileActivity,
-                                        "Profil guncellendi",
+                                        "Profil güncellendi",
                                         Toast.LENGTH_LONG
                                     ).show()
-                                    loadProfile(findViewById(R.id.btnTheme))
+                                    loadProfile()
                                 } else {
                                     val body = r.errorBody()?.string().orEmpty()
                                     val msg = when (r.code()) {
-                                        401 -> "Oturum suresi doldu; tekrar giris yapin."
-                                        404 -> "Endpoint yok: API guncel mi? (POST api/Client/profile)"
-                                        405 -> "Istek yontemi: API'yi yeniden baslatin."
-                                        else -> body.ifBlank { "Kayit basarisiz (HTTP ${r.code()})" }
+                                        401 -> "Oturum süresi doldu; tekrar giriş yapın."
+                                        404 -> "Endpoint yok: API güncel mi? (POST api/Client/profile)"
+                                        405 -> "İstek yöntemi: API'yi yeniden başlatın."
+                                        else -> body.ifBlank { "Kayıt başarısız (HTTP ${r.code()})" }
                                     }
                                     Toast.makeText(this@ClientProfileActivity, msg, Toast.LENGTH_LONG).show()
                                 }
@@ -208,14 +241,14 @@ class ClientProfileActivity : AppCompatActivity() {
                     } else {
                         Toast.makeText(
                             this@ClientProfileActivity,
-                            "Kod gecerli degil (onayli diyetisyen gerekir)",
+                            "Kod geçerli değil (onaylı diyetisyen gerekir)",
                             Toast.LENGTH_LONG
                         ).show()
                     }
                 } catch (e: Exception) {
                     Toast.makeText(
                         this@ClientProfileActivity,
-                        e.message ?: "Baglanti hatasi",
+                        e.message ?: "Bağlantı hatası",
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -235,15 +268,15 @@ class ClientProfileActivity : AppCompatActivity() {
                         try {
                             val r = RetrofitClient.instance.connectToDietitian(ConnectToDietitianRequest(code))
                             if (r.isSuccessful) {
-                                val msg = r.body()?.message ?: "Eslesti"
+                                val msg = r.body()?.message ?: "Eşleşti"
                                 Toast.makeText(this@ClientProfileActivity, msg, Toast.LENGTH_LONG).show()
                                 et.setText("")
                                 resetPreview()
-                                loadProfile(findViewById(R.id.btnTheme))
+                                loadProfile()
                             } else {
                                 Toast.makeText(
                                     this@ClientProfileActivity,
-                                    "Eslestirme basarisiz (${r.code()})",
+                                    "Eşleştirme başarısız (${r.code()})",
                                     Toast.LENGTH_LONG
                                 ).show()
                             }
@@ -260,47 +293,59 @@ class ClientProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadProfile(btnTheme: TextView) {
+    private fun loadProfile() {
         lifecycleScope.launch {
             try {
                 val r = RetrofitClient.instance.getClientProfile()
                 if (r.isSuccessful) {
                     val p = r.body() ?: return@launch
                     lastProfile = p
-                    val cardConnect = findViewById<CardView>(R.id.cardConnectDietitian)
+                    val cardConnect = findViewById<View>(R.id.cardConnectDietitian)
                     val dName = p.dietitianName?.trim().orEmpty()
                     cardConnect.visibility =
-                        if (dName.isEmpty() || dName == "Atanmadi") View.VISIBLE else View.GONE
+                        if (dName.isEmpty() || dName == "Atanmadi" || dName == "Atanmadı") View.VISIBLE else View.GONE
                     val first = p.firstName?.trim().orEmpty()
                     val last = p.lastName?.trim().orEmpty()
                     val name = listOf(first, last).filter { it.isNotEmpty() }.joinToString(" ")
-                        .ifEmpty { "Danisan" }
+                        .ifEmpty { "Danışan" }
                     findViewById<TextView>(R.id.tvDisplayName).text = name
                     findViewById<TextView>(R.id.tvDietitian).text =
-                        "Diyetisyen: ${p.dietitianName ?: "Atanmadi"}"
+                        "Diyetisyen: ${p.dietitianName ?: "Atanmadı"}"
                     findViewById<TextView>(R.id.tvHeight).text =
-                        if (p.height > 0) p.height.toInt().toString() else "-"
+                        if (p.height > 0) "${p.height.toInt()} cm" else "-"
                     findViewById<TextView>(R.id.tvWeight).text =
-                        if (p.weight > 0) p.weight.toString() else "-"
+                        if (p.weight > 0) {
+                            val s = String.format(Locale.ROOT, "%.1f", p.weight).trimEnd('0').trimEnd('.')
+                            "$s kg"
+                        } else "-"
                     findViewById<TextView>(R.id.tvGoal).text = p.goalText ?: "—"
                     val pStart = p.programStartDate?.let { formatProgramDate(it) } ?: "—"
-                    findViewById<TextView>(R.id.tvProgramStart).text = "Program baslangici: $pStart"
+                    val prefix = "Program başlangıcı: "
+                    val progText = prefix + pStart
+                    val ss = SpannableString(progText)
+                    val startBold = prefix.length
+                    if (startBold < progText.length) {
+                        ss.setSpan(
+                            StyleSpan(Typeface.BOLD),
+                            startBold,
+                            progText.length,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                    }
+                    findViewById<TextView>(R.id.tvProgramStart).text = ss
                     val a = (first.take(1) + last.take(1)).uppercase(Locale.ROOT)
                     findViewById<TextView>(R.id.avatarText).text = if (a.isNotBlank()) a else "D"
-                    currentTheme = ThemeUtils.fromProfile(p.themePreference)
-                    ThemeUtils.applyAndPersist(getSharedPreferences(ThemeUtils.PREF_NAME, MODE_PRIVATE), currentTheme)
-                    btnTheme.text = if (currentTheme == "dark") "Tema: Koyu (degistir)" else "Tema: Acik (degistir)"
                 } else {
                     Toast.makeText(
                         this@ClientProfileActivity,
-                        "Profil yuklenemedi",
+                        "Profil yüklenemedi",
                         Toast.LENGTH_LONG
                     ).show()
                 }
             } catch (e: Exception) {
                 Toast.makeText(
                     this@ClientProfileActivity,
-                    "Baglanti hatasi: ${e.message}",
+                    "Bağlantı hatası: ${e.message}",
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -327,32 +372,10 @@ class ClientProfileActivity : AppCompatActivity() {
         return iso
     }
 
-    private fun toggleTheme() {
-        val next = if (currentTheme == "dark") "light" else "dark"
-        lifecycleScope.launch {
-            try {
-                val r = RetrofitClient.instance.updateAuthTheme(
-                    UpdateThemeRequest(themePreference = next)
-                )
-                if (r.isSuccessful) {
-                    currentTheme = next
-                    ThemeUtils.applyAndPersist(
-                        getSharedPreferences(ThemeUtils.PREF_NAME, MODE_PRIVATE),
-                        next
-                    )
-                    findViewById<TextView>(R.id.btnTheme).text =
-                        if (next == "dark") "Tema: Koyu (degistir)" else "Tema: Acik (degistir)"
-                } else {
-                    Toast.makeText(this@ClientProfileActivity, "Tema kaydedilemedi", Toast.LENGTH_LONG)
-                        .show()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(
-                    this@ClientProfileActivity,
-                    e.message ?: "Hata",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+    private fun resolveGoalLabelFromCalories(targetCalories: Int): String =
+        when {
+            targetCalories <= 1800 -> "Kilo Ver"
+            targetCalories >= 2300 -> "Kilo Al"
+            else -> "Formu Koru"
         }
-    }
 }

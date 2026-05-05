@@ -28,7 +28,7 @@ class ClientAiKitchenSharesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_client_ai_kitchen_shares)
-        ClientBottomBarHelper.bind(this, 5)
+        ClientBottomBarHelper.bind(this, 6)
 
         val etFrom = findViewById<EditText>(R.id.etShareFrom)
         val etTo = findViewById<EditText>(R.id.etShareTo)
@@ -95,14 +95,14 @@ class ClientAiKitchenSharesActivity : AppCompatActivity() {
                     val title = card.findViewById<TextView>(R.id.tvShareItemTitle)
                     val body = card.findViewById<TextView>(R.id.tvShareItemQuery)
                     val r = log.selectedRecipes.firstOrNull()
-                    val srcLabel = if (log.source == "gemini") "Gemini" else "Mock"
+                    val srcLabel = if (log.source == "gemini") "Yapay zeka" else "Yerel örnek"
                     meta.text = buildString {
                         append(log.createdAtUtc.replace("T", " ").take(19))
                         append("  ·  ")
                         append(srcLabel)
                         append("  ·  Hedef: ")
                         append(log.targetCalories)
-                        append(" kcal")
+                        append(" kkal")
                     }
                     title.text = r?.title ?: "Tarif"
                     body.text = buildString {
@@ -110,7 +110,7 @@ class ClientAiKitchenSharesActivity : AppCompatActivity() {
                         append("Sorgu malzemeler: ${log.ingredients}\n\n")
                         r?.let { x ->
                             x.description?.takeIf { it.isNotBlank() }?.let { append("$it\n\n") }
-                            append("~${x.estimatedCalories} kcal")
+                            append("~${x.estimatedCalories} kkal")
                             x.prepTimeMinutes?.takeIf { it > 0 }?.let { append("  ·  ~$it dk") }
                             append("\n\n")
                             if (x.ingredients.isNotEmpty()) {

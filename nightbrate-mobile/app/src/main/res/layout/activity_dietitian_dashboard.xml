@@ -151,7 +151,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Aktif Program"
+                                android:text="Aktif program"
                                 android:textColor="@color/admin_muted"
                                 android:textSize="13sp" />
 
@@ -233,11 +233,15 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardDashCriticalAlerts"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_rowWeight="1"
                     android:layout_columnWeight="1"
                     android:layout_margin="6dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
                     app:cardBackgroundColor="@color/admin_card_bg"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
@@ -404,7 +408,7 @@
                         android:layout_marginTop="12dp"
                         android:gravity="center"
                         android:padding="10dp"
-                        android:text="AI Denetim Paneline Git →"
+                        android:text="Yapay zeka denetim paneline git →"
                         android:textColor="#22C55E"
                         android:textSize="15sp"
                         android:textStyle="bold" />

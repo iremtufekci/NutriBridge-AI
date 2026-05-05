@@ -5,6 +5,7 @@ import { Users, Stethoscope, Clock, Database } from "lucide-react";
 import { AreaChart, Area, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { api } from "../../api/http";
 import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
+import { normalizeActivityDescription } from "../../lib/activityDescriptionTr";
 
 type PendingDietitian = {
   id?: string;
@@ -144,7 +145,7 @@ export function AdminDashboard() {
         setPendingDietitians(Array.isArray(pending) ? pending : []);
         await loadRecentActivities();
       } catch (error) {
-        console.error("Dashboard verisi alinamadi", error);
+        console.error("Dashboard verisi alınamadı", error);
       }
     };
     void load();
@@ -169,62 +170,64 @@ export function AdminDashboard() {
       title: "Toplam Aktif Kullanıcı",
       value: String(statsData.activeUsers),
       icon: Users,
-      iconWrap: "bg-emerald-100 dark:bg-emerald-900/50",
-      iconColor: "text-emerald-600 dark:text-[#2ECC71]",
+      iconWrap: "bg-emerald-100",
+      iconColor: "text-emerald-600",
       trend: null,
     },
     {
       title: "Aktif Diyetisyen Sayısı",
       value: String(statsData.activeDietitians),
       icon: Stethoscope,
-      iconWrap: "bg-teal-100 dark:bg-cyan-900/40",
-      iconColor: "text-teal-600 dark:text-cyan-400",
+      iconWrap: "bg-teal-100",
+      iconColor: "text-teal-600",
       trend: null,
     },
     {
       title: "Onay Bekleyen",
       value: String(statsData.pendingDietitians),
       icon: Clock,
-      iconWrap: "bg-amber-100 dark:bg-amber-900/40",
-      iconColor: "text-amber-600 dark:text-amber-400",
+      iconWrap: "bg-amber-100",
+      iconColor: "text-amber-600",
       trend: null,
     },
     {
-      title: "Toplam Kayıt (Users)",
+      title: "Toplam kayıt (kullanıcılar)",
       value: String(statsData.totalUsers),
       icon: Database,
-      iconWrap: "bg-violet-100 dark:bg-violet-900/40",
-      iconColor: "text-violet-600 dark:text-violet-300",
+      iconWrap: "bg-violet-100",
+      iconColor: "text-violet-600",
       trend: momTrend4 ? `${momTrend4} · son aya göre yeni kayıt` : null,
     },
   ];
 
   return (
     <SidebarLayout userRole="admin" userName={adminName}>
-      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-[#F4F6F8] dark:bg-[#0D1117] min-h-screen text-slate-900 dark:text-white transition-colors pb-24 lg:pb-8">
+      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-slate-50 min-h-screen text-slate-900 transition-colors pb-24 lg:pb-8">
         <div>
-          <h1 className="text-3xl sm:text-5xl font-bold mb-1">Admin Dashboard</h1>
-          <p className="text-slate-500 dark:text-[#9CA3AF]">Sistem genel görünümü ve istatistikler</p>
+          <h1 className="mb-1 text-3xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+            Yönetim özeti
+          </h1>
+          <p className="text-slate-600">Sistem genel görünümü ve istatistikler</p>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {statItems.map((item) => {
             const Icon = item.icon;
             return (
               <div
                 key={item.title}
-                className="rounded-3xl bg-white dark:bg-[#1F2937] border border-slate-200 dark:border-slate-700 p-4 sm:p-5 shadow-sm"
+                className="rounded-2xl border border-slate-200/90 bg-white p-4 shadow-md shadow-slate-200/40 ring-1 ring-slate-100 sm:rounded-3xl sm:p-5"
               >
                 <div className="flex items-start justify-between gap-2">
-                  <p className="text-sm text-slate-500 dark:text-[#9CA3AF] leading-tight pr-1">{item.title}</p>
+                  <p className="pr-1 text-sm font-medium leading-tight text-slate-600">{item.title}</p>
                   <div
                     className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${item.iconWrap}`}
                   >
                     <Icon size={18} className={item.iconColor} />
                   </div>
                 </div>
-                <p className="text-3xl sm:text-4xl font-bold mt-2 tabular-nums">{item.value}</p>
-                <p className="text-sm mt-1 min-h-[1.25rem] text-emerald-500">
+                <p className="mt-2 text-3xl font-bold tabular-nums text-slate-900 sm:text-4xl">{item.value}</p>
+                <p className="mt-1 min-h-[1.25rem] text-sm font-medium text-emerald-600">
                   {item.trend ? `↑ ${item.trend}` : "\u00a0"}
                 </p>
               </div>
@@ -233,8 +236,8 @@ export function AdminDashboard() {
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
-          <div className="xl:col-span-2 bg-white dark:bg-[#1F2937] rounded-3xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
-            <h3 className="text-2xl font-bold mb-4">Aylık Kayıt Trendi</h3>
+          <div className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-md shadow-slate-200/40 sm:rounded-3xl sm:p-6 xl:col-span-2">
+            <h3 className="mb-4 text-xl font-bold text-slate-900 sm:text-2xl">Aylık kayıt trendi</h3>
             {monthlyData.length === 0 ? (
               <p className="text-slate-500 text-sm">Henüz kayıt yok veya dönemde veri yok.</p>
             ) : (
@@ -246,7 +249,7 @@ export function AdminDashboard() {
                       <stop offset="95%" stopColor="#22C55E" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#9CA3AF" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
                   <XAxis dataKey="month" stroke="#64748B" fontSize={12} />
                   <YAxis allowDecimals={false} stroke="#64748B" fontSize={12} />
                   <Tooltip
@@ -265,8 +268,8 @@ export function AdminDashboard() {
             )}
           </div>
 
-          <div className="bg-white dark:bg-[#1F2937] rounded-3xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
-            <h3 className="text-2xl font-bold mb-4">Kullanıcı Rol Dağılımı</h3>
+          <div className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-md shadow-slate-200/40 sm:rounded-3xl sm:p-6">
+            <h3 className="mb-4 text-xl font-bold text-slate-900 sm:text-2xl">Kullanıcı rol dağılımı</h3>
             {roleDistribution.length === 0 || roleDistribution.every((d) => d.value === 0) ? (
               <p className="text-slate-500 text-sm">Veri yok.</p>
             ) : (
@@ -291,23 +294,23 @@ export function AdminDashboard() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#1F2937] rounded-3xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
-          <h3 className="text-2xl font-bold mb-4">Onay bekleyen diyetisyenler</h3>
+        <div className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-md shadow-slate-200/40 sm:rounded-3xl sm:p-6">
+          <h3 className="mb-4 text-xl font-bold text-slate-900 sm:text-2xl">Onay bekleyen diyetisyenler</h3>
           <div className="space-y-3">
             {pendingDietitians.length === 0 && (
-              <p className="text-sm text-slate-500 dark:text-[#9CA3AF]">Şu anda onay bekleyen diyetisyen yok.</p>
+              <p className="text-sm text-slate-500">Şu anda onay bekleyen diyetisyen yok.</p>
             )}
 
             {pendingDietitians.map((dietitian) => (
               <div
                 key={dietitian.id}
-                className="flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4 bg-slate-50 dark:bg-[#0D1117] rounded-2xl border border-slate-200 dark:border-slate-800"
+                className="flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4 bg-slate-50 rounded-2xl border border-slate-200"
               >
                 <div className="min-w-0">
                   <p className="font-semibold">
                     {dietitian.firstName} {dietitian.lastName}
                   </p>
-                  <p className="text-xs text-slate-500 dark:text-[#9CA3AF] break-words">
+                  <p className="text-xs text-slate-500 break-words">
                     {dietitian.email} - {dietitian.clinicName}
                   </p>
                 </div>
@@ -322,29 +325,29 @@ export function AdminDashboard() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#1F2937] rounded-3xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
-          <h3 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">Son Aktiviteler</h3>
+        <div className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-md shadow-slate-200/40 sm:rounded-3xl sm:p-6">
+          <h3 className="mb-4 text-xl font-bold text-slate-900 sm:text-2xl">Son aktiviteler</h3>
           <div className="space-y-3">
             {activities.length === 0 && (
-              <p className="text-sm text-slate-500 dark:text-[#9CA3AF]">Henüz kayıtlı aktivite yok.</p>
+              <p className="text-sm text-slate-500">Henüz kayıtlı aktivite yok.</p>
             )}
             {activities.map((a) => (
               <div
                 key={a.id || `${a.actorDisplayName}-${a.createdAt}`}
-                className="flex items-center justify-between gap-3 p-3 sm:p-4 bg-slate-50 dark:bg-[#0D1117] rounded-2xl border border-slate-200 dark:border-slate-800"
+                className="flex items-center justify-between gap-3 p-3 sm:p-4 bg-slate-50 rounded-2xl border border-slate-200"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold text-sm flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm flex-shrink-0">
                     {(a.initial || "?").charAt(0).toUpperCase()}
                   </div>
                   <div className="min-w-0">
-                    <p className="font-semibold text-slate-900 dark:text-slate-100 truncate">
+                    <p className="font-semibold text-slate-900 truncate">
                       {a.actorDisplayName || "—"}
                     </p>
-                    <p className="text-xs text-slate-500 dark:text-[#9CA3AF] truncate">{a.description}</p>
+                    <p className="text-xs text-slate-500 truncate">{normalizeActivityDescription(a.description)}</p>
                   </div>
                 </div>
-                <span className="text-xs text-slate-500 dark:text-[#9CA3AF] flex-shrink-0 whitespace-nowrap">
+                <span className="text-xs text-slate-500 flex-shrink-0 whitespace-nowrap">
                   {formatTimeAgoTr(a.createdAt)}
                 </span>
               </div>

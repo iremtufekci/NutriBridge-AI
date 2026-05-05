@@ -10,7 +10,8 @@ android {
     defaultConfig {
         applicationId = "com.example.nightbrate"
         minSdk = 24
-        targetSdk = 35
+        // 35: bazı cihaz/emülatörlerde zorunlu edge-to-edge ile siyah/boş ilk ekran; 34 daha istikrarlı.
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -51,6 +52,8 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation(libs.androidx.core.ktx)
+    // Activity 1.8+ yaşam döngüsü düzeltmeleri (TopResumedActivityChangeItem vb.)
+    implementation("androidx.activity:activity-ktx:1.9.3")
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)

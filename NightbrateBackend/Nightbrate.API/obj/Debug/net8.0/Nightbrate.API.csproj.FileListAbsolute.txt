@@ -188,3 +188,6 @@ c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\DebugModelFix\Zst
 c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\DebugModelFix\Nightbrate.Application.pdb
 c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\DebugModelFix\Nightbrate.Infrastructure.pdb
 c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\DebugModelFix\Nightbrate.Core.pdb
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\CloudinaryDotNet.dll
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\Newtonsoft.Json.dll

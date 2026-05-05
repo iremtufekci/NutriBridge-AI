@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="email"
+            android:text="E-posta"
             android:textColor="@color/text_gray"
             android:textSize="13sp" />
 
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:backgroundTint="@color/primary_green"
-            android:text="Onayla (veritabaninda onaylandi)"
+            android:text="Onayla (veritabanında onaylandı)"
             android:textColor="@color/white" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

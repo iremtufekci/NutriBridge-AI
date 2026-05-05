@@ -38,33 +38,58 @@ public sealed class GeminiMealAnalysisService : IMealAnalysisService
 
         try
         {
-            return await AnalyzeImageCoreAsync(imageFilePath, ct).ConfigureAwait(false);
+            if (string.IsNullOrWhiteSpace(_opt.ApiKey))
+                throw new AppException("Yapay zeka hizmeti için API anahtarı yapılandırılmamış.");
+
+            if (!File.Exists(imageFilePath))
+                throw new AppException("Analiz için görüntü dosyası bulunamadı.");
+
+            var ext = Path.GetExtension(imageFilePath).ToLowerInvariant();
+            var mime = ext switch
+            {
+                ".png" => "image/png",
+                ".jpg" or ".jpeg" => "image/jpeg",
+                _ => "image/jpeg"
+            };
+
+            var bytes = await File.ReadAllBytesAsync(imageFilePath, ct).ConfigureAwait(false);
+            return await AnalyzeImageBytesCoreAsync(bytes, mime, ct).ConfigureAwait(false);
         }
         catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
         {
             throw new AppException(
-                "Gorsel analizi zaman asimina ugradi (islem cok surdu). Daha dusuk cozunurlukte bir fotograf " +
-                "deneyin veya birkac dakika sonra tekrar deneyin.");
+                "Görsel analizi zaman aşımına uğradı (işlem uzun sürdü). Daha düşük çözünürlükte bir fotoğraf " +
+                "deneyin veya birkaç dakika sonra tekrar deneyin.");
         }
     }
 
-    private async Task<MealAnalysisResultDto> AnalyzeImageCoreAsync(string imageFilePath, CancellationToken cancellationToken)
+    public async Task<MealAnalysisResultDto> AnalyzeImageBytesAsync(byte[] imageBytes, string mimeType, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(_opt.ApiKey))
-            throw new AppException("Gemini API anahtari yapilandirilmamis.");
+        using var opCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        opCts.CancelAfter(TimeSpan.FromMinutes(4));
+        var ct = opCts.Token;
 
-        if (!File.Exists(imageFilePath))
-            throw new AppException("Analiz icin goruntu dosyasi bulunamadi.");
-
-        var ext = Path.GetExtension(imageFilePath).ToLowerInvariant();
-        var mime = ext switch
+        try
         {
-            ".png" => "image/png",
-            ".jpg" or ".jpeg" => "image/jpeg",
-            _ => "image/jpeg"
-        };
+            if (string.IsNullOrWhiteSpace(_opt.ApiKey))
+                throw new AppException("Yapay zeka hizmeti için API anahtarı yapılandırılmamış.");
 
-        var bytes = await File.ReadAllBytesAsync(imageFilePath, cancellationToken).ConfigureAwait(false);
+            if (imageBytes is null || imageBytes.Length == 0)
+                throw new AppException("Analiz için görüntü verisi boş.");
+
+            var mime = string.IsNullOrWhiteSpace(mimeType) ? "image/jpeg" : mimeType.Trim();
+            return await AnalyzeImageBytesCoreAsync(imageBytes, mime, ct).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            throw new AppException(
+                "Görsel analizi zaman aşımına uğradı (işlem uzun sürdü). Daha düşük çözünürlükte bir fotoğraf " +
+                "deneyin veya birkaç dakika sonra tekrar deneyin.");
+        }
+    }
+
+    private async Task<MealAnalysisResultDto> AnalyzeImageBytesCoreAsync(byte[] bytes, string mime, CancellationToken cancellationToken)
+    {
         var b64 = Convert.ToBase64String(bytes);
 
         const string schemaJson =
@@ -133,8 +158,8 @@ public sealed class GeminiMealAnalysisService : IMealAnalysisService
                     raw.Contains("not supported for generateContent", StringComparison.OrdinalIgnoreCase))
                 {
                     throw new AppException(
-                        "Bu Gemini model adi API'de bulunamadi veya generateContent ile kullanilamiyor (eski model adlari kaldirilmis olabilir). " +
-                        "Nightbrate.API yapilandirmasinda Gemini:Model degerini guncel bir modele cekin: gemini-2.5-flash veya gemini-2.5-flash-lite.");
+                        "Seçilen yapay zeka modeli bulunamıyor veya bu işlem için kullanılamıyor. " +
+                        "Sunucu yapılandırmasındaki model adını güncel bir sürüme çekin.");
                 }
 
                 if (IsTransientGeminiOverload(response.StatusCode, raw) && attempt < maxAttempts - 1)
@@ -143,35 +168,32 @@ public sealed class GeminiMealAnalysisService : IMealAnalysisService
                 if (IsTransientGeminiOverload(response.StatusCode, raw))
                 {
                     throw new AppException(
-                        "Gorsel analizi su an tamamlanamadi: Gemini tarafinda gecici yogunluk var. " +
-                        "Birkac saniye veya dakika sonra tekrar deneyin. Sorun surerse appsettings'te " +
-                        "Gemini:Model degerini gemini-2.5-flash-lite ile deneyin.");
+                        "Görsel analizi şu an tamamlanamadı: yapay zeka hizmetinde geçici yoğunluk var. " +
+                        "Bir süre sonra tekrar deneyin veya yapılandırmada daha hafif bir model deneyin.");
                 }
 
                 if (IsQuotaOrRateLimited(response.StatusCode, raw))
                 {
                     throw new AppException(
-                        "Gemini kotasi doldu veya secilen model icin ucretsiz kullanim kapali (limit 0). " +
-                        "Cozum: Google AI Studio / Cloud konsolunda kotayi ve faturayi kontrol edin; " +
-                        "Model olarak gemini-2.5-flash-lite (daha ucuz) veya gemini-2.5-flash deneyin. " +
-                        "Birkac dakika sonra tekrar deneyin.");
+                        "Yapay zeka kotası doldu veya seçilen model için ücretsiz kullanım kapalı. " +
+                        "Kota ve faturayı sağlayıcı konsolundan kontrol edin; birkaç dakika sonra tekrar deneyin.");
                 }
 
                 var hint = TryExtractGeminiErrorMessage(raw);
                 throw new AppException(
                     string.IsNullOrWhiteSpace(hint)
-                        ? "Gorsel analizi tamamlanamadi. Gemini API anahtari ve model adini kontrol edin."
-                        : $"Gorsel analizi tamamlanamadi: {hint}");
+                        ? "Görsel analizi tamamlanamadı. API anahtarını ve model adını kontrol edin."
+                        : $"Görsel analizi tamamlanamadı: {hint}");
             }
 
             if (response is null || !response.IsSuccessStatusCode)
             {
-                throw new AppException("Gorsel analizi tamamlanamadi. Lutfen tekrar deneyin.");
+                throw new AppException("Görsel analizi tamamlanamadı. Lütfen tekrar deneyin.");
             }
 
             var text = ExtractResponseText(raw);
             if (string.IsNullOrWhiteSpace(text))
-                throw new AppException("Gemini yaniti bos veya guvenlik nedeniyle engellendi. Baska bir fotograf deneyin.");
+                throw new AppException("Yapay zeka yanıtı boş veya güvenlik nedeniyle engellendi. Başka bir fotoğraf deneyin.");
 
             MealGeminiJson? parsed;
             try
@@ -180,11 +202,11 @@ public sealed class GeminiMealAnalysisService : IMealAnalysisService
             }
             catch (JsonException)
             {
-                throw new AppException("Gemini yaniti cozumlenemedi. Lutfen tekrar deneyin.");
+                throw new AppException("Yapay zeka yanıtı çözümlenemedi. Lütfen tekrar deneyin.");
             }
 
             if (parsed is null)
-                throw new AppException("Gemini analiz sonucu alinamadi.");
+                throw new AppException("Yapay zeka analiz sonucu alınamadı.");
 
             var foods = parsed.Foods?.Where(static s => !string.IsNullOrWhiteSpace(s)).Select(static s => s.Trim()).Distinct().ToList()
                         ?? new List<string>();

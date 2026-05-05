@@ -8,6 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.nightbrate.ActivityWindowHelper.applyStandardContentWindow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -15,6 +16,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        applyStandardContentWindow()
         setContentView(R.layout.activity_main)
 
         val etEmail = findViewById<EditText>(R.id.etEmail)
@@ -71,18 +73,9 @@ class MainActivity : AppCompatActivity() {
                         .putString("email", email)
                         .apply()
 
-                    try {
-                        val pr = RetrofitClient.instance.getCurrentUserProfile()
-                        if (pr.isSuccessful) {
-                            val th = pr.body()?.themePreference
-                            ThemeUtils.applyAndPersist(
-                                authPrefs,
-                                ThemeUtils.fromProfile(th)
-                            )
-                        }
-                    } catch (_: Exception) { }
+                    ThemeUtils.applyLightTheme(authPrefs)
 
-                    Toast.makeText(this@MainActivity, "Giris basarili!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Giriş başarılı!", Toast.LENGTH_SHORT).show()
 
                     val intent = when (role) {
                         "admin" -> Intent(this@MainActivity, AdminDashboardActivity::class.java)
@@ -104,7 +97,7 @@ class MainActivity : AppCompatActivity() {
                     val message = if (backendMessage.isNotBlank()) {
                         backendMessage
                     } else {
-                        "Giriş Başarısız: Email veya şifre hatalı!"
+                        "Giriş başarısız: E-posta veya şifre hatalı!"
                     }
 
                     Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()

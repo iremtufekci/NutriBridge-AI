@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { ChevronRight, Info, Lock, Moon, Stethoscope, UserRound, X } from "lucide-react";
+import { ChevronRight, Info, Lock, Stethoscope, UserRound, X } from "lucide-react";
 import { SidebarLayout } from "../../components/SidebarLayout";
 import { api, getApiErrorMessage } from "../../api/http";
 import {
@@ -18,19 +18,17 @@ type ClientProfileData = {
   goalText: string;
   dietitianName: string;
   programStartDate: string;
-  themePreference: "light" | "dark";
 };
 
 const defaultProfile: ClientProfileData = {
-  firstName: "Danisan",
+  firstName: "Danışan",
   lastName: "",
   weight: 0,
   height: 0,
   targetCalories: 2000,
   goalText: "Formu Koru",
-  dietitianName: "Atanmadi",
+  dietitianName: "Atanmadı",
   programStartDate: new Date().toISOString(),
-  themePreference: "light",
 };
 
 type PreviewDiet = { displayName: string; firstName?: string; lastName?: string };
@@ -55,14 +53,13 @@ export function ClientProfile() {
   const [dietConnectBusy, setDietConnectBusy] = useState(false);
 
   const userName = useMemo(
-    () => `${profile.firstName} ${profile.lastName}`.trim() || "Danisan",
+    () => `${profile.firstName} ${profile.lastName}`.trim() || "Danışan",
     [profile.firstName, profile.lastName]
   );
 
   const loadProfile = useCallback(async () => {
     try {
       const { data } = await api.get("/api/client/profile");
-      const normalizedTheme = data.themePreference === "dark" ? "dark" : "light";
       const tc = typeof data.targetCalories === "number" ? data.targetCalories : 2000;
       setProfile({
         firstName: data.firstName || "",
@@ -71,18 +68,11 @@ export function ClientProfile() {
         height: data.height || 0,
         targetCalories: tc,
         goalText: data.goalText || resolveGoalLabelFromCalories(tc),
-        dietitianName: data.dietitianName || "Atanmadi",
+        dietitianName: data.dietitianName || "Atanmadı",
         programStartDate: data.programStartDate || new Date().toISOString(),
-        themePreference: normalizedTheme,
       });
-
-      localStorage.setItem("theme", normalizedTheme);
-      document.documentElement.classList.toggle("dark", normalizedTheme === "dark");
-      window.dispatchEvent(
-        new CustomEvent("nightbrate-theme", { detail: { isDark: normalizedTheme === "dark" } })
-      );
     } catch (error) {
-      console.error("Profil verisi alinamadi", error);
+      console.error("Profil verisi alınamadı", error);
     }
   }, []);
 
@@ -162,7 +152,10 @@ export function ClientProfile() {
     }
   };
 
-  const hasNoDietitian = !profile.dietitianName || profile.dietitianName === "Atanmadi";
+  const hasNoDietitian =
+    !profile.dietitianName ||
+    profile.dietitianName === "Atanmadi" ||
+    profile.dietitianName === "Atanmadı";
 
   const handleVerifyDietCode = async () => {
     const code = dietCode.replace(/\s/g, "").toUpperCase();
@@ -183,7 +176,7 @@ export function ClientProfile() {
       setDietPreview({ displayName, firstName: data.firstName, lastName: data.lastName });
       setVerifiedCode(code);
     } catch (error: any) {
-      const msg = error?.response?.data?.message || "Kod gecerli degil veya diyetisyen onayli degil.";
+      const msg = error?.response?.data?.message || "Kod geçerli değil veya diyetisyen onaylı değil.";
       alert(msg);
     } finally {
       setDietConnectBusy(false);
@@ -215,64 +208,49 @@ export function ClientProfile() {
     }
   };
 
-  const toggleTheme = async () => {
-    const next = profile.themePreference === "dark" ? "light" : "dark";
-    try {
-      await api.post("/api/Auth/theme", { themePreference: next });
-      setProfile((prev) => ({ ...prev, themePreference: next }));
-      localStorage.setItem("theme", next);
-      document.documentElement.classList.toggle("dark", next === "dark");
-      window.dispatchEvent(
-        new CustomEvent("nightbrate-theme", { detail: { isDark: next === "dark" } })
-      );
-    } catch (error) {
-      alert("Tema kaydedilemedi: " + ((error as any)?.response?.data?.message || "Hata"));
-    }
-  };
-
   const applyPresetCalories = (n: number) => {
     setEditDraft((d) => ({ ...d, targetCalories: String(n) }));
   };
 
   return (
     <SidebarLayout userRole="client" userName={userName}>
-      <div className="min-h-screen bg-[#F4F6F8] dark:bg-slate-950 px-4 py-6 sm:px-6 lg:px-8 pb-24 lg:pb-8">
+      <div className="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 lg:px-8 pb-24 lg:pb-8">
         <div className="mx-auto max-w-5xl space-y-5">
           <div>
-            <h1 className="text-3xl sm:text-5xl font-bold text-slate-900 dark:text-slate-100">Profil & Ayarlar</h1>
-            <p className="text-slate-500 dark:text-[#9CA3AF]">Bilgilerinizi yonetin</p>
+            <h1 className="text-3xl sm:text-5xl font-bold text-slate-900">Profil & Ayarlar</h1>
+            <p className="text-slate-500">Bilgilerinizi yönetin</p>
           </div>
 
-          <section className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1F2937] p-6 sm:p-8">
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8">
             <div className="flex flex-col items-center gap-5">
               <div className="w-24 h-24 rounded-full bg-[#2ECC71] text-white flex items-center justify-center text-4xl font-bold">
                 {(profile.firstName?.charAt(0) || "D").toUpperCase()}
                 {(profile.lastName?.charAt(0) || "").toUpperCase()}
               </div>
               <div className="text-center">
-                <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100">{userName}</h2>
-                <p className="text-emerald-600 dark:text-[#2ECC71] mt-1">Diyetisyen: {profile.dietitianName}</p>
+                <h2 className="text-3xl font-bold text-slate-900">{userName}</h2>
+                <p className="text-emerald-600 mt-1">Diyetisyen: {profile.dietitianName}</p>
               </div>
             </div>
 
             <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
               <div>
-                <p className="text-4xl font-bold text-slate-900 dark:text-slate-100">{profile.height || "-"} cm</p>
-                <p className="text-slate-500 dark:text-[#9CA3AF]">Boyum</p>
+                <p className="text-4xl font-bold text-slate-900">{profile.height || "-"} cm</p>
+                <p className="text-slate-500">Boyum</p>
               </div>
               <div>
-                <p className="text-4xl font-bold text-slate-900 dark:text-slate-100">{profile.weight || "-"} kg</p>
-                <p className="text-slate-500 dark:text-[#9CA3AF]">Kilom</p>
+                <p className="text-4xl font-bold text-slate-900">{profile.weight || "-"} kg</p>
+                <p className="text-slate-500">Kilom</p>
               </div>
               <div>
-                <p className="text-4xl font-bold text-slate-900 dark:text-slate-100">{profile.goalText}</p>
-                <p className="text-slate-500 dark:text-[#9CA3AF]">Hedef</p>
+                <p className="text-4xl font-bold text-slate-900">{profile.goalText}</p>
+                <p className="text-slate-500">Hedef</p>
               </div>
             </div>
 
-            <div className="mt-6 border-t border-slate-200 dark:border-slate-800 pt-4 text-sm text-slate-500 dark:text-[#9CA3AF]">
-              Program Baslangici:{" "}
-              <span className="font-semibold text-slate-700 dark:text-slate-200">
+            <div className="mt-6 border-t border-slate-200 pt-4 text-sm text-slate-500">
+              Program başlangıcı:{" "}
+              <span className="font-semibold text-slate-700">
                 {new Date(profile.programStartDate).toLocaleDateString("tr-TR", {
                   day: "numeric",
                   month: "long",
@@ -283,27 +261,27 @@ export function ClientProfile() {
           </section>
 
           {hasNoDietitian && (
-            <section className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1F2937] p-6 sm:p-8 space-y-4">
+            <section className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 space-y-4">
               <div>
-                <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                  <Stethoscope className="h-6 w-6 text-emerald-600 dark:text-[#2ECC71]" />
-                  Diyetisyenime baglan
+                <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                  <Stethoscope className="h-6 w-6 text-emerald-600" />
+                  Diyetisyenime bağlan
                 </h2>
-                <p className="text-sm text-slate-500 dark:text-[#9CA3AF] mt-1">
-                  Diyetisyeninizin 6 haneli takip kodunu girin. Once kodu dogrulayin, ismi gorun, sonra
-                  eşleşmeyi onaylayin.
+                <p className="text-sm text-slate-500 mt-1">
+                  Diyetisyeninizin 6 haneli takip kodunu girin. Önce kodu doğrulayın, ismi görün, sonra
+                  eşleşmeyi onaylayın.
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-2 sm:items-end">
                 <div className="flex-1">
-                  <label className="text-xs text-slate-500 dark:text-[#9CA3AF] block mb-1">Takip kodu</label>
+                  <label className="text-xs text-slate-500 block mb-1">Takip kodu</label>
                   <input
                     type="text"
                     value={dietCode}
                     onChange={(e) => setDietCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6))}
                     maxLength={6}
-                    placeholder="ornek: A1B2C3"
-                    className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 px-4 py-3 text-slate-900 dark:text-slate-100 font-mono tracking-widest"
+                    placeholder="örnek: A1B2C3"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 font-mono tracking-widest"
                     disabled={dietConnectBusy}
                   />
                 </div>
@@ -311,19 +289,19 @@ export function ClientProfile() {
                   type="button"
                   onClick={() => void handleVerifyDietCode()}
                   disabled={dietConnectBusy || dietCode.replace(/\s/g, "").length !== 6}
-                  className="rounded-xl bg-slate-200 dark:bg-slate-700 px-5 py-3 font-semibold text-slate-800 dark:text-slate-100 disabled:opacity-50"
+                  className="rounded-xl bg-slate-200 px-5 py-3 font-semibold text-slate-800 disabled:opacity-50"
                 >
-                  {dietConnectBusy && !dietPreview ? "Kontrol ediliyor…" : "Kodu dogrula"}
+                  {dietConnectBusy && !dietPreview ? "Kontrol ediliyor…" : "Kodu doğrula"}
                 </button>
               </div>
               {dietPreview && (
-                <div className="rounded-2xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50/80 dark:bg-emerald-900/20 p-4 space-y-3">
-                  <p className="text-slate-800 dark:text-slate-100">
+                <div className="rounded-2xl border border-emerald-200 bg-emerald-50/80 p-4 space-y-3">
+                  <p className="text-slate-800">
                     <span className="font-semibold">Bulundu: </span>
                     {dietPreview.displayName}
                   </p>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
-                    Bu isimle eslesmek istediginizden emin misiniz? Onayladiginizda baglanti veritabanina
+                  <p className="text-sm text-slate-600">
+                    Bu isimle eşleşmek istediğinizden emin misiniz? Onayladığınızda bağlantı veritabanına
                     kaydedilir.
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -339,9 +317,9 @@ export function ClientProfile() {
                       type="button"
                       onClick={handleCancelDietConnect}
                       disabled={dietConnectBusy}
-                      className="rounded-xl border border-slate-300 dark:border-slate-600 px-5 py-2.5 font-semibold text-slate-700 dark:text-slate-200"
+                      className="rounded-xl border border-slate-300 px-5 py-2.5 font-semibold text-slate-700"
                     >
-                      Vazgectim
+                      Vazgeçtim
                     </button>
                   </div>
                 </div>
@@ -353,37 +331,23 @@ export function ClientProfile() {
             <button
               type="button"
               onClick={openEditPanel}
-              className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1F2937] p-5 flex items-center justify-between text-left"
+              className="w-full rounded-2xl border border-slate-200 bg-white p-5 flex items-center justify-between text-left"
             >
-              <span className="flex items-center gap-3 text-lg font-semibold text-slate-900 dark:text-slate-100">
-                <UserRound className="text-emerald-600 dark:text-[#2ECC71]" />
-                Kisisel Bilgilerimi Duzenle
+              <span className="flex items-center gap-3 text-lg font-semibold text-slate-900">
+                <UserRound className="text-emerald-600" />
+                Kişisel bilgilerimi düzenle
               </span>
               <ChevronRight className="text-slate-400 shrink-0" />
             </button>
 
             <button
               type="button"
-              onClick={toggleTheme}
-              className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1F2937] p-5 flex items-center justify-between"
-            >
-              <span className="flex items-center gap-3 text-lg font-semibold text-slate-900 dark:text-slate-100">
-                <Moon className="text-emerald-600 dark:text-[#2ECC71]" />
-                Tema Ayarlari
-              </span>
-              <span className="text-base font-medium text-slate-600 dark:text-slate-300">
-                {profile.themePreference === "dark" ? "Dark Mode" : "Light Mode"}
-              </span>
-            </button>
-
-            <button
-              type="button"
               onClick={() => setPanel("privacy")}
-              className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1F2937] p-5 flex items-center justify-between text-left"
+              className="w-full rounded-2xl border border-slate-200 bg-white p-5 flex items-center justify-between text-left"
             >
-              <span className="flex items-center gap-3 text-lg font-semibold text-slate-900 dark:text-slate-100">
-                <Lock className="text-emerald-600 dark:text-[#2ECC71]" />
-                Gizlilik Politikasi
+              <span className="flex items-center gap-3 text-lg font-semibold text-slate-900">
+                <Lock className="text-emerald-600" />
+                Gizlilik politikası
               </span>
               <ChevronRight className="text-slate-400 shrink-0" />
             </button>
@@ -391,11 +355,11 @@ export function ClientProfile() {
             <button
               type="button"
               onClick={() => setPanel("about")}
-              className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#1F2937] p-5 flex items-center justify-between text-left"
+              className="w-full rounded-2xl border border-slate-200 bg-white p-5 flex items-center justify-between text-left"
             >
-              <span className="flex items-center gap-3 text-lg font-semibold text-slate-900 dark:text-slate-100">
-                <Info className="text-emerald-600 dark:text-[#2ECC71]" />
-                Hakkinda
+              <span className="flex items-center gap-3 text-lg font-semibold text-slate-900">
+                <Info className="text-emerald-600" />
+                Hakkında
               </span>
               <ChevronRight className="text-slate-400 shrink-0" />
             </button>
@@ -412,15 +376,15 @@ export function ClientProfile() {
               onClick={() => setPanel(null)}
             >
               <div
-                className="bg-white dark:bg-[#1F2937] rounded-2xl max-w-md w-full max-h-[90vh] overflow-hidden shadow-xl border border-slate-200 dark:border-slate-600 pointer-events-auto"
+                className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-hidden shadow-xl border border-slate-200 pointer-events-auto"
                 onClick={(e) => e.stopPropagation()}
                 onMouseDown={(e) => e.stopPropagation()}
               >
-                <div className="p-4 border-b border-slate-200 dark:border-slate-600 flex items-center justify-between">
-                  <h2 className="font-bold text-lg text-slate-900 dark:text-slate-100">Kisisel bilgiler</h2>
+                <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+                  <h2 className="font-bold text-lg text-slate-900">Kişisel bilgiler</h2>
                   <button
                     type="button"
-                    className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                    className="p-2 rounded-lg hover:bg-slate-100"
                     onClick={() => setPanel(null)}
                     aria-label="Kapat"
                   >
@@ -429,33 +393,33 @@ export function ClientProfile() {
                 </div>
                 <div className="p-4 space-y-3 overflow-y-auto max-h-[75vh]">
                   <div>
-                    <label className="text-xs text-slate-500 dark:text-slate-400" htmlFor="client-edit-fname">
+                    <label className="text-xs text-slate-500" htmlFor="client-edit-fname">
                       Ad
                     </label>
                     <input
                       id="client-edit-fname"
                       name="firstName"
                       autoComplete="given-name"
-                      className="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/80 px-3 py-2.5 text-slate-900 dark:text-slate-100"
+                      className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900"
                       value={editDraft.firstName}
                       onChange={(e) => setEditDraft((d) => ({ ...d, firstName: e.target.value }))}
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-slate-500 dark:text-slate-400" htmlFor="client-edit-lname">
+                    <label className="text-xs text-slate-500" htmlFor="client-edit-lname">
                       Soyad
                     </label>
                     <input
                       id="client-edit-lname"
                       name="lastName"
                       autoComplete="family-name"
-                      className="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/80 px-3 py-2.5 text-slate-900 dark:text-slate-100"
+                      className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900"
                       value={editDraft.lastName}
                       onChange={(e) => setEditDraft((d) => ({ ...d, lastName: e.target.value }))}
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-slate-500 dark:text-slate-400" htmlFor="client-edit-height">
+                    <label className="text-xs text-slate-500" htmlFor="client-edit-height">
                       Boy (cm)
                     </label>
                     <input
@@ -464,13 +428,13 @@ export function ClientProfile() {
                       name="height"
                       inputMode="decimal"
                       autoComplete="off"
-                      className="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/80 px-3 py-2.5 text-slate-900 dark:text-slate-100"
+                      className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900"
                       value={editDraft.height}
                       onChange={(e) => setEditDraft((d) => ({ ...d, height: e.target.value }))}
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-slate-500 dark:text-slate-400" htmlFor="client-edit-weight">
+                    <label className="text-xs text-slate-500" htmlFor="client-edit-weight">
                       Kilo (kg)
                     </label>
                     <input
@@ -479,14 +443,14 @@ export function ClientProfile() {
                       name="weight"
                       inputMode="decimal"
                       autoComplete="off"
-                      className="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/80 px-3 py-2.5 text-slate-900 dark:text-slate-100"
+                      className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900"
                       value={editDraft.weight}
                       onChange={(e) => setEditDraft((d) => ({ ...d, weight: e.target.value }))}
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-slate-500 dark:text-slate-400" htmlFor="client-edit-cal">
-                      Gunluk hedef kalori
+                    <label className="text-xs text-slate-500" htmlFor="client-edit-cal">
+                      Günlük hedef kalori
                     </label>
                     <input
                       id="client-edit-cal"
@@ -494,12 +458,12 @@ export function ClientProfile() {
                       name="targetCalories"
                       inputMode="numeric"
                       autoComplete="off"
-                      className="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/80 px-3 py-2.5 text-slate-900 dark:text-slate-100"
+                      className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900"
                       value={editDraft.targetCalories}
                       onChange={(e) => setEditDraft((d) => ({ ...d, targetCalories: e.target.value }))}
                     />
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                      Oneri: Hedef, girilen kaloriye gore gosterilir:{" "}
+                    <p className="text-xs text-slate-500 mt-1">
+                      Öneri: Hedef, girilen kaloriye göre gösterilir:{" "}
                       {resolveGoalLabelFromCalories(
                         parseInt(editDraft.targetCalories, 10) || profile.targetCalories
                       )}
@@ -514,7 +478,7 @@ export function ClientProfile() {
                           key={x.n}
                           type="button"
                           onClick={() => applyPresetCalories(x.n)}
-                          className="text-xs px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200"
+                          className="text-xs px-3 py-1.5 rounded-lg bg-slate-100 text-slate-800"
                         >
                           {x.t} ({x.n})
                         </button>
@@ -525,10 +489,10 @@ export function ClientProfile() {
                     <button
                       type="button"
                       onClick={() => setPanel(null)}
-                      className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 font-semibold text-slate-800 dark:text-slate-200"
+                      className="flex-1 py-2.5 rounded-xl border border-slate-200 font-semibold text-slate-800"
                       disabled={saveBusy}
                     >
-                      Iptal
+                      İptal
                     </button>
                     <button
                       type="button"
@@ -555,23 +519,23 @@ export function ClientProfile() {
               onClick={() => setPanel(null)}
             >
               <div
-                className="bg-white dark:bg-[#1F2937] rounded-2xl max-w-2xl w-full max-h-[88vh] overflow-hidden shadow-xl border border-slate-200 dark:border-slate-600"
+                className="bg-white rounded-2xl max-w-2xl w-full max-h-[88vh] overflow-hidden shadow-xl border border-slate-200"
                 onClick={(e) => e.stopPropagation()}
                 onMouseDown={(e) => e.stopPropagation()}
               >
-                <div className="p-4 border-b border-slate-200 dark:border-slate-600 flex items-center justify-between">
-                  <h2 className="font-bold text-lg text-slate-900 dark:text-slate-100">
-                    {panel === "privacy" ? "Gizlilik politikasi" : "Hakkinda"}
+                <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+                  <h2 className="font-bold text-lg text-slate-900">
+                    {panel === "privacy" ? "Gizlilik politikası" : "Hakkında"}
                   </h2>
                   <button
                     type="button"
-                    className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                    className="p-2 rounded-lg hover:bg-slate-100"
                     onClick={() => setPanel(null)}
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
-                <div className="p-4 overflow-y-auto max-h-[72vh] text-sm text-slate-700 dark:text-slate-300 whitespace-pre-line leading-relaxed">
+                <div className="p-4 overflow-y-auto max-h-[72vh] text-sm text-slate-700 whitespace-pre-line leading-relaxed">
                   {panel === "privacy" ? CLIENT_PRIVACY_POLICY_TEXT : CLIENT_ABOUT_TEXT}
                 </div>
               </div>

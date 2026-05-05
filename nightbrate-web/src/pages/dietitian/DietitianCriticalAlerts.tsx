@@ -101,13 +101,13 @@ export function DietitianCriticalAlerts() {
 
   return (
     <SidebarLayout userRole="dietitian" userName={name}>
-      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-[#F4F6F8] dark:bg-[#0D1117] min-h-screen text-slate-900 dark:text-white transition-colors pb-28 lg:pb-8">
+      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-slate-50 min-h-screen text-slate-900 transition-colors pb-28 lg:pb-8">
         <div>
           <h1 className="text-3xl sm:text-4xl font-bold flex items-center gap-2">
             <AlertTriangle className="w-9 h-9 text-rose-500 shrink-0" />
             Kritik Uyarılar
           </h1>
-          <p className="text-slate-500 dark:text-[#9CA3AF] mt-1 max-w-2xl">
+          <p className="text-slate-500 mt-1 max-w-2xl">
             Son 3 günün verilerine göre öğün uyumu ve günlük kalori kuralları değerlendirilir. İncelediğiniz
             kayıt listeden düşer; veri tekrar eşikleri aştığında yeni uyarı oluşabilir.
           </p>
@@ -120,15 +120,15 @@ export function DietitianCriticalAlerts() {
         )}
 
         {error && (
-          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200">
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
             {error}
           </div>
         )}
 
         {!loading && alerts.length > 0 && (
-          <div className="rounded-2xl border border-rose-200/90 bg-rose-50/90 dark:border-rose-900/40 dark:bg-rose-950/30 px-4 py-3 flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
-            <p className="text-sm text-rose-900 dark:text-rose-100/95">
+          <div className="rounded-2xl border border-rose-200/90 bg-rose-50/90 px-4 py-3 flex items-start gap-3">
+            <AlertTriangle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+            <p className="text-sm text-rose-900">
               <span className="font-semibold">Kritik durumda {alerts.length} kayıt</span>
               {highCount > 0 && (
                 <span>
@@ -143,10 +143,10 @@ export function DietitianCriticalAlerts() {
         )}
 
         {!loading && alerts.length === 0 && !error && (
-          <div className="rounded-2xl border border-emerald-200/80 bg-emerald-50/60 dark:border-emerald-900/30 dark:bg-emerald-950/20 px-4 py-6 text-center">
+          <div className="rounded-2xl border border-emerald-200/80 bg-emerald-50/60 px-4 py-6 text-center">
             <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto mb-2" />
-            <p className="font-semibold text-emerald-800 dark:text-emerald-200">Şu an listelenecek kritik uyarı yok</p>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">Yeni kayıtlar veri geldikçe burada belirir.</p>
+            <p className="font-semibold text-emerald-800">Şu an listelenecek kritik uyarı yok</p>
+            <p className="text-sm text-slate-600 mt-1">Yeni kayıtlar veri geldikçe burada belirir.</p>
           </div>
         )}
 
@@ -157,10 +157,10 @@ export function DietitianCriticalAlerts() {
               <li
                 key={a.id}
                 className={[
-                  "rounded-2xl border p-4 sm:p-5 shadow-sm bg-white dark:bg-[#1F2937]",
+                  "rounded-2xl border p-4 sm:p-5 shadow-sm bg-white",
                   isHigh
-                    ? "border-rose-200 dark:border-rose-900/50 border-l-4 border-l-rose-500"
-                    : "border-amber-200/90 dark:border-amber-800/50 border-l-4 border-l-amber-500",
+                    ? "border-rose-200 border-l-4 border-l-rose-500"
+                    : "border-amber-200/90 border-l-4 border-l-amber-500",
                 ].join(" ")}
               >
                 <div className="flex flex-wrap items-start justify-between gap-2">
@@ -169,15 +169,15 @@ export function DietitianCriticalAlerts() {
                       className={[
                         "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0",
                         isHigh
-                          ? "bg-rose-100 text-rose-600 dark:bg-rose-950/50 dark:text-rose-300"
-                          : "bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-200",
+                          ? "bg-rose-100 text-rose-600"
+                          : "bg-amber-100 text-amber-800",
                       ].join(" ")}
                     >
                       {(a.clientName || "?").charAt(0).toUpperCase()}
                     </div>
                     <div className="min-w-0">
-                      <p className="text-lg font-bold text-slate-900 dark:text-white truncate">{a.clientName}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                      <p className="text-lg font-bold text-slate-900 truncate">{a.clientName}</p>
+                      <p className="text-xs text-slate-500">
                         Tarih: {new Date(a.date).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}
                       </p>
                     </div>
@@ -186,19 +186,19 @@ export function DietitianCriticalAlerts() {
                     className={[
                       "text-xs font-semibold px-2.5 py-1 rounded-full shrink-0",
                       isHigh
-                        ? "bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-200"
-                        : "bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-200",
+                        ? "bg-rose-100 text-rose-700"
+                        : "bg-amber-100 text-amber-800",
                     ].join(" ")}
                   >
                     {isHigh ? "Yüksek öncelik" : "Orta öncelik"}
                   </span>
                 </div>
 
-                <div className="mt-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 px-3 py-2 flex items-center gap-2 text-sm text-slate-800 dark:text-slate-200">
+                <div className="mt-3 rounded-xl bg-slate-50 px-3 py-2 flex items-center gap-2 text-sm text-slate-800">
                   <span aria-hidden>⚠️</span>
                   <span className="font-medium">{alertTypeLabel(a.alertType)}</span>
                 </div>
-                <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{a.message}</p>
+                <p className="mt-2 text-sm text-slate-600 leading-relaxed">{a.message}</p>
 
                 <div className="mt-4 flex flex-wrap gap-2">
                   <button
@@ -213,7 +213,7 @@ export function DietitianCriticalAlerts() {
                   <button
                     type="button"
                     onClick={() => void openProfile(a.clientId)}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-[#0D1117] text-slate-800 dark:text-slate-100 text-sm font-semibold px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800/80"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-slate-200 bg-white text-slate-800 text-sm font-semibold px-4 py-2.5 hover:bg-slate-50"
                   >
                     <User className="w-4 h-4" />
                     Profili gör
@@ -237,18 +237,18 @@ export function DietitianCriticalAlerts() {
             }}
           >
             <div
-              className="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-[#1F2937] shadow-xl p-5 max-h-[90vh] overflow-y-auto"
+              className="w-full max-w-md rounded-2xl border border-slate-200 bg-white shadow-xl p-5 max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-start justify-between gap-2">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white">Danışan özeti</h2>
+                <h2 className="text-lg font-bold text-slate-900">Danışan özeti</h2>
                 <button
                   type="button"
                   onClick={() => {
                     setProfileClientId(null);
                     setBrief(null);
                   }}
-                  className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                  className="p-1 rounded-lg hover:bg-slate-100"
                   aria-label="Kapat"
                 >
                   <X className="w-5 h-5" />
@@ -263,21 +263,21 @@ export function DietitianCriticalAlerts() {
                 <dl className="mt-4 space-y-2 text-sm">
                   <div>
                     <dt className="text-slate-500">Ad</dt>
-                    <dd className="font-medium text-slate-900 dark:text-white">
+                    <dd className="font-medium text-slate-900">
                       {brief.firstName} {brief.lastName}
                     </dd>
                   </div>
                   <div>
                     <dt className="text-slate-500">E-posta</dt>
-                    <dd className="text-slate-800 dark:text-slate-200 break-all">{brief.email || "—"}</dd>
+                    <dd className="text-slate-800 break-all">{brief.email || "—"}</dd>
                   </div>
                   <div>
                     <dt className="text-slate-500">Telefon</dt>
-                    <dd className="text-slate-800 dark:text-slate-200">{brief.phone?.trim() ? brief.phone : "—"}</dd>
+                    <dd className="text-slate-800">{brief.phone?.trim() ? brief.phone : "—"}</dd>
                   </div>
                   <div>
                     <dt className="text-slate-500">Hedef kalori</dt>
-                    <dd>{brief.targetCalories} kcal</dd>
+                    <dd>{brief.targetCalories} kkal</dd>
                   </div>
                   <div className="flex gap-6">
                     <div>
@@ -292,7 +292,7 @@ export function DietitianCriticalAlerts() {
                 </dl>
               )}
               {!briefLoading && !brief && (
-                <p className="mt-4 text-sm text-red-600 dark:text-red-300">Profil yüklenemedi veya erişim yok.</p>
+                <p className="mt-4 text-sm text-red-600">Profil yüklenemedi veya erişim yok.</p>
               )}
             </div>
           </div>,

@@ -50,7 +50,7 @@ export function DietitianAiReview() {
       const mapped = Array.isArray(data) ? data : [];
       setClients(mapped);
     } catch (error) {
-      console.error("Danisanlar alinamadi", error);
+      console.error("Danışanlar alınamadı", error);
     } finally {
       setLoadingList(false);
     }
@@ -92,53 +92,53 @@ export function DietitianAiReview() {
 
   return (
     <SidebarLayout userRole="dietitian" userName={dietitianName}>
-      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-[#F4F6F8] dark:bg-[#0D1117] min-h-screen text-slate-900 dark:text-white transition-colors pb-24 lg:pb-8">
+      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-slate-50 min-h-screen text-slate-900 transition-colors pb-24 lg:pb-8">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div>
             <h1 className="text-4xl font-bold flex items-center gap-2">
               <BarChart3 className="w-9 h-9 text-emerald-500 shrink-0" />
-              AI Denetimi
+              Yapay zeka denetimi
             </h1>
-            <p className="text-slate-500 dark:text-[#9CA3AF] mt-1 max-w-2xl">
-              Danisanlarin <strong>AI Mutfak</strong> ekraninda secdikleri ve sizinle paylastiklari tarifler burada listelenir.
-              Kayitlar uygulama uzerinden veritabanina alinir; yalnizca kendi danisanlarinizi gorebilirsiniz.
+            <p className="text-slate-500 mt-1 max-w-2xl">
+              Danışanların <strong>yapay zeka mutfak</strong> ekranında seçtikleri ve sizinle paylaştıkları tarifler burada listelenir.
+              Kayıtlar uygulama üzerinden veritabanına alınır; yalnızca kendi danışanlarınızı görebilirsiniz.
             </p>
           </div>
         </div>
 
         {selectedClientId && selectedClientName && (
-          <div className="rounded-2xl border-2 border-emerald-500/40 bg-emerald-50/90 dark:bg-emerald-950/40 px-4 py-3">
-            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-[#2ECC71]">Secili danisan</p>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white mt-0.5">{selectedClientName}</p>
+          <div className="rounded-2xl border-2 border-emerald-500/40 bg-emerald-50/90 px-4 py-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Seçili danışan</p>
+            <p className="text-2xl font-bold text-slate-900 mt-0.5">{selectedClientName}</p>
           </div>
         )}
 
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1F2937] p-4 space-y-3">
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 space-y-3">
           <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
                 type="search"
-                placeholder="Danisan adi ile ara..."
-                className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-[#0D1117] pl-10 pr-3 py-3"
+                placeholder="Danışan adı ile ara…"
+                className="w-full rounded-xl border border-slate-300 bg-slate-50 pl-10 pr-3 py-3"
                 value={clientQuery}
                 onChange={(e) => setClientQuery(e.target.value)}
               />
             </div>
             {loadingList && <Loader2 className="w-5 h-5 animate-spin text-emerald-500 self-center" />}
           </div>
-          <div className="max-h-48 overflow-y-auto rounded-xl border border-slate-200 dark:border-slate-600 divide-y divide-slate-200 dark:divide-slate-600">
+          <div className="max-h-48 overflow-y-auto rounded-xl border border-slate-200 divide-y divide-slate-200">
             {filteredClients.length === 0 ? (
               <p className="p-3 text-sm text-slate-500">
                 {loadingList
-                  ? "Liste yukleniyor…"
+                  ? "Liste yükleniyor…"
                   : clients.length === 0
-                    ? "Henuz bagli danisan yok."
-                    : "Arama sonucu yok; aramayi sadelestirin."}
+                    ? "Henüz bağlı danışan yok."
+                    : "Arama sonucu yok; aramayı sadeleştirin."}
               </p>
             ) : (
               filteredClients.map((client) => {
-                const label = `${client.firstName || ""} ${client.lastName || ""}`.trim() || "Isimsiz";
+                const label = `${client.firstName || ""} ${client.lastName || ""}`.trim() || "İsimsiz";
                 return (
                   <button
                     type="button"
@@ -150,8 +150,8 @@ export function DietitianAiReview() {
                     }}
                     className={`w-full text-left px-3 py-2.5 text-sm font-medium transition-colors ${
                       selectedClientId === client.id
-                        ? "bg-emerald-500/20 text-emerald-800 dark:text-emerald-200 ring-1 ring-inset ring-emerald-500/30"
-                        : "hover:bg-slate-100 dark:hover:bg-[#2D3748]"
+                        ? "bg-emerald-500/20 text-emerald-800 ring-1 ring-inset ring-emerald-500/30"
+                        : "hover:bg-slate-100"
                     }`}
                   >
                     {label}
@@ -163,17 +163,17 @@ export function DietitianAiReview() {
         </div>
 
         {selectedClientId && (
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1F2937] p-4">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white">AI Mutfak paylasimlari</h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Danisan uygulamada secer ve paylasir; burada sadece okunur. Son kayitlar (en cok 30) listelenir.
+          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+            <h2 className="text-lg font-bold text-slate-900">Yapay zeka mutfak paylaşımları</h2>
+            <p className="text-sm text-slate-500 mt-1">
+              Danışan uygulamada seçer ve paylaşır; burada sadece okunur. Son kayıtlar (en çok 30) listelenir.
             </p>
             {loadingKitchen ? (
               <p className="text-sm text-slate-500 mt-3 flex items-center gap-2">
-                <Loader2 className="w-4 h-4 animate-spin" /> Yukleniyor…
+                <Loader2 className="w-4 h-4 animate-spin" /> Yükleniyor…
               </p>
             ) : kitchenLogs.length === 0 ? (
-              <p className="text-sm text-slate-500 mt-3">Henuz paylasilmis tarif yok veya yukleme hatasi.</p>
+              <p className="text-sm text-slate-500 mt-3">Henüz paylaşılmış tarif yok veya yükleme hatası.</p>
             ) : (
               <ul className="mt-4 space-y-4">
                 {kitchenLogs.map((log) => {
@@ -190,17 +190,17 @@ export function DietitianAiReview() {
                   return (
                     <li
                       key={log.id || log.createdAtUtc + (log.preference || "")}
-                      className="rounded-xl border border-slate-200 dark:border-slate-600 p-3 bg-slate-50/80 dark:bg-[#111827]/80"
+                      className="rounded-xl border border-slate-200 p-3 bg-slate-50/80"
                     >
-                      <div className="flex flex-wrap items-baseline justify-between gap-2 text-xs text-slate-500 dark:text-slate-400">
+                      <div className="flex flex-wrap items-baseline justify-between gap-2 text-xs text-slate-500">
                         <span>{when}</span>
                         <span>
-                          Hedef {log.targetCalories} kcal
+                          Hedef {log.targetCalories} kkal
                           {log.source ? ` · ${log.source}` : ""}
                         </span>
                       </div>
-                      <p className="text-sm mt-1 text-slate-600 dark:text-slate-300">
-                        <span className="font-medium text-slate-800 dark:text-slate-200">Tercih:</span> {log.preference}
+                      <p className="text-sm mt-1 text-slate-600">
+                        <span className="font-medium text-slate-800">Tercih:</span> {log.preference}
                       </p>
                       <p className="text-xs text-slate-500 mt-1">
                         <span className="font-medium">Malzemeler (sorgu):</span> {log.ingredients}
@@ -210,25 +210,25 @@ export function DietitianAiReview() {
                           {log.selectedRecipes.map((r, i) => (
                             <div
                               key={i + (r.title || "")}
-                              className="rounded-lg border border-emerald-200/60 dark:border-emerald-800/50 p-2 bg-white/90 dark:bg-[#0D1117]/90"
+                              className="rounded-lg border border-emerald-200/60 p-2 bg-white/90"
                             >
-                              <p className="font-semibold text-slate-900 dark:text-white">{r.title}</p>
+                              <p className="font-semibold text-slate-900">{r.title}</p>
                               {r.description && (
-                                <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{r.description}</p>
+                                <p className="text-sm text-slate-600 mt-1">{r.description}</p>
                               )}
                               <p className="text-xs text-slate-500 mt-1">
-                                ~{r.estimatedCalories} kcal
+                                ~{r.estimatedCalories} kkal
                                 {r.prepTimeMinutes != null ? ` · ${r.prepTimeMinutes} dk` : ""}
                               </p>
                               {r.ingredients?.length > 0 && (
-                                <ul className="mt-1 text-xs list-disc list-inside text-slate-600 dark:text-slate-300">
+                                <ul className="mt-1 text-xs list-disc list-inside text-slate-600">
                                   {r.ingredients.map((ing, j) => (
                                     <li key={j}>{ing}</li>
                                   ))}
                                 </ul>
                               )}
                               {r.steps?.length > 0 && (
-                                <ol className="mt-2 text-xs list-decimal list-inside text-slate-600 dark:text-slate-300 space-y-0.5">
+                                <ol className="mt-2 text-xs list-decimal list-inside text-slate-600 space-y-0.5">
                                   {r.steps.map((s, j) => (
                                     <li key={j}>{s}</li>
                                   ))}

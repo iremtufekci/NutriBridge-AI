@@ -4,12 +4,14 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.IdentityModel.Tokens;
+using Nightbrate.API;
 using Nightbrate.API.Middleware;
 using Nightbrate.API.Monitoring;
 using Nightbrate.API.Services;
 using Nightbrate.Application.Interfaces;
 using Nightbrate.Application.Options;
 using Nightbrate.Application.Services;
+using Nightbrate.Infrastructure;
 using Nightbrate.Infrastructure.Data;
 using Nightbrate.Infrastructure.Monitoring;
 using Nightbrate.Infrastructure.Repositories;
@@ -20,11 +22,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<FormOptions>(options =>
 {
-    options.MultipartBodyLengthLimit = 5 * 1024 * 1024;
+    options.MultipartBodyLengthLimit = 12 * 1024 * 1024;
 });
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.Limits.MaxRequestBodySize = 5 * 1024 * 1024;
+    options.Limits.MaxRequestBodySize = 12 * 1024 * 1024;
 });
 
 builder.Services.AddCors(options =>
@@ -98,12 +100,53 @@ builder.Services.AddScoped<IDietitianService, DietitianService>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
-builder.Services.Configure<MealUploadOptions>(o =>
+builder.Services.Configure<CloudinaryStorageOptions>(builder.Configuration.GetSection("Cloudinary"));
+builder.Services.PostConfigure<CloudinaryStorageOptions>(o =>
 {
-    o.MealsDirectory = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "uploads", "meals");
-    o.PublicRelativePath = "/uploads/meals";
+    var url = builder.Configuration["CLOUDINARY_URL"] ?? Environment.GetEnvironmentVariable("CLOUDINARY_URL");
+    if (string.IsNullOrWhiteSpace(url))
+        return;
+    if (!CloudinaryUrlParser.TryParse(url.Trim(), out var cn, out var ak, out var sec))
+        return;
+    if (string.IsNullOrWhiteSpace(o.CloudName))
+        o.CloudName = cn;
+    if (string.IsNullOrWhiteSpace(o.ApiKey))
+        o.ApiKey = ak;
+    if (string.IsNullOrWhiteSpace(o.ApiSecret))
+        o.ApiSecret = sec;
 });
-builder.Services.AddScoped<IMealPhotoStorage, LocalMealPhotoStorage>();
+
+builder.Services.Configure<PdfUploadOptions>(o =>
+{
+    o.PdfsDirectory = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "uploads", "pdfs");
+    o.PublicRelativePath = "/uploads/pdfs";
+    o.MaxPdfBytes = 9 * 1024 * 1024;
+});
+
+var cloudinaryCloudName = builder.Configuration["Cloudinary:CloudName"]?.Trim();
+if (string.IsNullOrWhiteSpace(cloudinaryCloudName))
+{
+    var urlOnly = builder.Configuration["CLOUDINARY_URL"] ?? Environment.GetEnvironmentVariable("CLOUDINARY_URL");
+    if (!string.IsNullOrWhiteSpace(urlOnly) && CloudinaryUrlParser.TryParse(urlOnly.Trim(), out var cn, out _, out _))
+        cloudinaryCloudName = cn;
+}
+
+if (!string.IsNullOrWhiteSpace(cloudinaryCloudName))
+{
+    builder.Services.AddNightbrateCloudinaryStorage();
+}
+else
+{
+    builder.Services.Configure<MealUploadOptions>(o =>
+    {
+        o.MealsDirectory = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "uploads", "meals");
+        o.PublicRelativePath = "/uploads/meals";
+    });
+    builder.Services.AddScoped<IMealPhotoStorage, LocalMealPhotoStorage>();
+    builder.Services.AddScoped<IPdfDocumentStorage, LocalPdfDocumentStorage>();
+}
+builder.Services.AddScoped<IClientPdfAnalysisRepository, ClientPdfAnalysisRepository>();
+builder.Services.AddScoped<IClientPdfAnalysisService, ClientPdfAnalysisService>();
 
 builder.Services.Configure<GeminiMealAnalysisOptions>(builder.Configuration.GetSection("Gemini"));
 builder.Services.PostConfigure<GeminiMealAnalysisOptions>(o =>
@@ -117,11 +160,13 @@ if (!string.IsNullOrWhiteSpace(geminiKey))
 {
     builder.Services.AddHttpClient<IMealAnalysisService, GeminiMealAnalysisService>();
     builder.Services.AddHttpClient<IKitchenChefService, GeminiKitchenChefService>();
+    builder.Services.AddHttpClient<IPdfAnalysisAiService, GeminiPdfAnalysisService>();
 }
 else
 {
     builder.Services.AddSingleton<IMealAnalysisService, MockMealAnalysisService>();
     builder.Services.AddSingleton<IKitchenChefService, MockKitchenChefService>();
+    builder.Services.AddSingleton<IPdfAnalysisAiService, MockPdfAnalysisService>();
 }
 
 builder.Services.AddScoped<IMealPhotoAnalysisService, MealPhotoAnalysisService>();

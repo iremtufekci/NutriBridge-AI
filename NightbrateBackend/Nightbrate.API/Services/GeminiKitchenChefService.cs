@@ -32,10 +32,10 @@ public sealed class GeminiKitchenChefService : IKitchenChefService
     public async Task<KitchenChefResponseDto> GenerateRecipesAsync(KitchenChefRequestDto request, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(_opt.ApiKey))
-            throw new AppException("Gemini API anahtari yapilandirilmamis.");
+            throw new AppException("Yapay zeka hizmeti için API anahtarı yapılandırılmamış.");
 
         if (string.IsNullOrWhiteSpace(request.Ingredients))
-            throw new AppException("Malzemeler bos olamaz.");
+            throw new AppException("Malzemeler boş olamaz.");
 
         var preferenceLabel = KitchenChefPreferences.LabelOrDefault(request.Preference);
         var kcal = Math.Clamp(request.TargetCalories, 200, 5000);
@@ -88,26 +88,25 @@ public sealed class GeminiKitchenChefService : IKitchenChefService
                 if (IsQuotaOrRateLimited(response.StatusCode, raw))
                 {
                     throw new AppException(
-                        "Gemini kotasi doldu veya secilen model icin ucretsiz kullanim kapali (limit 0). " +
-                        "Cozum: Google AI Studio / Cloud konsolunda kotayi ve faturayi kontrol edin; " +
-                        "Model olarak gemini-2.5-flash-lite deneyin.");
+                        "Yapay zeka hizmeti kotası doldu veya seçilen model için ücretsiz kullanım kapalı. " +
+                        "Bir süre sonra tekrar deneyin veya yapılandırmada daha hafif bir model seçin.");
                 }
 
                 var hint = TryExtractGeminiErrorMessage(raw);
                 throw new AppException(
                     string.IsNullOrWhiteSpace(hint)
-                        ? "Tarif uretilemedi. Gemini API anahtari ve model adini kontrol edin."
-                        : $"Tarif uretilemedi: {hint}");
+                        ? "Tarif üretilemedi. API anahtarını ve model adını kontrol edin."
+                        : $"Tarif üretilemedi: {hint}");
             }
         }
         catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
         {
-            throw new AppException("Tarif uretimi zaman asimina ugradi. Daha kisa sure sonra tekrar deneyin.");
+            throw new AppException("Tarif üretimi zaman aşımına uğradı. Kısa bir süre sonra tekrar deneyin.");
         }
 
         var text = ExtractResponseText(raw);
         if (string.IsNullOrWhiteSpace(text))
-            throw new AppException("Gemini yaniti bos. Lutfen tekrar deneyin.");
+            throw new AppException("Yapay zeka yanıtı boş. Lütfen tekrar deneyin.");
 
         KitchenChefRootJson? root;
         try
@@ -116,11 +115,11 @@ public sealed class GeminiKitchenChefService : IKitchenChefService
         }
         catch (JsonException)
         {
-            throw new AppException("Gemini yaniti cozumlenemedi. Lutfen tekrar deneyin.");
+            throw new AppException("Yapay zeka yanıtı çözümlenemedi. Lütfen tekrar deneyin.");
         }
 
         if (root?.Recipes is not { Count: > 0 })
-            throw new AppException("Tarif listesi alinamadi.");
+            throw new AppException("Tarif listesi alınamadı.");
 
         var list = new List<KitchenChefRecipeDto>();
         foreach (var r in root.Recipes)
@@ -138,7 +137,7 @@ public sealed class GeminiKitchenChefService : IKitchenChefService
         }
 
         if (list.Count == 0)
-            throw new AppException("Gecerli tarif uretilemedi.");
+            throw new AppException("Geçerli tarif üretilemedi.");
 
         return new KitchenChefResponseDto
         {

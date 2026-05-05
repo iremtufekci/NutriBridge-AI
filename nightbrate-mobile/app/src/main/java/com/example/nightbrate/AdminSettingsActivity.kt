@@ -23,7 +23,7 @@ class AdminSettingsActivity : AppCompatActivity() {
                 if (!r.isSuccessful) {
                     Toast.makeText(
                         this@AdminSettingsActivity,
-                        "Hesap bilgisi yuklenemedi",
+                        "Hesap bilgisi yüklenemedi",
                         Toast.LENGTH_LONG
                     ).show()
                     return@launch
@@ -39,7 +39,7 @@ class AdminSettingsActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Toast.makeText(
                     this@AdminSettingsActivity,
-                    e.message ?: "Baglanti hatasi",
+                    e.message ?: "Bağlantı hatası",
                     Toast.LENGTH_LONG
                 ).show()
             }

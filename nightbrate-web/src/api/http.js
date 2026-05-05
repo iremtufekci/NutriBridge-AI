@@ -23,12 +23,12 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-/** Axios/HTTP hata nesnesinden kullaniciya gosterilecek metin. */
+/** Axios/HTTP hata nesnesinden kullanıcıya gösterilecek metin. */
 export function getApiErrorMessage(err) {
   if (!err || typeof err !== "object") return "Beklenmeyen hata.";
-  if (err.code === "ECONNABORTED") return "Istek zaman asimina ugradi. Baglantiyi kontrol edin.";
+  if (err.code === "ECONNABORTED") return "İstek zaman aşımına uğradı. Bağlantıyı kontrol edin.";
   if (err.message === "Network Error")
-    return "Sunucuya baglanilamadi. API calisiyor mu (ornegin 5231)? Vite dev icin /api proxy aktif olsun.";
+    return "Sunucuya bağlanılamadı. Sunucu çalışıyor mu (örneğin 5231)? Geliştirme ortamında /api yönlendirmesinin açık olduğunu kontrol edin.";
   const r = err.response;
   if (!r) return err.message || "Bilinmeyen hata.";
   const s = r.status;
@@ -42,10 +42,10 @@ export function getApiErrorMessage(err) {
       if (parts.length) return parts.join(" ");
     }
   }
-  if (s === 401) return "Oturum suresi doldu veya giris yok. Lutfen tekrar giris yapin.";
-  if (s === 403) return "Bu islem icin yetkiniz yok.";
-  if (s === 404) return "Uç nokta bulunamadi. Backendi yeniden baslatip en son surumu derlediğinizden emin olun.";
-  if (s === 405) return "Istek yontemi reddedildi. Guncel API ve POST/PUT eslemesini kontrol edin.";
-  if (s >= 500) return "Sunucu hatasi. Detay: HTTP " + s;
-  return "Istek basarisiz (HTTP " + s + ").";
+  if (s === 401) return "Oturum süresi doldu veya giriş yok. Lütfen tekrar giriş yapın.";
+  if (s === 403) return "Bu işlem için yetkiniz yok.";
+  if (s === 404) return "Uç nokta bulunamadı. Sunucuyu yeniden başlatıp güncel sürümü çalıştırdığınızdan emin olun.";
+  if (s === 405) return "İstek yöntemi uygun değil. Gönderilen işlemle sunucu eşlemesini kontrol edin.";
+  if (s >= 500) return "Sunucu hatası. Durum kodu: " + s;
+  return "İstek başarısız (durum kodu: " + s + ").";
 }

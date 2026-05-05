@@ -79,7 +79,7 @@ public class CriticalAlertService(
             if (string.IsNullOrEmpty(c.Id)) continue;
             var name = $"{c.FirstName} {c.LastName}".Trim();
             if (name.Length == 0) name = c.Email;
-            if (name.Length == 0) name = "Danisan";
+            if (name.Length == 0) name = "Danışan";
 
             foreach (var ymd in dateStr)
             {
@@ -143,19 +143,19 @@ public class CriticalAlertService(
 
     public async Task AcknowledgeAsync(string dietitianId, AckCriticalAlertDto dto, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(dietitianId)) throw new AppException("Oturum bulunamadi.");
-        if (string.IsNullOrWhiteSpace(dto.ClientId)) throw new AppException("Danisan secin.");
-        if (string.IsNullOrWhiteSpace(dto.AlertType)) throw new AppException("Uyari turu gecersiz.");
+        if (string.IsNullOrWhiteSpace(dietitianId)) throw new AppException("Oturum bulunamadı.");
+        if (string.IsNullOrWhiteSpace(dto.ClientId)) throw new AppException("Danışan seçin.");
+        if (string.IsNullOrWhiteSpace(dto.AlertType)) throw new AppException("Uyarı türü geçersiz.");
         var dateKey = ProgramDateHelper.TryNormalize(dto.ReferenceDate);
-        if (dateKey is null) throw new AppException("Gecerli referans tarihi (yyyy-MM-dd) gonderin.");
+        if (dateKey is null) throw new AppException("Geçerli referans tarihi gönderin (yyyy-aa-gg).");
 
         if (dto.AlertType is not (CriticalAlertTypes.MissedMeals or CriticalAlertTypes.HighCalories))
-            throw new AppException("Bilinmeyen uyari turu.");
+            throw new AppException("Bilinmeyen uyarı türü.");
 
         var client = await clientRepository.GetByIdAsync(dto.ClientId).ConfigureAwait(false);
-        if (client is null) throw new AppException("Danisan bulunamadi.");
+        if (client is null) throw new AppException("Danışan bulunamadı.");
         if (client.DietitianId != dietitianId)
-            throw new AppException("Sadece kendi danisanlarinizin uyari kaydini kapatabilirsiniz.");
+            throw new AppException("Yalnızca kendi danışanlarınızın uyarı kaydını kapatabilirsiniz.");
 
         var key = MakeAckKey(dto.ClientId, dto.AlertType, dateKey);
         var existing = await ackRepository.GetByDietitianIdAsync(dietitianId, cancellationToken).ConfigureAwait(false);

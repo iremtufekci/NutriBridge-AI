@@ -130,7 +130,7 @@ class AdminSystemAnalyticsActivity : AppCompatActivity() {
     private fun bindUi(d: SystemAnalyticsResponse) {
         val hours = d.dataWindowHours ?: 24
         findViewById<TextView>(R.id.tvSysAnSubtitle).text =
-            "Teknik metrikler, API ve güvenlik (son $hours saat, periyodik yenileme)"
+            "Teknik metrikler, sunucu performansı ve güvenlik (son $hours saat, periyodik yenileme)"
 
         val note = findViewById<TextView>(R.id.tvSysAnDataNote)
         if (d.dataNote.isNullOrBlank()) {
@@ -196,8 +196,8 @@ class AdminSystemAnalyticsActivity : AppCompatActivity() {
             tvNet.text = ""
             tvNetNote.visibility = View.GONE
         } else {
-            tvCpu.text = "CPU %${"%.0f".format(res.cpuPercent)}  ·  RAM %${"%.0f".format(res.memoryPercent)}  ${res.memoryRefLabel ?: ""}".trim()
-            tvDisk.text = "Disk I/O %${"%.0f".format(res.diskIoPercent)}  ${res.diskRefLabel ?: ""}".trim()
+            tvCpu.text = "İşlemci %${"%.0f".format(res.cpuPercent)}  ·  Bellek %${"%.0f".format(res.memoryPercent)}  ${res.memoryRefLabel ?: ""}".trim()
+            tvDisk.text = "Disk G/Ç %${"%.0f".format(res.diskIoPercent)}  ${res.diskRefLabel ?: ""}".trim()
             tvNet.text =
                 "Ağ ~${"%.2f".format(res.networkMbps)} MB/s  ↑${"%.1f".format(res.networkUp)}  ↓${"%.1f".format(res.networkDown)}"
             val nn = res.networkNote?.trim().orEmpty()

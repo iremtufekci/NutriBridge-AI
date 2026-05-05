@@ -29,6 +29,8 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import retrofit2.Response
 import java.io.File
+import java.io.IOException
+import java.net.SocketTimeoutException
 
 class ClientMealAnalysisActivity : AppCompatActivity() {
 
@@ -112,43 +114,61 @@ class ClientMealAnalysisActivity : AppCompatActivity() {
         chipGroupFoods.removeAllViews()
 
         lifecycleScope.launch {
-            val tripleResult = withContext(Dispatchers.IO) {
-                runCatching {
-                    val cr = contentResolver
-                    val mime = cr.getType(uri) ?: "image/jpeg"
-                    require(mime in setOf("image/jpeg", "image/png", "image/jpg")) { "Sadece JPG veya PNG seçin." }
-                    val bytes = cr.openInputStream(uri)?.use { it.readBytes() }
-                        ?: error("Dosya okunamadı.")
-                    require(bytes.size <= maxBytes) { "Dosya en fazla 5 MB olabilir." }
-                    val fileName = queryDisplayName(uri).ifBlank { "meal.jpg" }
-                    Triple(bytes, mime, fileName)
+            try {
+                val tripleResult = withContext(Dispatchers.IO) {
+                    runCatching {
+                        val cr = contentResolver
+                        val mime = cr.getType(uri) ?: "image/jpeg"
+                        require(mime in setOf("image/jpeg", "image/png", "image/jpg")) { "Sadece JPG veya PNG seçin." }
+                        val bytes = cr.openInputStream(uri)?.use { it.readBytes() }
+                            ?: error("Dosya okunamadı.")
+                        require(bytes.size <= maxBytes) { "Dosya en fazla 5 MB olabilir." }
+                        val fileName = queryDisplayName(uri).ifBlank { "meal.jpg" }
+                        Triple(bytes, mime, fileName)
+                    }
                 }
-            }
 
-            val (bytes, mime, fileName) = tripleResult.getOrElse {
-                Toast.makeText(this@ClientMealAnalysisActivity, it.message ?: "Hata", Toast.LENGTH_LONG).show()
-                return@launch
-            }
-
-            imgPreview.load(uri)
-            cardMealPreview.visibility = View.VISIBLE
-
-            cardMealLoading.visibility = View.VISIBLE
-            val response = withContext(Dispatchers.IO) {
-                val body = bytes.toRequestBody(mime.toMediaTypeOrNull())
-                val part = MultipartBody.Part.createFormData("photo", fileName, body)
-                RetrofitClient.instance.uploadMealPhoto(part)
-            }
-            cardMealLoading.visibility = View.GONE
-
-            if (response.isSuccessful) {
-                val data = response.body()
-                if (data != null) {
-                    showResult(data)
+                val (bytes, mime, fileName) = tripleResult.getOrElse {
+                    Toast.makeText(this@ClientMealAnalysisActivity, it.message ?: "Hata", Toast.LENGTH_LONG).show()
+                    return@launch
                 }
-            } else {
-                tvError.text = readErrorMessage(response)
+
+                imgPreview.load(uri)
+                cardMealPreview.visibility = View.VISIBLE
+
+                cardMealLoading.visibility = View.VISIBLE
+                val response = withContext(Dispatchers.IO) {
+                    val body = bytes.toRequestBody(mime.toMediaTypeOrNull())
+                    val part = MultipartBody.Part.createFormData("photo", fileName, body)
+                    RetrofitClient.instance.uploadMealPhoto(part)
+                }
+
+                if (response.isSuccessful) {
+                    val data = response.body()
+                    if (data != null) {
+                        showResult(data)
+                    }
+                } else {
+                    tvError.text = readErrorMessage(response)
+                    tvError.visibility = View.VISIBLE
+                }
+            } catch (e: SocketTimeoutException) {
+                val msg = "Sunucu yanıt vermedi (zaman aşımı). Backend çalışıyor mu ve emülatörde 10.0.2.2 adresini kontrol edin."
+                Toast.makeText(this@ClientMealAnalysisActivity, msg, Toast.LENGTH_LONG).show()
+                tvError.text = msg
                 tvError.visibility = View.VISIBLE
+            } catch (e: IOException) {
+                val msg = e.message?.takeIf { it.isNotBlank() } ?: "Ağ bağlantısı hatası."
+                Toast.makeText(this@ClientMealAnalysisActivity, msg, Toast.LENGTH_LONG).show()
+                tvError.text = msg
+                tvError.visibility = View.VISIBLE
+            } catch (e: Exception) {
+                val msg = e.message ?: "Yükleme başarısız."
+                Toast.makeText(this@ClientMealAnalysisActivity, msg, Toast.LENGTH_LONG).show()
+                tvError.text = msg
+                tvError.visibility = View.VISIBLE
+            } finally {
+                cardMealLoading.visibility = View.GONE
             }
         }
     }
@@ -190,13 +210,13 @@ class ClientMealAnalysisActivity : AppCompatActivity() {
         when (data.analysisSource?.lowercase()) {
             "gemini" -> {
                 tvAnalysisSource.visibility = View.VISIBLE
-                tvAnalysisSource.text = "Analiz kaynağı: Google Gemini"
+                tvAnalysisSource.text = "Analiz kaynağı: yapay zeka hizmeti"
                 tvAnalysisSource.setTextColor(0xFF1D4ED8.toInt())
             }
             "mock" -> {
                 tvAnalysisSource.visibility = View.VISIBLE
                 tvAnalysisSource.text =
-                    "Analiz kaynağı: Yerel simülasyon (API'de Gemini anahtarı tanımlı değil)"
+                    "Analiz kaynağı: yerel simülasyon (sunucuda yapay zeka anahtarı tanımlı değil)"
                 tvAnalysisSource.setTextColor(0xFFB45309.toInt())
             }
             else -> {
