@@ -9,7 +9,7 @@ public class ClientProfileDto
     public int TargetCalories { get; set; }
     public string GoalText { get; set; } = string.Empty;
     public string ThemePreference { get; set; } = "light";
-    public string DietitianName { get; set; } = "Atanmadi";
+    public string DietitianName { get; set; } = "Atanmadı";
     public DateTime ProgramStartDate { get; set; }
 }
 

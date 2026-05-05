@@ -16,6 +16,7 @@ import {
 import { SidebarLayout } from "../../components/SidebarLayout";
 import { api } from "../../api/http";
 import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
+import { normalizeActivityDescription } from "../../lib/activityDescriptionTr";
 import axios from "axios";
 
 function formatTimeAgoTr(iso: string | null | undefined) {
@@ -204,14 +205,14 @@ export function AdminUserManagement() {
   const countLabel = useMemo(() => rows.length, [rows.length]);
 
   const cardBase =
-    "rounded-2xl border p-4 shadow-sm transition-colors bg-white border-slate-200/80 dark:bg-[#161B22] dark:border-slate-700/80";
+    "rounded-2xl border p-4 shadow-sm transition-colors bg-white border-slate-200/80";
 
   return (
     <SidebarLayout userRole="admin" userName={adminName}>
-      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-[#F4F6F8] dark:bg-[#0D1117] min-h-screen text-slate-900 dark:text-white transition-colors pb-24 lg:pb-8">
+      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-slate-50 min-h-screen text-slate-900 transition-colors pb-24 lg:pb-8">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Kullanıcı Yönetimi</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm sm:text-base">
+          <p className="text-slate-500 mt-1 text-sm sm:text-base">
             Sistemdeki tüm kullanıcıları görüntüleyin ve yönetin
           </p>
         </div>
@@ -219,16 +220,16 @@ export function AdminUserManagement() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
           {(
             [
-              ["Toplam Kullanıcı", stats?.totalUsers ?? "—", "text-slate-900 dark:text-white"],
-              ["Admin", stats?.admins ?? "—", "text-amber-600 dark:text-amber-400"],
-              ["Diyetisyen", stats?.dietitians ?? "—", "text-emerald-600 dark:text-emerald-400"],
-              ["Danışan", stats?.clients ?? "—", "text-emerald-600 dark:text-emerald-400"],
-              ["Aktif", stats?.active ?? "—", "text-emerald-600 dark:text-emerald-400"],
-              ["Bekleyen", stats?.pending ?? "—", "text-amber-600 dark:text-amber-400"],
+              ["Toplam Kullanıcı", stats?.totalUsers ?? "—", "text-slate-900"],
+              ["Yönetici", stats?.admins ?? "—", "text-amber-600"],
+              ["Diyetisyen", stats?.dietitians ?? "—", "text-emerald-600"],
+              ["Danışan", stats?.clients ?? "—", "text-emerald-600"],
+              ["Aktif", stats?.active ?? "—", "text-emerald-600"],
+              ["Bekleyen", stats?.pending ?? "—", "text-amber-600"],
             ] as const
           ).map(([t, v, c]) => (
             <div key={t} className={cardBase}>
-              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">{t}</p>
+              <p className="text-xs sm:text-sm text-slate-500 font-medium">{t}</p>
               <p className={`text-2xl sm:text-3xl font-bold mt-1 ${c}`}>{v}</p>
             </div>
           ))}
@@ -242,7 +243,7 @@ export function AdminUserManagement() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
               <input
                 type="search"
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-[#0D1117] text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-2 focus:ring-[#2ECC71]/40 focus:border-[#2ECC71] outline-none"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-[#2ECC71]/40 focus:border-[#2ECC71] outline-none"
                 placeholder="İsim, e-posta veya telefon ile ara..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -254,7 +255,7 @@ export function AdminUserManagement() {
               className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-white transition-colors shrink-0 ${
                 showFilters
                   ? "bg-[#2ECC71] hover:bg-[#27ae60]"
-                  : "bg-slate-800 dark:bg-slate-200 dark:text-slate-900 hover:opacity-90"
+                  : "bg-slate-800 text-white hover:opacity-90"
               }`}
             >
               <Filter className="w-4 h-4" />
@@ -264,15 +265,15 @@ export function AdminUserManagement() {
 
           {showFilters && (
             <>
-              <div className="border-t border-slate-200 dark:border-slate-700 pt-4" />
+              <div className="border-t border-slate-200 pt-4" />
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-bold text-slate-800 dark:text-slate-200 mb-1.5">
+                  <label className="block text-sm font-bold text-slate-800 mb-1.5">
                     Kullanıcı Rolü
                   </label>
                   <div className="relative">
                     <select
-                      className="w-full appearance-none rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-[#0D1117] py-2.5 pl-3 pr-10 text-sm focus:ring-2 focus:ring-[#2ECC71]/30 outline-none"
+                      className="w-full appearance-none rounded-xl border border-slate-200 bg-white py-2.5 pl-3 pr-10 text-sm focus:ring-2 focus:ring-[#2ECC71]/30 outline-none"
                       value={roleFilter}
                       onChange={(e) => setRoleFilter(e.target.value)}
                     >
@@ -286,12 +287,12 @@ export function AdminUserManagement() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-800 dark:text-slate-200 mb-1.5">
+                  <label className="block text-sm font-bold text-slate-800 mb-1.5">
                     Hesap Durumu
                   </label>
                   <div className="relative">
                     <select
-                      className="w-full appearance-none rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-[#0D1117] py-2.5 pl-3 pr-10 text-sm focus:ring-2 focus:ring-[#2ECC71]/30 outline-none"
+                      className="w-full appearance-none rounded-xl border border-slate-200 bg-white py-2.5 pl-3 pr-10 text-sm focus:ring-2 focus:ring-[#2ECC71]/30 outline-none"
                       value={statusFilter}
                       onChange={(e) => setStatusFilter(e.target.value)}
                     >
@@ -308,7 +309,7 @@ export function AdminUserManagement() {
             </>
           )}
 
-          <p className="text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-sm text-slate-500">
             {loading ? "Yükleniyor…" : `${countLabel} kullanıcı bulundu`}
           </p>
         </div>
@@ -317,7 +318,7 @@ export function AdminUserManagement() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[900px] text-left text-sm">
               <thead>
-                <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-900/50">
+                <tr className="border-b border-slate-200 bg-slate-50/80">
                   <th className="p-3 font-bold">Kullanıcı</th>
                   <th className="p-3 font-bold">İletişim</th>
                   <th className="p-3 font-bold">Rol</th>
@@ -344,17 +345,17 @@ export function AdminUserManagement() {
                   rows.map((u) => (
                     <tr
                       key={u.id}
-                      className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50/50 dark:hover:bg-slate-900/30"
+                      className="border-b border-slate-100 hover:bg-slate-50/50"
                     >
                       <td className="p-3">
                         <div className="flex items-center gap-2">
-                          <div className="w-9 h-9 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-200 flex items-center justify-center text-sm font-bold shrink-0">
+                          <div className="w-9 h-9 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-sm font-bold shrink-0">
                             {u.initial}
                           </div>
                           <span className="font-medium line-clamp-1">{u.displayName}</span>
                         </div>
                       </td>
-                      <td className="p-3 text-slate-600 dark:text-slate-300">
+                      <td className="p-3 text-slate-600">
                         <div className="flex items-center gap-1.5 text-xs sm:text-sm">
                           <Mail className="w-3.5 h-3.5 shrink-0" />
                           <span className="break-all">{u.email}</span>
@@ -370,8 +371,8 @@ export function AdminUserManagement() {
                         <span
                           className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                             u.roleKey === "admin"
-                              ? "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200"
-                              : "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200"
+                              ? "bg-amber-100 text-amber-800"
+                              : "bg-emerald-100 text-emerald-800"
                           }`}
                         >
                           {u.role}
@@ -381,17 +382,17 @@ export function AdminUserManagement() {
                         <span
                           className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                             u.statusKey === "suspended"
-                              ? "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200"
+                              ? "bg-red-100 text-red-800"
                               : u.statusKey === "pending"
-                                ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200"
-                                : "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200"
+                                ? "bg-amber-100 text-amber-800"
+                                : "bg-emerald-100 text-emerald-800"
                           }`}
                         >
                           {u.statusKey === "active" && <Check className="w-3 h-3" />}
                           {u.statusLabel}
                         </span>
                       </td>
-                      <td className="p-3 text-slate-600 dark:text-slate-300 whitespace-nowrap">
+                      <td className="p-3 text-slate-600 whitespace-nowrap">
                         <div className="flex items-center gap-1.5 text-xs sm:text-sm">
                           <Calendar className="w-3.5 h-3.5" />
                           {u.createdAt
@@ -399,16 +400,16 @@ export function AdminUserManagement() {
                             : "—"}
                         </div>
                       </td>
-                      <td className="p-3 text-slate-600 dark:text-slate-300 text-xs sm:text-sm whitespace-nowrap">
+                      <td className="p-3 text-slate-600 text-xs sm:text-sm whitespace-nowrap">
                         {formatTimeAgoTr(u.lastActivityAt)}
                       </td>
                       <td className="p-3">
                         <div className="flex items-center justify-end gap-2">
                           <button
                             type="button"
-                            title="Aktivite logları"
+                            title="Aktivite kayıtları"
                             onClick={() => void openLogs(u)}
-                            className="w-9 h-9 rounded-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-[#0D1117] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                            className="w-9 h-9 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-600 hover:bg-slate-50"
                           >
                             <Activity className="w-4 h-4" />
                           </button>
@@ -447,12 +448,12 @@ export function AdminUserManagement() {
 
       {logUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" role="dialog">
-          <div className="bg-white dark:bg-[#161B22] rounded-2xl max-w-lg w-full max-h-[80vh] overflow-hidden shadow-xl border border-slate-200 dark:border-slate-700">
-            <div className="p-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+          <div className="bg-white rounded-2xl max-w-lg w-full max-h-[80vh] overflow-hidden shadow-xl border border-slate-200">
+            <div className="p-4 border-b border-slate-200 flex items-center justify-between">
               <h2 className="font-bold text-lg">Aktivite — {logUser.displayName}</h2>
               <button
                 type="button"
-                className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                className="p-1 rounded-lg hover:bg-slate-100"
                 onClick={() => setLogUser(null)}
               >
                 Kapat
@@ -467,16 +468,16 @@ export function AdminUserManagement() {
                 logItems.map((a) => (
                   <div
                     key={a.id}
-                    className="flex gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800"
+                    className="flex gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100"
                   >
-                    <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-xs font-bold shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold shrink-0">
                       {a.initial}
                     </div>
                     <div className="min-w-0">
                       <p className="text-xs text-slate-500">
                         {a.actorDisplayName} · {new Date(a.createdAt).toLocaleString("tr-TR")}
                       </p>
-                      <p className="text-sm mt-0.5">{a.description}</p>
+                      <p className="text-sm mt-0.5">{normalizeActivityDescription(a.description)}</p>
                     </div>
                   </div>
                 ))
@@ -488,19 +489,19 @@ export function AdminUserManagement() {
 
       {suspendUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" role="dialog">
-          <div className="bg-white dark:bg-[#161B22] rounded-2xl max-w-md w-full shadow-xl border border-slate-200 dark:border-slate-700 p-6 space-y-4">
+          <div className="bg-white rounded-2xl max-w-md w-full shadow-xl border border-slate-200 p-6 space-y-4">
             <div className="flex items-start gap-2">
               <ShieldAlert className="w-6 h-6 text-amber-500 shrink-0 mt-0.5" />
               <div>
                 <h2 className="font-bold text-lg">Kullanıcıyı askıya al</h2>
-                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                  <strong className="text-slate-800 dark:text-slate-200">{suspendUser.email}</strong> giriş
+                <p className="text-sm text-slate-500 mt-1">
+                  <strong className="text-slate-800">{suspendUser.email}</strong> giriş
                   yapamayacak. Giriş ekranında gösterilecek metni yazın.
                 </p>
               </div>
             </div>
             <textarea
-              className="w-full min-h-[120px] rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-[#0D1117] p-3 text-sm focus:ring-2 focus:ring-[#2ECC71]/30 outline-none"
+              className="w-full min-h-[120px] rounded-xl border border-slate-200 bg-white p-3 text-sm focus:ring-2 focus:ring-[#2ECC71]/30 outline-none"
               placeholder="Askıya alma nedeni (kullanıcıya gösterilir)…"
               value={suspendMsg}
               onChange={(e) => setSuspendMsg(e.target.value)}
@@ -508,7 +509,7 @@ export function AdminUserManagement() {
             <div className="flex gap-2 justify-end">
               <button
                 type="button"
-                className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800"
+                className="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50"
                 onClick={() => setSuspendUser(null)}
                 disabled={suspendLoading}
               >

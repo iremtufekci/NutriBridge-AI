@@ -1,236 +1,275 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_bottom_nav"
     android:elevation="10dp"
-    android:gravity="center"
-    android:minHeight="56dp"
-    android:orientation="horizontal"
+    android:fillViewport="true"
+    android:scrollbars="none"
     android:paddingTop="6dp"
     android:paddingBottom="8dp">
 
     <LinearLayout
-        android:id="@+id/tabHome"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingVertical="4dp">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="4dp">
 
-        <TextView
-            android:id="@+id/iconHome"
+        <LinearLayout
+            android:id="@+id/tabHome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="⌂"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/labelHome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
-            android:maxLines="2"
-            android:text="Ana Sayfa"
-            android:textColor="@color/nav_item_inactive"
-            android:textSize="9sp" />
-    </LinearLayout>
+            android:minWidth="56dp"
+            android:orientation="vertical"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="4dp">
 
-    <LinearLayout
-        android:id="@+id/tabJournal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingVertical="4dp">
+            <TextView
+                android:id="@+id/iconHome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⌂"
+                android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/iconJournal"
+            <TextView
+                android:id="@+id/labelHome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="2"
+                android:text="Ana Sayfa"
+                android:textColor="@color/nav_item_inactive"
+                android:textSize="8sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tabJournal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="📅"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/labelJournal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
-            android:maxLines="2"
-            android:text="Diyet"
-            android:textColor="@color/nav_item_inactive"
-            android:textSize="8sp" />
-    </LinearLayout>
+            android:minWidth="56dp"
+            android:orientation="vertical"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="4dp">
 
-    <LinearLayout
-        android:id="@+id/tabPast"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingVertical="4dp">
+            <TextView
+                android:id="@+id/iconJournal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📅"
+                android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/iconPast"
+            <TextView
+                android:id="@+id/labelJournal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="2"
+                android:text="Diyet"
+                android:textColor="@color/nav_item_inactive"
+                android:textSize="8sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tabPast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="📜"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/labelPast"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
-            android:maxLines="2"
-            android:text="Gecmiş"
-            android:textColor="@color/nav_item_inactive"
-            android:textSize="8sp" />
-    </LinearLayout>
+            android:minWidth="56dp"
+            android:orientation="vertical"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="4dp">
 
-    <LinearLayout
-        android:id="@+id/tabFood"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingVertical="4dp">
+            <TextView
+                android:id="@+id/iconPast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📜"
+                android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/iconFood"
+            <TextView
+                android:id="@+id/labelPast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="2"
+                android:text="Geçmiş"
+                android:textColor="@color/nav_item_inactive"
+                android:textSize="8sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tabFood"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="🔍"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/labelFood"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
-            android:maxLines="2"
-            android:text="Yemek Analizi"
-            android:textColor="@color/nav_item_inactive"
-            android:textSize="9sp" />
-    </LinearLayout>
+            android:minWidth="56dp"
+            android:orientation="vertical"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="4dp">
 
-    <LinearLayout
-        android:id="@+id/tabChef"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingVertical="4dp">
+            <TextView
+                android:id="@+id/iconFood"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔍"
+                android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/iconChef"
+            <TextView
+                android:id="@+id/labelFood"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="2"
+                android:text="Yemek"
+                android:textColor="@color/nav_item_inactive"
+                android:textSize="8sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tabPdf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="🍳"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/labelChef"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
-            android:maxLines="2"
-            android:text="AI Mutfak"
-            android:textColor="@color/nav_item_inactive"
-            android:textSize="9sp" />
-    </LinearLayout>
+            android:minWidth="56dp"
+            android:orientation="vertical"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="4dp">
 
-    <LinearLayout
-        android:id="@+id/tabShares"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingVertical="4dp">
+            <TextView
+                android:id="@+id/iconPdf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📄"
+                android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/iconShares"
+            <TextView
+                android:id="@+id/labelPdf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="2"
+                android:text="PDF"
+                android:textColor="@color/nav_item_inactive"
+                android:textSize="8sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tabChef"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="📤"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/labelShares"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
-            android:maxLines="2"
-            android:text="Paylaştığım"
-            android:textColor="@color/nav_item_inactive"
-            android:textSize="8sp" />
-    </LinearLayout>
+            android:minWidth="56dp"
+            android:orientation="vertical"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="4dp">
 
-    <LinearLayout
-        android:id="@+id/tabProfile"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingHorizontal="2dp"
-        android:paddingVertical="4dp">
+            <TextView
+                android:id="@+id/iconChef"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🍳"
+                android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/iconProfile"
+            <TextView
+                android:id="@+id/labelChef"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="2"
+                android:text="YZ mutfak"
+                android:textColor="@color/nav_item_inactive"
+                android:textSize="8sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tabShares"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="👤"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/labelProfile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
-            android:maxLines="2"
-            android:text="Profilim"
-            android:textColor="@color/nav_item_inactive"
-            android:textSize="9sp" />
+            android:minWidth="56dp"
+            android:orientation="vertical"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="4dp">
+
+            <TextView
+                android:id="@+id/iconShares"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📤"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/labelShares"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="2"
+                android:text="Paylaştım"
+                android:textColor="@color/nav_item_inactive"
+                android:textSize="8sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tabProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:minWidth="56dp"
+            android:orientation="vertical"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="4dp">
+
+            <TextView
+                android:id="@+id/iconProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="👤"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/labelProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="2"
+                android:text="Profilim"
+                android:textColor="@color/nav_item_inactive"
+                android:textSize="8sp" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</HorizontalScrollView>

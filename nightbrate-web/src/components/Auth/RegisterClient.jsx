@@ -53,7 +53,7 @@ export function RegisterClient() {
       const response = await api.post("/api/Auth/register-client", payload);
 
       if (response.status === 200 || response.status === 201) {
-        alert("Kayıt Başarılı! " + (response.data.message || "Hoş geldiniz."));
+        alert("Kayıt başarılı! " + (response.data.message || "Hoş geldiniz."));
         navigate("/");
       }
     } catch (error) {
@@ -66,7 +66,7 @@ export function RegisterClient() {
         alert("Hata: " + errorMsg);
       } else if (error.request) {
         // İstek yapıldı ama cevap gelmedi (Backend kapalı olabilir)
-        alert("Backend sunucusuna ulaşılamıyor! Lütfen terminalde 'dotnet run' yapın.");
+        alert("Sunucuya ulaşılamıyor. Bağlantınızı ve sunucunun çalıştığını kontrol edin.");
       } else {
         alert("Beklenmedik bir hata oluştu: " + error.message);
       }
@@ -74,15 +74,15 @@ export function RegisterClient() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0D1117] flex items-center justify-center p-4">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
       <style dangerouslySetInnerHTML={{ __html: `
         .input-style {
           width: 100%;
           padding: 0.75rem;
-          background-color: #0D1117;
-          border: 1px solid #2D3748;
+          background-color: #ffffff;
+          border: 1px solid #e2e8f0;
           border-radius: 0.75rem;
-          color: white;
+          color: #0f172a;
           outline: none;
           transition: all 0.2s;
           margin-bottom: 1rem;
@@ -107,14 +107,14 @@ export function RegisterClient() {
         }
       `}} />
 
-      <div className="w-full max-w-md bg-[#1F2937] rounded-2xl p-8 border border-slate-700 shadow-2xl">
+      <div className="w-full max-w-md bg-white rounded-2xl p-8 border border-slate-200 shadow-2xl">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-[#22C55E] mb-2">NutriBridge</h1>
           <div className="flex justify-center gap-2 mt-4">
-            <div className={`w-8 h-1 rounded-full ${step >= 1 ? 'bg-[#22C55E]' : 'bg-slate-600'}`} />
-            <div className={`w-8 h-1 rounded-full ${step >= 2 ? 'bg-[#22C55E]' : 'bg-slate-600'}`} />
+            <div className={`w-8 h-1 rounded-full ${step >= 1 ? "bg-[#22C55E]" : "bg-slate-300"}`} />
+            <div className={`w-8 h-1 rounded-full ${step >= 2 ? "bg-[#22C55E]" : "bg-slate-300"}`} />
           </div>
-          <p className="text-slate-400 mt-2 text-sm">{step === 1 ? "Kişisel Bilgiler" : "Vücut & Hedef Bilgileri"}</p>
+          <p className="text-slate-600 mt-2 text-sm">{step === 1 ? "Kişisel Bilgiler" : "Vücut & Hedef Bilgileri"}</p>
         </div>
 
         {step === 1 ? (
@@ -161,7 +161,7 @@ export function RegisterClient() {
           </form>
         )}
 
-        <p className="text-center text-slate-400 mt-6 text-sm">
+        <p className="text-center text-slate-600 mt-6 text-sm">
           Zaten hesabınız var mı? <Link to="/" className="text-[#22C55E] font-bold hover:underline">Giriş Yap</Link>
         </p>
       </div>

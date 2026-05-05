@@ -243,6 +243,19 @@ data class KitchenChefShareLogItem(
     @SerializedName("selectedRecipes") val selectedRecipes: List<KitchenChefRecipeItem> = emptyList()
 )
 
+data class ClientPdfAnalysisResponseDto(
+    @SerializedName("id") val id: String? = null,
+    @SerializedName("pdfUrl") val pdfUrl: String? = null,
+    @SerializedName("originalFileName") val originalFileName: String? = null,
+    @SerializedName("documentType") val documentType: String? = null,
+    @SerializedName("summary") val summary: String? = null,
+    @SerializedName("keyFindings") val keyFindings: List<String> = emptyList(),
+    @SerializedName("cautions") val cautions: List<String> = emptyList(),
+    @SerializedName("suggestedForDietitian") val suggestedForDietitian: List<String> = emptyList(),
+    @SerializedName("analysisSource") val analysisSource: String? = null,
+    @SerializedName("createdAtUtc") val createdAtUtc: String? = null
+)
+
 data class DietitianDailyTaskItemDto(
     @SerializedName("id") val id: String? = null,
     @SerializedName("taskKey") val taskKey: String? = null,
@@ -266,7 +279,77 @@ data class SetDietitianTaskCompleteBody(
     @SerializedName("isCompleted") val isCompleted: Boolean
 )
 
-/** Sadece sayım için; tam şema gerekmez. */
-data class DietitianCriticalAlertStub(
-    @SerializedName("id") val id: String? = null
+data class DietitianCriticalAlertDto(
+    @SerializedName("id") val id: String = "",
+    @SerializedName("clientId") val clientId: String = "",
+    @SerializedName("clientName") val clientName: String = "",
+    @SerializedName("alertType") val alertType: String = "",
+    @SerializedName("severity") val severity: String = "",
+    @SerializedName("message") val message: String = "",
+    @SerializedName("date") val date: String = "",
+    @SerializedName("referenceDate") val referenceDate: String = ""
+)
+
+data class AckCriticalAlertRequest(
+    @SerializedName("clientId") val clientId: String,
+    @SerializedName("alertType") val alertType: String,
+    @SerializedName("referenceDate") val referenceDate: String
+)
+
+data class DietitianTabCountsDto(
+    @SerializedName("all") val all: Int = 0,
+    @SerializedName("active") val active: Int = 0,
+    @SerializedName("critical") val critical: Int = 0,
+    @SerializedName("passive") val passive: Int = 0
+)
+
+data class DietitianMyClientsResponseDto(
+    @SerializedName("tabCounts") val tabCounts: DietitianTabCountsDto = DietitianTabCountsDto(),
+    @SerializedName("clients") val clients: List<DietitianClientCardDto> = emptyList()
+)
+
+data class DietitianClientCardDto(
+    @SerializedName("id") val id: String? = null,
+    @SerializedName("firstName") val firstName: String? = null,
+    @SerializedName("lastName") val lastName: String? = null,
+    @SerializedName("displayName") val displayName: String? = null,
+    @SerializedName("startedAtUtc") val startedAtUtc: String? = null,
+    @SerializedName("lastActivityUtc") val lastActivityUtc: String? = null,
+    @SerializedName("compliancePercent") val compliancePercent: Int = 0,
+    @SerializedName("segment") val segment: String? = null,
+    @SerializedName("isCritical") val isCritical: Boolean = false
+)
+
+data class DietitianClientBriefDto(
+    @SerializedName("clientId") val clientId: String? = null,
+    @SerializedName("firstName") val firstName: String? = null,
+    @SerializedName("lastName") val lastName: String? = null,
+    @SerializedName("email") val email: String? = null,
+    @SerializedName("targetCalories") val targetCalories: Int = 0,
+    @SerializedName("weight") val weight: Double = 0.0,
+    @SerializedName("height") val height: Double = 0.0,
+    @SerializedName("phone") val phone: String? = null
+)
+
+data class DietitianProgramMealOverviewDto(
+    @SerializedName("mealKey") val mealKey: String? = null,
+    @SerializedName("label") val label: String? = null,
+    @SerializedName("description") val description: String? = null,
+    @SerializedName("calories") val calories: Int = 0,
+    @SerializedName("completed") val completed: Boolean = false
+)
+
+data class DietitianProgramDayOverviewDto(
+    @SerializedName("programDate") val programDate: String? = null,
+    @SerializedName("weekdayLabel") val weekdayLabel: String? = null,
+    @SerializedName("meals") val meals: List<DietitianProgramMealOverviewDto> = emptyList()
+)
+
+data class DietitianClientOverviewDto(
+    @SerializedName("client") val client: DietitianClientBriefDto? = null,
+    @SerializedName("compliancePercent") val compliancePercent: Int = 0,
+    @SerializedName("complianceReferenceDate") val complianceReferenceDate: String? = null,
+    @SerializedName("weeklyProgramDays") val weeklyProgramDays: List<DietitianProgramDayOverviewDto> = emptyList(),
+    @SerializedName("kitchenRecipeLogs") val kitchenRecipeLogs: List<KitchenChefShareLogItem> = emptyList(),
+    @SerializedName("pdfAnalyses") val pdfAnalyses: List<ClientPdfAnalysisResponseDto> = emptyList()
 )

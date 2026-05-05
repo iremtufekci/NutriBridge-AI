@@ -25,11 +25,11 @@ public class KitchenChefController(
         if (string.IsNullOrWhiteSpace(body.Ingredients))
             throw new AppException("Malzemeler zorunludur.");
         if (body.Ingredients.Length > 4000)
-            throw new AppException("Malzeme listesi cok uzun (en fazla 4000 karakter).");
+            throw new AppException("Malzeme listesi çok uzun (en fazla 4000 karakter).");
         if (!KitchenChefPreferences.IsValid(body.Preference))
-            throw new AppException("Gecerli bir tercih secin (ornegin: practical, low_calorie).");
+            throw new AppException("Geçerli bir tercih seçin: pratik, düşük kalori, vejetaryen, yüksek protein, vegan veya glutensiz.");
         if (body.TargetCalories is < 200 or > 5000)
-            throw new AppException("Hedef kalori 200–5000 arasinda olmalidir.");
+            throw new AppException("Hedef kalori 200–5000 arasında olmalıdır.");
 
         var result = await kitchenChefService.GenerateRecipesAsync(body, cancellationToken).ConfigureAwait(false);
         return Ok(result);
@@ -41,23 +41,23 @@ public class KitchenChefController(
     public async Task<IActionResult> Save([FromBody] KitchenChefSaveRequestDto body, CancellationToken cancellationToken)
     {
         if (body.SelectedRecipes is not { Count: 1 })
-            throw new AppException("Diyetisyenle paylasmak icin tam bir tarif secin (listeden yalnizca birini isaretleyin).");
+            throw new AppException("Diyetisyenle paylaşmak için tam bir tarif seçin (listeden yalnızca birini işaretleyin).");
         if (string.IsNullOrWhiteSpace(body.Ingredients))
             throw new AppException("Malzemeler zorunludur.");
         if (!KitchenChefPreferences.IsValid(body.Preference))
-            throw new AppException("Gecerli bir tercih secin.");
+            throw new AppException("Geçerli bir tercih seçin: pratik, düşük kalori, vejetaryen, yüksek protein, vegan veya glutensiz.");
         if (body.TargetCalories is < 200 or > 5000)
-            throw new AppException("Hedef kalori 200–5000 arasinda olmalidir.");
+            throw new AppException("Hedef kalori 200–5000 arasında olmalıdır.");
 
         foreach (var r in body.SelectedRecipes)
         {
             if (string.IsNullOrWhiteSpace(r.Title))
-                throw new AppException("Her tarif icin baslik zorunludur.");
+                throw new AppException("Her tarif için başlık zorunludur.");
         }
 
         var clientId = User.FindFirstValue("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
         if (string.IsNullOrWhiteSpace(clientId))
-            throw new AppException("Oturum bilgisi bulunamadi.");
+            throw new AppException("Oturum bilgisi bulunamadı.");
 
         var source = string.IsNullOrWhiteSpace(body.Source) ? "mock" : body.Source.Trim().ToLowerInvariant();
         if (source is not ("gemini" or "mock"))
@@ -82,11 +82,11 @@ public class KitchenChefController(
             var name = $"{c.FirstName} {c.LastName}".Trim();
             if (name.Length == 0) name = c.Email;
             await activityLogService
-                .LogAsync(clientId, name, "AI Mutfak: secilen tarifler diyetisyenle paylasildi")
+                .LogAsync(clientId, name, "Yapay zeka mutfak: seçilen tarifler diyetisyenle paylaşıldı")
                 .ConfigureAwait(false);
         }
 
-        return Ok(new { id = log.Id, message = "Tarifler kaydedildi. Diyetisyeniniz gorebilir." });
+        return Ok(new { id = log.Id, message = "Tarifler kaydedildi. Diyetisyeniniz görebilir." });
     }
 
     /// <summary>Danışanın diyetisyene paylaştığı AI Mutfak kayıtları (tarih ve kaynak filtresi).</summary>
@@ -102,26 +102,26 @@ public class KitchenChefController(
     {
         var clientId = User.FindFirstValue("UserId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
         if (string.IsNullOrWhiteSpace(clientId))
-            throw new AppException("Oturum bilgisi bulunamadi.");
+            throw new AppException("Oturum bilgisi bulunamadı.");
 
         DateTime? fromUtc = null;
         DateTime? toUtcEx = null;
         if (!string.IsNullOrWhiteSpace(from))
         {
             var n = ProgramDateHelper.TryNormalize(from);
-            if (n is null) throw new AppException("from: gecerli bir tarih (yyyy-MM-dd) girin.");
+            if (n is null) throw new AppException("from: geçerli bir tarih (yyyy-MM-dd) girin.");
             fromUtc = ProgramDateHelper.UtcStartOfYmdString(n);
         }
 
         if (!string.IsNullOrWhiteSpace(to))
         {
             var n = ProgramDateHelper.TryNormalize(to);
-            if (n is null) throw new AppException("to: gecerli bir tarih (yyyy-MM-dd) girin.");
+            if (n is null) throw new AppException("to: geçerli bir tarih (yyyy-MM-dd) girin.");
             toUtcEx = ProgramDateHelper.UtcStartOfYmdString(n).AddDays(1);
         }
 
         if (fromUtc.HasValue && toUtcEx.HasValue && fromUtc >= toUtcEx)
-            throw new AppException("Baslangic tarihi bitis tarihinden once olmalidir.");
+            throw new AppException("Başlangıç tarihi bitiş tarihinden önce olmalıdır.");
 
         if (skip < 0) skip = 0;
         if (take is < 1 or > 500) take = 200;

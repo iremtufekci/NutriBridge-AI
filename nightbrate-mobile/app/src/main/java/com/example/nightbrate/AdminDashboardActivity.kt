@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.nightbrate.ActivityWindowHelper.applyStandardContentWindow
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -82,6 +83,7 @@ class AdminDashboardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        applyStandardContentWindow()
         setContentView(R.layout.activity_admin_dashboard)
         AdminBottomBarHelper.bind(this, 0)
         loadDashboard()
@@ -146,7 +148,8 @@ class AdminDashboardActivity : AppCompatActivity() {
             val initial = (item.initial?.take(1) ?: "?").uppercase()
             row.findViewById<TextView>(R.id.tvActivityInitial).text = initial
             row.findViewById<TextView>(R.id.tvActivityName).text = item.actorDisplayName ?: "—"
-            row.findViewById<TextView>(R.id.tvActivityDescription).text = item.description.orEmpty()
+            row.findViewById<TextView>(R.id.tvActivityDescription).text =
+                ActivityDescriptionNormalize.toDisplay(item.description)
             row.findViewById<TextView>(R.id.tvActivityTimeAgo).text = formatTimeAgoTr(item.createdAt)
             container.addView(row)
         }

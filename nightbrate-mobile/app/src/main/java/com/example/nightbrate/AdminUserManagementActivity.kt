@@ -163,7 +163,7 @@ class AdminUserManagementActivity : AppCompatActivity() {
         val strong = ContextCompat.getColor(this, R.color.admin_strong)
         val amber = ContextCompat.getColor(this, R.color.um_stat_amber)
         val emerald = ContextCompat.getColor(this, R.color.um_stat_emerald)
-        bindStatCell(R.id.cellStatTotal, "Toplam Kullanıcı", s?.totalUsers?.toString(), strong)
+        bindStatCell(R.id.cellStatTotal, "Toplam kullanıcı", s?.totalUsers?.toString(), strong)
         bindStatCell(R.id.cellStatAdmin, "Admin", s?.admins?.toString(), amber)
         bindStatCell(R.id.cellStatDietitian, "Diyetisyen", s?.dietitians?.toString(), emerald)
         bindStatCell(R.id.cellStatClient, "Danışan", s?.clients?.toString(), emerald)
@@ -418,7 +418,7 @@ class AdminUserManagementActivity : AppCompatActivity() {
                         (a.initial?.take(1) ?: "?").uppercase()
                     val meta = "${a.actorDisplayName.orEmpty()} · ${formatDateTimeTr(a.createdAt)}"
                     row.findViewById<TextView>(R.id.uleMeta).text = meta
-                    row.findViewById<TextView>(R.id.uleDesc).text = a.description.orEmpty()
+                    row.findViewById<TextView>(R.id.uleDesc).text = ActivityDescriptionNormalize.toDisplay(a.description)
                     container.addView(row)
                 }
             } catch (e: Exception) {

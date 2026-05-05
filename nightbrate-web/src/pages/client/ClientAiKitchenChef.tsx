@@ -10,7 +10,7 @@ const PREFERENCES: { code: string; label: string }[] = [
   { code: "vegetarian", label: "Vejetaryen" },
   { code: "high_protein", label: "Protein" },
   { code: "vegan", label: "Vegan" },
-  { code: "gluten_free", label: "Gluten Free" },
+  { code: "gluten_free", label: "Glütensiz" },
 ];
 
 type Recipe = {
@@ -107,7 +107,7 @@ export function ClientAiKitchenChef() {
         source: result.source ?? "mock",
         selectedRecipes: picked,
       });
-      setSaveInfo("Seçtiğiniz tarif kaydedildi. Diyetisyeniniz “AI Denetimi” ekranından görebilir.");
+      setSaveInfo("Seçtiğiniz tarif kaydedildi. Diyetisyeniniz “Yapay zeka denetimi” ekranından görebilir.");
     } catch (e) {
       setError(getApiErrorMessage(e));
     } finally {
@@ -118,14 +118,14 @@ export function ClientAiKitchenChef() {
   return (
     <SidebarLayout userRole="client" userName={userName}>
       <div className="mx-auto max-w-2xl px-4 py-6 pb-28 lg:pb-8">
-        <div className="mb-6 rounded-2xl border border-emerald-200/80 bg-gradient-to-br from-emerald-50/90 to-white p-5 dark:from-emerald-950/40 dark:to-[#1F2937] dark:border-emerald-900/50">
+        <div className="mb-6 rounded-2xl border border-emerald-200/80 bg-gradient-to-br from-emerald-50/90 to-white p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-emerald-200/60 dark:bg-[#1F2937] dark:ring-emerald-800/50">
-              <ChefHat className="h-8 w-8 text-emerald-600 dark:text-emerald-400" aria-hidden />
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-emerald-200/60">
+              <ChefHat className="h-8 w-8 text-emerald-600" aria-hidden />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-slate-800 dark:text-slate-100">AI Mutfak Şefi</h1>
-              <p className="text-sm text-slate-600 dark:text-slate-400">
+              <h1 className="text-lg font-bold text-slate-800">Yapay zeka mutfak şefi</h1>
+              <p className="text-sm text-slate-600">
                 Yapay zeka ile hedef kalorinize uygun tarifler oluşturun
               </p>
             </div>
@@ -134,7 +134,7 @@ export function ClientAiKitchenChef() {
 
         <div className="space-y-6">
           <div>
-            <label htmlFor="chef-ingredients" className="mb-2 block text-sm font-semibold text-slate-800 dark:text-slate-200">
+            <label htmlFor="chef-ingredients" className="mb-2 block text-sm font-semibold text-slate-800">
               Elinizdeki Malzemeler <span className="text-red-500">*</span>
             </label>
             <textarea
@@ -143,16 +143,16 @@ export function ClientAiKitchenChef() {
               onChange={(e) => setIngredients(e.target.value)}
               rows={4}
               placeholder="Tavuk, krema, mantar, pirinç..."
-              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:border-slate-600 dark:bg-[#1F2937] dark:text-slate-100 dark:placeholder:text-slate-500"
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
             />
-            <p className="mt-2 flex items-start gap-2 text-xs text-amber-700 dark:text-amber-400/90">
+            <p className="mt-2 flex items-start gap-2 text-xs text-amber-700">
               <Lightbulb className="h-4 w-4 shrink-0 mt-0.5" aria-hidden />
               İpucu: Birden fazla malzeme yazabilirsiniz
             </p>
           </div>
 
           <div>
-            <p className="mb-2 block text-sm font-semibold text-slate-800 dark:text-slate-200">
+            <p className="mb-2 block text-sm font-semibold text-slate-800">
               Tercih <span className="text-red-500">*</span> <span className="font-normal text-slate-500">(birini seçin)</span>
             </p>
             <div className="flex flex-wrap gap-2">
@@ -167,7 +167,7 @@ export function ClientAiKitchenChef() {
                       "rounded-full border px-4 py-2 text-sm font-medium transition-colors",
                       on
                         ? "border-emerald-500 bg-emerald-500 text-white shadow-sm"
-                        : "border-slate-200 bg-white text-slate-700 hover:border-emerald-300 dark:border-slate-600 dark:bg-[#1F2937] dark:text-slate-200",
+                        : "border-slate-200 bg-white text-slate-700 hover:border-emerald-300",
                     ].join(" ")}
                   >
                     {p.label}
@@ -178,8 +178,8 @@ export function ClientAiKitchenChef() {
           </div>
 
           <div>
-            <label htmlFor="chef-kcal" className="mb-2 block text-sm font-semibold text-slate-800 dark:text-slate-200">
-              Hedef kalori (kcal) <span className="text-red-500">*</span>
+            <label htmlFor="chef-kcal" className="mb-2 block text-sm font-semibold text-slate-800">
+              Hedef kalori (kkal) <span className="text-red-500">*</span>
             </label>
             <input
               id="chef-kcal"
@@ -190,9 +190,9 @@ export function ClientAiKitchenChef() {
               value={targetCalories}
               onChange={(e) => setTargetCalories(e.target.value)}
               placeholder="Örn. 500"
-              className="w-full max-w-xs rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-800 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 dark:border-slate-600 dark:bg-[#1F2937] dark:text-slate-100"
+              className="w-full max-w-xs rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-800 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
             />
-            <p className="mt-1 text-xs text-slate-500">200 – 5000 kcal arası (öğüne veya porsiyona göre hedefiniz)</p>
+            <p className="mt-1 text-xs text-slate-500">200 – 5000 kkal arası (öğüne veya porsiyona göre hedefiniz)</p>
           </div>
 
           <button
@@ -207,14 +207,14 @@ export function ClientAiKitchenChef() {
         </div>
 
         {busy && (
-          <div className="mt-6 flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-600 dark:bg-[#1F2937]">
+          <div className="mt-6 flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-4">
             <Loader2 className="h-5 w-5 animate-spin text-emerald-600" />
-            <span className="text-sm text-slate-600 dark:text-slate-300">Tarifler hazırlanıyor… Lütfen bu sayfadan ayrılmayın.</span>
+            <span className="text-sm text-slate-600">Tarifler hazırlanıyor… Lütfen bu sayfadan ayrılmayın.</span>
           </div>
         )}
 
         {error && (
-          <div className="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200">
+          <div className="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
             {error}
           </div>
         )}
@@ -224,24 +224,24 @@ export function ClientAiKitchenChef() {
             {result.source && (
               <p
                 className={`text-xs font-semibold ${
-                  result.source === "gemini" ? "text-blue-700 dark:text-blue-300" : "text-amber-800 dark:text-amber-300"
+                  result.source === "gemini" ? "text-blue-700" : "text-amber-800"
                 }`}
               >
                 {result.source === "gemini"
-                  ? "Kaynak: Google Gemini"
-                  : "Kaynak: Yerel önizleme (API’de Gemini anahtarı yoksa)"}
+                  ? "Kaynak: yapay zeka hizmeti"
+                  : "Kaynak: yerel önizleme (sunucuda yapay zeka anahtarı tanımlı değilse)"}
               </p>
             )}
-            <p className="text-sm text-slate-600 dark:text-slate-400">
+            <p className="text-sm text-slate-600">
               Aşağıda <strong>birden fazla</strong> tarif göreceksiniz. Diyetisyeninizle paylaşmak istediğiniz{" "}
               <strong>yalnızca birini</strong> işaretleyip gönderin.
             </p>
             {result.recipes.map((r, i) => (
               <article
                 key={r.title + (r.estimatedCalories ?? "") + i}
-                className="overflow-hidden rounded-2xl border border-emerald-200/80 bg-white shadow-sm dark:border-emerald-900/40 dark:bg-[#1F2937]"
+                className="overflow-hidden rounded-2xl border border-emerald-200/80 bg-white shadow-sm"
               >
-                <div className="border-b border-emerald-100 bg-emerald-50/50 px-5 py-4 dark:border-emerald-900/30 dark:bg-emerald-950/20">
+                <div className="border-b border-emerald-100 bg-emerald-50/50 px-5 py-4">
                   <label className="flex cursor-pointer items-start gap-3">
                     <input
                       type="radio"
@@ -250,19 +250,19 @@ export function ClientAiKitchenChef() {
                       onChange={() => setSelectedIndex(i)}
                       className="mt-1.5 h-4 w-4 border-slate-300 text-emerald-600 focus:ring-emerald-500"
                     />
-                    <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">{r.title}</h2>
+                    <h2 className="text-lg font-bold text-slate-800">{r.title}</h2>
                   </label>
-                  {r.description && <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{r.description}</p>}
+                  {r.description && <p className="mt-1 text-sm text-slate-600">{r.description}</p>}
                   <div className="mt-2 flex flex-wrap gap-3 text-sm">
-                    <span className="font-semibold text-emerald-700 dark:text-emerald-400">{r.estimatedCalories} kcal</span>
+                    <span className="font-semibold text-emerald-700">{r.estimatedCalories} kkal</span>
                     {r.prepTimeMinutes != null && r.prepTimeMinutes > 0 && (
-                      <span className="text-slate-600 dark:text-slate-400">~{r.prepTimeMinutes} dk</span>
+                      <span className="text-slate-600">~{r.prepTimeMinutes} dk</span>
                     )}
                   </div>
                 </div>
-                <div className="space-y-4 px-5 py-4 text-sm text-slate-700 dark:text-slate-300">
+                <div className="space-y-4 px-5 py-4 text-sm text-slate-700">
                   <div>
-                    <p className="mb-2 font-semibold text-slate-800 dark:text-slate-200">Malzemeler</p>
+                    <p className="mb-2 font-semibold text-slate-800">Malzemeler</p>
                     <ul className="list-inside list-disc space-y-1">
                       {(r.ingredients ?? []).map((x) => (
                         <li key={x}>{x}</li>
@@ -270,7 +270,7 @@ export function ClientAiKitchenChef() {
                     </ul>
                   </div>
                   <div>
-                    <p className="mb-2 font-semibold text-slate-800 dark:text-slate-200">Hazırlanış</p>
+                    <p className="mb-2 font-semibold text-slate-800">Hazırlanış</p>
                     <ol className="list-inside list-decimal space-y-2">
                       {(r.steps ?? []).map((s, i) => (
                         <li key={i} className="pl-1">
@@ -286,22 +286,22 @@ export function ClientAiKitchenChef() {
               type="button"
               onClick={() => void shareWithDietitian()}
               disabled={saveBusy}
-              className="inline-flex w-full min-h-[48px] items-center justify-center gap-2 rounded-2xl border-2 border-emerald-500 bg-white px-4 text-sm font-semibold text-emerald-700 shadow-sm hover:bg-emerald-50 dark:border-emerald-600 dark:bg-[#1F2937] dark:text-emerald-300 dark:hover:bg-emerald-950/30 sm:w-auto"
+              className="inline-flex w-full min-h-[48px] items-center justify-center gap-2 rounded-2xl border-2 border-emerald-500 bg-white px-4 text-sm font-semibold text-emerald-700 shadow-sm hover:bg-emerald-50 sm:w-auto"
             >
               {saveBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Share2 className="h-4 w-4" />}
               Seçili tarifi diyetisyenle paylaş
             </button>
-            {saveInfo && <p className="text-sm text-emerald-700 dark:text-emerald-400">{saveInfo}</p>}
+            {saveInfo && <p className="text-sm text-emerald-700">{saveInfo}</p>}
           </div>
         )}
 
         {!result && !busy && !error && (
-          <div className="mt-12 flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 py-12 text-center dark:border-slate-600 dark:bg-slate-800/30">
-            <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-slate-200/80 dark:bg-slate-700/80">
+          <div className="mt-12 flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 py-12 text-center">
+            <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-slate-200/80">
               <ChefHat className="h-8 w-8 text-slate-500" />
             </div>
-            <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Malzemelerinizi ve hedef kalorinizi girin</p>
-            <p className="text-xs text-slate-500 dark:text-slate-500">Birden fazla tarif arasından birini seçip paylaşabilirsiniz</p>
+            <p className="text-sm font-medium text-slate-600">Malzemelerinizi ve hedef kalorinizi girin</p>
+            <p className="text-xs text-slate-500">Birden fazla tarif arasından birini seçip paylaşabilirsiniz</p>
           </div>
         )}
       </div>

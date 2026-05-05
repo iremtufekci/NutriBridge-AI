@@ -1,19 +1,21 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.Nightbrate" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <!-- Sabit açık tema (DayNight yok); setDefaultNightMode ile çakışan yeniden oluşturma yok. -->
+    <style name="Theme.Nightbrate" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/primary_green</item>
-        <item name="colorPrimaryVariant">@color/bg_dark</item>
         <item name="colorOnPrimary">@color/white</item>
-
         <item name="colorSecondary">@color/primary_green</item>
-        <item name="colorSecondaryVariant">@color/bg_dark</item>
         <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSurface">@color/card_surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="android:colorBackground">@color/client_scaffold</item>
+        <item name="colorOnBackground">@color/text_primary</item>
 
-        <!-- Web ile uyumlu açık gövde -->
         <item name="android:windowBackground">@color/client_scaffold</item>
         <item name="android:statusBarColor">@color/client_scaffold</item>
         <item name="android:navigationBarColor">@color/nav_bar_bg</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="lollipop">true</item>
     </style>
 
     <style name="Theme.Nightbrate.NoActionBar" parent="Theme.Nightbrate">

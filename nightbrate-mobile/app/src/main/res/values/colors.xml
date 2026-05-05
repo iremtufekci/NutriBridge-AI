@@ -14,8 +14,8 @@
     <color name="purple_700">#0F172A</color>
     <color name="bg_dark">#0F172A</color>
 
-    <!-- Web client: açık gövde #F8FAF7, kart #FFFFFF -->
-    <color name="client_scaffold">#F8FAF7</color>
+    <!-- Açık tema: dashboard referansı slate-50 #F9FAFB -->
+    <color name="client_scaffold">#F9FAFB</color>
     <color name="card_surface">#FFFFFF</color>
     <color name="text_primary">#0F172A</color>
     <color name="text_muted">#64748B</color>
@@ -35,14 +35,14 @@
     <color name="register_card">#1F2937</color>
     <color name="register_input_border">#374151</color>
 
-    <!-- Genel kart (açık modda beyaz yüzey; gece modu values-night ile) -->
+    <!-- Genel kart yüzeyi (açık tema) -->
     <color name="card_dark">#FFFFFF</color>
     <color name="text_gray">#64748B</color>
     <color name="input_border">#E2E8F0</color>
     <color name="input_placeholder">#94A3B8</color>
 
-    <!-- Web admin / diyetisyen panel #F4F6F8 -->
-    <color name="admin_page_bg">#F4F6F8</color>
+    <!-- Web panel arka planı (gündüz) -->
+    <color name="admin_page_bg">#F9FAFB</color>
     <color name="admin_card_bg">#FFFFFF</color>
     <color name="admin_card_header_grad_end">#F8FAFC</color>
     <color name="admin_row_surface">#F1F5F9</color>
@@ -82,4 +82,5 @@
     <color name="um_filter_inactive_bg">#F1F5F9</color>
     <color name="um_filter_inactive_text">#64748B</color>
     <color name="um_suspend_btn">#DC2626</color>
+    <color name="ai_review_row_selected">#E8F5E9</color>
 </resources>

@@ -258,7 +258,7 @@ class ClientDietProgramActivity : AppCompatActivity() {
 
         val dayTotal = dayTotalKcal(p)
         val num = nfTr.format(dayTotal)
-        val sp = SpannableString("Günlük toplam hedef: $num kcal")
+        val sp = SpannableString("Günlük toplam hedef: $num kkal")
         val kStart = sp.indexOf(num)
         if (kStart >= 0) {
             sp.setSpan(StyleSpan(Typeface.BOLD), kStart, kStart + num.length, 0)
@@ -334,7 +334,7 @@ class ClientDietProgramActivity : AppCompatActivity() {
         card.findViewById<TextView>(R.id.tvMealEmoji).text = m.emoji
         card.findViewById<TextView>(R.id.tvMealTitle).text = m.title
         card.findViewById<TextView>(R.id.tvMealTime).text = m.time
-        card.findViewById<TextView>(R.id.tvMealKcal).text = "${nfTr.format(kcal)} kcal"
+        card.findViewById<TextView>(R.id.tvMealKcal).text = "${nfTr.format(kcal)} kkal"
         val desc = card.findViewById<TextView>(R.id.tvMealDesc)
         desc.text = text.ifEmpty { "—" }
 

@@ -64,29 +64,34 @@
                         android:textSize="15sp" />
                 </LinearLayout>
 
-                <FrameLayout
+                <LinearLayout
+                    android:id="@+id/btnClientProfile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp">
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_profile_home_chip"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="8dp">
 
-                    <ImageButton
-                        android:id="@+id/btnClientBell"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="@drawable/client_bell_bg"
-                        android:contentDescription="Bildirimler"
-                        android:padding="10dp"
-                        android:src="@android:drawable/ic_popup_reminder"
-                        app:tint="@color/text_muted" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="👤"
+                        android:textSize="16sp" />
 
-                    <View
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:layout_gravity="top|end"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/client_bell_dot" />
-                </FrameLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:text="Profilim"
+                        android:textColor="@color/text_primary"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
@@ -189,7 +194,7 @@
                             android:background="@drawable/client_chip_bg"
                             android:paddingHorizontal="12dp"
                             android:paddingVertical="6dp"
-                            android:text="2000 kcal / gün"
+                            android:text="2000 kkal / gün"
                             android:textColor="@color/text_primary"
                             android:textSize="12sp"
                             android:textStyle="bold"
@@ -454,7 +459,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="AI Mutfak Şefi  YENİ"
+                            android:text="Yapay zeka mutfak şefi (yeni)"
                             android:textColor="@color/text_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />

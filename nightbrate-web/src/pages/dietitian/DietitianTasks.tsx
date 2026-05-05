@@ -27,13 +27,13 @@ type Bundle = {
 function categoryStyle(cat: string) {
   switch (cat) {
     case "Critical":
-      return "bg-rose-100 text-rose-600 dark:bg-rose-500/20 dark:text-rose-300";
+      return "bg-rose-100 text-rose-600";
     case "MealLog":
-      return "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-200";
+      return "bg-amber-100 text-amber-700";
     case "ProgramReview":
-      return "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300";
+      return "bg-emerald-100 text-emerald-700";
     default:
-      return "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300";
+      return "bg-slate-100 text-slate-600";
   }
 }
 
@@ -92,12 +92,12 @@ export function DietitianTasks() {
 
   return (
     <SidebarLayout userRole="dietitian" userName={name}>
-      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-[#F4F6F8] dark:bg-[#0D1117] min-h-screen text-slate-900 dark:text-white pb-24 lg:pb-8">
+      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-slate-50 min-h-screen text-slate-900 pb-24 lg:pb-8">
         <div className="flex items-center gap-3">
           <Link
             to="/dietitian/dashboard"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 dark:border-slate-700 dark:bg-[#1F2937] dark:text-slate-300"
-            aria-label="Dashboard"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600"
+            aria-label="Özet"
           >
             <ChevronLeft size={22} />
           </Link>
@@ -107,7 +107,7 @@ export function DietitianTasks() {
               Günlük görevler
             </h1>
             {bundle?.taskDate && (
-              <p className="text-sm text-slate-500 dark:text-[#9CA3AF] mt-1">
+              <p className="text-sm text-slate-500 mt-1">
                 Tarih: {bundle.taskDate} · Bekleyen {bundle.pendingCount} / Toplam {bundle.totalCount}
               </p>
             )}
@@ -121,26 +121,26 @@ export function DietitianTasks() {
         )}
 
         {error && (
-          <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-rose-700 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-200">
+          <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-rose-700">
             {error}
           </div>
         )}
 
         {!loading && bundle && (
-          <div className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1F2937] p-4 sm:p-5 shadow-sm space-y-3">
+          <div className="rounded-3xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm space-y-3">
             {bundle.tasks.length === 0 && (
-              <p className="text-slate-500 dark:text-[#9CA3AF] py-8 text-center">Bugün için henüz görev üretilmedi.</p>
+              <p className="text-slate-500 py-8 text-center">Bugün için henüz görev üretilmedi.</p>
             )}
             {bundle.tasks.map((task) => (
               <div
                 key={task.id}
-                className="flex items-start gap-3 rounded-2xl bg-slate-50 dark:bg-[#0D1117] border border-slate-100 dark:border-slate-800 p-4"
+                className="flex items-start gap-3 rounded-2xl bg-slate-50 border border-slate-100 p-4"
               >
                 <button
                   type="button"
                   disabled={busyId === task.id}
                   onClick={() => void toggle(task)}
-                  className="mt-0.5 h-6 w-6 shrink-0 rounded border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center disabled:opacity-50"
+                  className="mt-0.5 h-6 w-6 shrink-0 rounded border-2 border-slate-300 flex items-center justify-center disabled:opacity-50"
                   aria-pressed={task.isCompleted}
                   aria-label={task.isCompleted ? "Tamamlanmadı işaretle" : "Tamamlandı işaretle"}
                 >
@@ -152,13 +152,13 @@ export function DietitianTasks() {
                       {categoryLabel(task.category)}
                     </span>
                     {task.isCompleted && (
-                      <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">Tamamlandı</span>
+                      <span className="text-[10px] font-semibold text-emerald-600">Tamamlandı</span>
                     )}
                   </div>
                   <p className={`font-semibold text-lg mt-1 ${task.isCompleted ? "line-through opacity-60" : ""}`}>{task.title}</p>
-                  <p className="text-slate-500 dark:text-[#9CA3AF] text-sm">{task.subtitle}</p>
+                  <p className="text-slate-500 text-sm">{task.subtitle}</p>
                 </div>
-                <span className="text-xs font-semibold text-amber-600 dark:text-amber-400 whitespace-nowrap">{task.dueLabel}</span>
+                <span className="text-xs font-semibold text-amber-600 whitespace-nowrap">{task.dueLabel}</span>
               </div>
             ))}
           </div>

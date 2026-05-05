@@ -94,7 +94,7 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="API istek / saat"
+                                    android:text="İstek sayısı / saat"
                                     android:textColor="@color/admin_muted"
                                     android:textSize="11sp" />
 
@@ -138,7 +138,7 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="Ort. sorgu süresi"
+                                    android:text="Ortalama sorgu süresi"
                                     android:textColor="@color/admin_muted"
                                     android:textSize="11sp" />
 
@@ -233,7 +233,7 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="2xx / önbellek"
+                                    android:text="Başarılı yanıt / önbellek"
                                     android:textColor="@color/admin_muted"
                                     android:textSize="11sp" />
 

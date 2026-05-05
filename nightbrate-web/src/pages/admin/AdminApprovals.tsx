@@ -30,7 +30,7 @@ export function AdminApprovals() {
       const { data } = await api.get("/api/admin/pending-dietitians");
       setPending(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error("Bekleyen diyetisyenler alinamadi", error);
+      console.error("Bekleyen diyetisyenler alınamadı", error);
     } finally {
       setLoading(false);
     }
@@ -46,7 +46,7 @@ export function AdminApprovals() {
       await api.post(`/api/admin/approve-dietitian/${dietitianId}`);
       await loadPending();
     } catch (error) {
-      alert("Onaylama basarisiz: " + ((error as any)?.response?.data?.message || "Bilinmeyen hata"));
+      alert("Onaylama başarısız: " + ((error as any)?.response?.data?.message || "Bilinmeyen hata"));
     }
   };
 
@@ -57,7 +57,7 @@ export function AdminApprovals() {
       const { data } = await api.get(`/api/admin/dietitian/${dietitianId}`);
       setSelected(data);
     } catch (error) {
-      alert("Detaylar alinamadi: " + ((error as any)?.response?.data?.message || "Bilinmeyen hata"));
+      alert("Detaylar alınamadı: " + ((error as any)?.response?.data?.message || "Bilinmeyen hata"));
     } finally {
       setDetailLoading(false);
     }
@@ -71,28 +71,28 @@ export function AdminApprovals() {
       setSelected(null);
       await loadPending();
     } catch (error) {
-      alert("Onaylama basarisiz: " + ((error as any)?.response?.data?.message || "Bilinmeyen hata"));
+      alert("Onaylama başarısız: " + ((error as any)?.response?.data?.message || "Bilinmeyen hata"));
     }
   };
 
   return (
     <SidebarLayout userRole="admin" userName={adminName}>
-      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-[#F4F6F8] dark:bg-[#0D1117] min-h-screen text-slate-900 dark:text-white transition-colors pb-24 lg:pb-8">
+      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-slate-50 min-h-screen text-slate-900 transition-colors pb-24 lg:pb-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h1 className="text-3xl sm:text-5xl font-bold">Diyetisyen Onaylari</h1>
-            <p className="text-slate-500 dark:text-[#9CA3AF] mt-1">Bekleyen kayitlari inceleyin ve onaylayin</p>
+            <p className="text-slate-500 mt-1">Bekleyen kayıtları inceleyin ve onaylayın</p>
           </div>
           <div className="px-4 py-2 rounded-full bg-amber-100 text-amber-700 font-semibold w-fit">
             {pendingCount} Onay Bekliyor
           </div>
         </div>
 
-        <div className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1F2937] overflow-hidden shadow-sm">
+        <div className="rounded-3xl border border-slate-200 bg-white overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[900px]">
-              <thead className="bg-slate-50 dark:bg-slate-800/60">
-                <tr className="text-left text-sm text-slate-500 dark:text-slate-300">
+              <thead className="bg-slate-50">
+                <tr className="text-left text-sm text-slate-500">
                   <th className="p-4">Ad Soyad</th>
                   <th className="p-4">E-posta</th>
                   <th className="p-4">Diploma No</th>
@@ -121,7 +121,7 @@ export function AdminApprovals() {
 
                 {!loading &&
                   pending.map((item) => (
-                    <tr key={item.id} className="border-t border-slate-100 dark:border-slate-800">
+                    <tr key={item.id} className="border-t border-slate-100">
                       <td className="p-4">
                         <div className="flex items-center gap-3">
                           <div className="w-9 h-9 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
@@ -132,12 +132,12 @@ export function AdminApprovals() {
                           </span>
                         </div>
                       </td>
-                      <td className="p-4 text-slate-600 dark:text-slate-300 text-sm break-all">
+                      <td className="p-4 text-slate-600 text-sm break-all">
                         {item.email || "—"}
                       </td>
-                      <td className="p-4 text-slate-600 dark:text-slate-300">{item.diplomaNo || "-"}</td>
-                      <td className="p-4 text-slate-600 dark:text-slate-300">{item.clinicName || "-"}</td>
-                      <td className="p-4 text-slate-600 dark:text-slate-300">
+                      <td className="p-4 text-slate-600">{item.diplomaNo || "-"}</td>
+                      <td className="p-4 text-slate-600">{item.clinicName || "-"}</td>
+                      <td className="p-4 text-slate-600">
                         {item.createdAt
                           ? new Date(item.createdAt).toLocaleDateString("tr-TR")
                           : "-"}
@@ -151,8 +151,8 @@ export function AdminApprovals() {
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => inspectDietitian(item.id)}
-                            className="p-2 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-[#2D3748]"
-                            title="Incele"
+                            className="p-2 rounded-full border border-slate-200 hover:bg-slate-100"
+                            title="İncele"
                           >
                             <Eye size={16} />
                           </button>
@@ -165,7 +165,7 @@ export function AdminApprovals() {
                           </button>
                           <button
                             className="p-2 rounded-full bg-rose-500 text-white/80 cursor-not-allowed"
-                            title="Reddet (yakinda)"
+                            title="Reddet (yakında)"
                             disabled
                           >
                             <X size={16} />
@@ -181,13 +181,13 @@ export function AdminApprovals() {
 
         {(selected || detailLoading) && (
           <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
-            <div className="w-full max-w-5xl rounded-3xl bg-white dark:bg-[#1F2937] border border-slate-200 dark:border-slate-700 shadow-2xl">
-              <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-700">
+            <div className="w-full max-w-5xl rounded-3xl bg-white border border-slate-200 shadow-2xl">
+              <div className="flex items-center justify-between p-6 border-b border-slate-200">
                 <div>
                   <h2 className="text-4xl font-bold">Diyetisyen Detaylari</h2>
-                  <p className="text-slate-500 dark:text-[#9CA3AF] mt-1">Kayit bilgilerini inceleyin</p>
+                  <p className="text-slate-500 mt-1">Kayit bilgilerini inceleyin</p>
                 </div>
-                <button onClick={() => setSelected(null)} className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-[#2D3748]">
+                <button onClick={() => setSelected(null)} className="p-2 rounded-full hover:bg-slate-100">
                   <X size={24} />
                 </button>
               </div>
@@ -196,7 +196,7 @@ export function AdminApprovals() {
                 <div className="p-10 text-center text-slate-500">Yukleniyor...</div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 p-6">
-                  <div className="rounded-2xl bg-slate-50 dark:bg-[#0D1117] border border-slate-200 dark:border-slate-700 p-6">
+                  <div className="rounded-2xl bg-slate-50 border border-slate-200 p-6">
                     <div className="w-20 h-20 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-4xl font-bold mb-6">
                       {(selected?.firstName || "D").charAt(0)}
                     </div>
@@ -208,16 +208,16 @@ export function AdminApprovals() {
                       value={selected?.createdAt ? new Date(selected.createdAt).toLocaleDateString("tr-TR") : "-"}
                     />
                     <div className="mt-4">
-                      <p className="text-slate-500 dark:text-[#9CA3AF] text-sm">Durum</p>
+                      <p className="text-slate-500 text-sm">Durum</p>
                       <span className="inline-flex rounded-full px-3 py-1 text-xs font-semibold bg-amber-100 text-amber-700 mt-2">
                         {selected?.isApproved ? "Onaylandi" : "Beklemede"}
                       </span>
                     </div>
                   </div>
 
-                  <div className="rounded-2xl bg-slate-50 dark:bg-[#0D1117] border border-slate-200 dark:border-slate-700 p-6 flex flex-col">
+                  <div className="rounded-2xl bg-slate-50 border border-slate-200 p-6 flex flex-col">
                     <h3 className="text-3xl font-bold mb-4">Diploma/Sertifika</h3>
-                    <div className="flex-1 rounded-2xl border border-dashed border-slate-300 dark:border-slate-600 flex flex-col items-center justify-center text-slate-500 dark:text-[#9CA3AF]">
+                    <div className="flex-1 rounded-2xl border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-500">
                       <Download size={56} />
                       <p className="mt-4 text-xl">Diploma Onizleme</p>
                       <button
@@ -225,7 +225,7 @@ export function AdminApprovals() {
                           if (selected?.diplomaDocumentUrl) {
                             window.open(selected.diplomaDocumentUrl, "_blank");
                           } else {
-                            alert("Bu kayit icin yuklenmis diploma dosyasi bulunmuyor.");
+                            alert("Bu kayıt için yüklenmiş diploma dosyası bulunmuyor.");
                           }
                         }}
                         className="mt-4 px-6 py-2 rounded-full bg-emerald-500 text-white font-semibold hover:bg-emerald-600"
@@ -254,8 +254,8 @@ export function AdminApprovals() {
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="mb-4">
-      <p className="text-slate-500 dark:text-[#9CA3AF] text-sm">{label}</p>
-      <p className="font-semibold text-2xl text-slate-900 dark:text-slate-100">{value}</p>
+      <p className="text-slate-500 text-sm">{label}</p>
+      <p className="font-semibold text-2xl text-slate-900">{value}</p>
     </div>
   );
 }

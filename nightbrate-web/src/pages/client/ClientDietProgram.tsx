@@ -160,16 +160,16 @@ export function ClientDietProgram() {
 
   return (
     <SidebarLayout userRole="client" userName={userName}>
-      <div className="min-h-full bg-[#F8FAF7] dark:bg-slate-950 px-4 py-6 pb-28 lg:pb-8 transition-colors">
+      <div className="min-h-full bg-slate-50 px-4 py-6 pb-28 lg:pb-8 transition-colors">
         <div className="mx-auto max-w-3xl">
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Diyet Programım</h1>
-          <p className="text-slate-500 dark:text-[#9CA3AF] text-sm mt-1">
-            Tarih sekmesinde <strong>bugun ve ileri 14 gun</strong> gosteriliyor; gune tiklayin.
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Diyet Programım</h1>
+          <p className="text-slate-500 text-sm mt-1">
+            Tarih sekmesinde <strong>bugün ve ileri 14 gün</strong> gösteriliyor; güne tıklayın.
             {dietitianLabel ? ` ${dietitianLabel}` : ""}
           </p>
 
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white mt-8 mb-3">Diyet takvimi</h2>
-          <p className="text-xs text-slate-500 dark:text-[#9CA3AF] -mt-1 mb-2">Bugun ve sonrasi (14 gun) — soldan saga kaydirin</p>
+          <h2 className="text-lg font-bold text-slate-900 mt-8 mb-3">Diyet takvimi</h2>
+          <p className="text-xs text-slate-500 -mt-1 mb-2">Bugün ve sonrası (14 gün) — soldan sağa kaydırın</p>
           <div className="flex gap-1 sm:gap-2 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-thin">
             {upcomingDays.map((d) => {
               const idx = d.getDay() === 0 ? 6 : d.getDay() - 1;
@@ -191,8 +191,8 @@ export function ClientDietProgram() {
                     active
                       ? "border-emerald-500 bg-emerald-500 text-white shadow-md"
                       : today
-                        ? "border-emerald-500/50 bg-white dark:bg-[#1F2937] text-slate-900 dark:text-white"
-                        : "border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1F2937] text-slate-600 dark:text-slate-300"
+                        ? "border-emerald-500/50 bg-white text-slate-900"
+                        : "border-slate-200 bg-white text-slate-600"
                   }`}
                 >
                   <span className="text-[10px] sm:text-xs font-medium opacity-90">{dayLabel}</span>
@@ -209,8 +209,8 @@ export function ClientDietProgram() {
           )}
 
           {!detailLoading && !dayProgram && (
-            <div className="mt-6 rounded-2xl border border-dashed border-slate-300 dark:border-slate-600 bg-white/60 dark:bg-[#1F2937]/50 p-8 text-center text-slate-500 dark:text-[#9CA3AF]">
-              {toYmd(selected)} tarihi icin plan yok. Diyetisyeniniz bu tarihe program atadiginda burada goreceksiniz.
+            <div className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-white/60 p-8 text-center text-slate-500">
+              {toYmd(selected)} tarihi için plan yok. Diyetisyeniniz bu tarihe program atadığında burada göreceksiniz.
             </div>
           )}
 
@@ -226,37 +226,37 @@ export function ClientDietProgram() {
                     key={m.key}
                     className={`rounded-2xl border p-4 sm:p-5 transition-colors ${
                       isDone
-                        ? "bg-emerald-50/90 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900"
-                        : "bg-white dark:bg-[#1F2937] border-slate-200 dark:border-slate-700"
+                        ? "bg-emerald-50/90 border-emerald-200"
+                        : "bg-white border-slate-200"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-emerald-600">
+                        <div className="p-2 rounded-xl bg-slate-100 text-emerald-600">
                           {m.key === "snack" ? <Cookie className="w-5 h-5" /> : <m.icon className="w-5 h-5" />}
                         </div>
                         <div>
-                          <h3 className="font-bold text-slate-900 dark:text-white text-lg">{m.title}</h3>
-                          <p className="text-sm text-slate-500 dark:text-[#9CA3AF]">{m.time}</p>
+                          <h3 className="font-bold text-slate-900 text-lg">{m.title}</h3>
+                          <p className="text-sm text-slate-500">{m.time}</p>
                         </div>
                       </div>
-                      <span className="text-emerald-600 dark:text-[#2ECC71] font-bold text-sm sm:text-base whitespace-nowrap">
-                        {kcal} kcal
+                      <span className="text-emerald-600 font-bold text-sm sm:text-base whitespace-nowrap">
+                        {kcal} kkal
                       </span>
                     </div>
-                    <p className="mt-3 text-slate-700 dark:text-slate-300 text-sm leading-relaxed min-h-[2.5rem]">
+                    <p className="mt-3 text-slate-700 text-sm leading-relaxed min-h-[2.5rem]">
                       {text.trim() || "—"}
                     </p>
                     <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-                      <div className="inline-flex flex-wrap items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                      <div className="inline-flex flex-wrap items-center gap-2 text-sm text-slate-600">
                         {isDone ? (
-                          <span className="text-emerald-600 dark:text-[#2ECC71] font-medium">Tamamlandı</span>
+                          <span className="text-emerald-600 font-medium">Tamamlandı</span>
                         ) : (
                           <button
                             type="button"
                             disabled={isMarking}
                             onClick={() => void markMealComplete(m.key)}
-                            className="inline-flex items-center gap-1.5 rounded-lg border-2 border-emerald-500/80 bg-emerald-50/80 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200 font-semibold px-3 py-1.5 hover:bg-emerald-100/90 dark:hover:bg-emerald-900/30 disabled:opacity-50"
+                            className="inline-flex items-center gap-1.5 rounded-lg border-2 border-emerald-500/80 bg-emerald-50/80 text-emerald-800 font-semibold px-3 py-1.5 hover:bg-emerald-100/90 disabled:opacity-50"
                           >
                             {isMarking ? (
                               <>
@@ -271,7 +271,7 @@ export function ClientDietProgram() {
                       <button
                         type="button"
                         onClick={() => window.alert("Alternatif öneriler yakında eklenecek.")}
-                        className="text-sm font-semibold px-3 py-1.5 rounded-lg border-2 border-amber-400/80 text-amber-800 dark:text-amber-200 bg-amber-50/50 dark:bg-amber-950/20 hover:bg-amber-100/80"
+                        className="text-sm font-semibold px-3 py-1.5 rounded-lg border-2 border-amber-400/80 text-amber-800 bg-amber-50/50 hover:bg-amber-100/80"
                       >
                         Evde yok
                       </button>
@@ -280,8 +280,8 @@ export function ClientDietProgram() {
                 );
               })}
 
-              <p className="text-center text-sm text-slate-500 dark:text-[#9CA3AF] pt-1">
-                Günlük toplam hedef: <strong className="text-slate-800 dark:text-slate-200">{dayTotalKcal} kcal</strong>
+              <p className="text-center text-sm text-slate-500 pt-1">
+                Günlük toplam hedef: <strong className="text-slate-800">{dayTotalKcal} kkal</strong>
                 {dayProgram.updatedAt && (
                   <span className="block text-xs mt-1 opacity-80">
                     Son güncelleme: {new Date(dayProgram.updatedAt).toLocaleString("tr-TR")}

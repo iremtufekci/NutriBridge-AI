@@ -56,6 +56,25 @@ public class DietitianController(
         return Ok(b);
     }
 
+    [HttpGet("my-clients")]
+    public async Task<IActionResult> GetMyClients(
+        [FromQuery] string sort = "nameAsc",
+        [FromQuery] string tab = "all",
+        CancellationToken cancellationToken = default)
+    {
+        var dietitianId = User.FindFirstValue("UserId") ?? string.Empty;
+        return Ok(await dietitianService.GetMyClientsAsync(dietitianId, sort, tab, cancellationToken));
+    }
+
+    [HttpGet("client-overview")]
+    public async Task<IActionResult> GetClientOverview([FromQuery] string clientId, CancellationToken cancellationToken = default)
+    {
+        var dietitianId = User.FindFirstValue("UserId") ?? string.Empty;
+        var dto = await dietitianService.GetClientOverviewAsync(dietitianId, clientId, cancellationToken);
+        if (dto is null) return NotFound();
+        return Ok(dto);
+    }
+
     [HttpGet("clients-with-last-meal")]
     public async Task<IActionResult> GetClientsWithLastMeal()
     {

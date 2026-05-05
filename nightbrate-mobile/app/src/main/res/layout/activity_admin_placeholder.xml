@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="Admin"
+                android:text="Yönetici"
                 android:textColor="@color/primary_green"
                 android:textSize="12sp" />
 
@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:text="Baslik"
+                android:text="Başlık"
                 android:textColor="@color/admin_strong"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lineSpacingExtra="3dp"
-                android:text="Aciklama"
+                android:text="Açıklama"
                 android:textColor="@color/text_gray"
                 android:textSize="15sp" />
         </LinearLayout>

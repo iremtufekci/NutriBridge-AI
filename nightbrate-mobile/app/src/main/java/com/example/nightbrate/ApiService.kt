@@ -5,6 +5,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Multipart
+import retrofit2.http.Part
 import retrofit2.http.POST
 import retrofit2.http.PATCH
 import retrofit2.http.Path
@@ -26,6 +27,17 @@ interface ApiService {
     suspend fun registerClient(
         @Body request: ClientRegisterRequest
     ): Response<Unit>
+
+    @GET("api/Client/pdf-analyses")
+    suspend fun getClientPdfAnalyses(
+        @Query("take") take: Int = 30
+    ): Response<List<ClientPdfAnalysisResponseDto>>
+
+    @Multipart
+    @POST("api/Client/pdf-analyses/upload")
+    suspend fun uploadClientPdf(
+        @Part pdf: MultipartBody.Part
+    ): Response<ClientPdfAnalysisResponseDto>
 
     @GET("api/Client/diet-programs")
     suspend fun getMyDietPrograms(): Response<List<ClientDietProgramDayResponse>>
@@ -130,7 +142,7 @@ interface ApiService {
     ): Response<Unit>
 
     @GET("api/Dietitian/critical-alerts")
-    suspend fun getDietitianCriticalAlerts(): Response<List<DietitianCriticalAlertStub>>
+    suspend fun getDietitianCriticalAlerts(): Response<List<DietitianCriticalAlertDto>>
 
     @GET("api/Dietitian/daily-tasks/today")
     suspend fun getTodayDailyTasks(): Response<DietitianTodayTasksBundleDto>
@@ -155,6 +167,11 @@ interface ApiService {
         @Query("programDate") programDate: String
     ): Response<DietProgramViewResponse>
 
+    @POST("api/Dietitian/diet-program")
+    suspend fun saveDietProgram(
+        @Body body: SaveDietProgramRequest
+    ): Response<Unit>
+
     @POST("api/KitchenChef/generate")
     suspend fun generateKitchenRecipes(
         @Body body: KitchenChefGenerateRequest
@@ -169,3 +186,30 @@ interface ApiService {
         @Query("take") take: Int = 50
     ): Response<List<KitchenChefShareLogItem>>
 
+    @GET("api/Dietitian/my-clients")
+    suspend fun getMyClients(
+        @Query("sort") sort: String = "nameAsc",
+        @Query("tab") tab: String = "all"
+    ): Response<DietitianMyClientsResponseDto>
+
+    @GET("api/Dietitian/client-overview")
+    suspend fun getClientOverview(
+        @Query("clientId") clientId: String
+    ): Response<DietitianClientOverviewDto>
+
+    @GET("api/Dietitian/client-kitchen-recipe-logs")
+    suspend fun getClientKitchenRecipeLogs(
+        @Query("clientId") clientId: String,
+        @Query("take") take: Int = 30
+    ): Response<List<KitchenChefShareLogItem>>
+
+    @POST("api/Dietitian/acknowledge-critical-alert")
+    suspend fun acknowledgeCriticalAlert(
+        @Body body: AckCriticalAlertRequest
+    ): Response<Unit>
+
+    @GET("api/Dietitian/client-brief")
+    suspend fun getDietitianClientBrief(
+        @Query("clientId") clientId: String
+    ): Response<DietitianClientBriefDto>
+}

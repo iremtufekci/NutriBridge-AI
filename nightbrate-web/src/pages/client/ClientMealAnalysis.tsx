@@ -93,12 +93,12 @@ export function ClientMealAnalysis() {
     <SidebarLayout userRole="client" userName={userName}>
       <div className="mx-auto max-w-lg px-4 py-6 pb-28 lg:pb-8">
         <div className="mb-6 flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/15 text-emerald-600">
             <ScanSearch className="h-6 w-6" aria-hidden />
           </div>
           <div>
-            <h1 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Yemek analizi</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400">
+            <h1 className="text-lg font-semibold text-slate-800">Yemek analizi</h1>
+            <p className="text-sm text-slate-500">
               Fotoğraf yükleyin; tahmini kalori ve besinler (şimdilik simülasyon) gösterilir.
             </p>
           </div>
@@ -133,7 +133,7 @@ export function ClientMealAnalysis() {
             type="button"
             onClick={onPickGallery}
             disabled={busy}
-            className="inline-flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-800 shadow-sm active:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:bg-[#1F2937] dark:text-slate-100 dark:active:bg-slate-800"
+            className="inline-flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-800 shadow-sm active:bg-slate-50 disabled:opacity-50"
           >
             <ImagePlus className="h-5 w-5" />
             Galeriden seç
@@ -149,51 +149,51 @@ export function ClientMealAnalysis() {
           </button>
         </div>
 
-        <p className="mt-3 text-xs text-slate-500 dark:text-slate-500">
+        <p className="mt-3 text-xs text-slate-500">
           Yalnızca JPG/PNG, en fazla 5 MB.
         </p>
 
         {busy && (
-          <div className="mt-6 flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-600 dark:bg-[#1F2937]">
+          <div className="mt-6 flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-4">
             <Loader2 className="h-5 w-5 animate-spin text-emerald-600" />
-            <span className="text-sm text-slate-600 dark:text-slate-300">
+            <span className="text-sm text-slate-600">
               Fotoğraf kaydediliyor ve analiz ediliyor (genelde 30 sn–2 dk, yoğunlukta biraz daha uzayabilir)…
             </span>
           </div>
         )}
 
         {error && (
-          <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200">
+          <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
             {error}
           </div>
         )}
 
         {displayImg && !busy && (
-          <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 dark:border-slate-600 dark:bg-slate-800">
+          <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
             <img src={displayImg} alt="Yüklenen öğün" className="max-h-72 w-full object-cover" />
           </div>
         )}
 
         {result && !busy && (
-          <div className="mt-6 space-y-4 rounded-2xl border border-emerald-200 bg-emerald-50/80 p-5 dark:border-emerald-900/40 dark:bg-emerald-950/30">
+          <div className="mt-6 space-y-4 rounded-2xl border border-emerald-200 bg-emerald-50/80 p-5">
             <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-emerald-800 dark:text-emerald-300">
+              <p className="text-xs font-medium uppercase tracking-wide text-emerald-800">
                 Tahmini enerji
               </p>
-              <p className="text-3xl font-bold text-emerald-700 dark:text-emerald-400">
+              <p className="text-3xl font-bold text-emerald-700">
                 {result.estimatedCalories}{" "}
-                <span className="text-lg font-semibold text-emerald-600/90 dark:text-emerald-500/90">kcal</span>
+                <span className="text-lg font-semibold text-emerald-600/90">kkal</span>
               </p>
             </div>
             <div>
-              <p className="mb-2 text-xs font-medium uppercase tracking-wide text-slate-600 dark:text-slate-400">
+              <p className="mb-2 text-xs font-medium uppercase tracking-wide text-slate-600">
                 Tespit edilen besinler
               </p>
               <ul className="flex flex-wrap gap-2">
                 {result.detectedFoods.map((f) => (
                   <li
                     key={f}
-                    className="rounded-lg bg-white px-3 py-1 text-sm font-medium text-slate-800 shadow-sm dark:bg-slate-800 dark:text-slate-100"
+                    className="rounded-lg bg-white px-3 py-1 text-sm font-medium text-slate-800 shadow-sm"
                   >
                     {f}
                   </li>
@@ -201,19 +201,19 @@ export function ClientMealAnalysis() {
               </ul>
             </div>
             {result.mealLogId && (
-              <p className="text-xs text-slate-500 dark:text-slate-500">Kayıt ID: {result.mealLogId}</p>
+              <p className="text-xs text-slate-500">Kayıt ID: {result.mealLogId}</p>
             )}
             {result.analysisSource && (
               <p
                 className={`text-xs font-semibold ${
                   result.analysisSource === "gemini"
-                    ? "text-blue-700 dark:text-blue-300"
-                    : "text-amber-700 dark:text-amber-300"
+                    ? "text-blue-700"
+                    : "text-amber-700"
                 }`}
               >
                 {result.analysisSource === "gemini"
-                  ? "Analiz kaynağı: Google Gemini"
-                  : "Analiz kaynağı: Yerel simülasyon (API’de Gemini anahtarı tanımlı değil)"}
+                  ? "Analiz kaynağı: yapay zeka hizmeti"
+                  : "Analiz kaynağı: yerel simülasyon (sunucuda yapay zeka anahtarı tanımlı değil)"}
               </p>
             )}
           </div>

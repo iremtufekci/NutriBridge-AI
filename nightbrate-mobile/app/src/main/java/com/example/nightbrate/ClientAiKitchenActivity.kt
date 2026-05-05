@@ -21,7 +21,7 @@ class ClientAiKitchenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_client_ai_kitchen)
-        ClientBottomBarHelper.bind(this, 4)
+        ClientBottomBarHelper.bind(this, 5)
 
         val etIngredients = findViewById<EditText>(R.id.etAiKitchenIngredients)
         val etKcal = findViewById<EditText>(R.id.etAiKitchenKcal)
@@ -80,12 +80,12 @@ class ClientAiKitchenActivity : AppCompatActivity() {
                     if (data != null) {
                         when (data.source?.lowercase()) {
                             "gemini" -> {
-                                tvSource.text = "Kaynak: Google Gemini"
+                                tvSource.text = "Kaynak: yapay zeka hizmeti"
                                 tvSource.setTextColor(0xFF1D4ED8.toInt())
                                 tvSource.visibility = View.VISIBLE
                             }
                             "mock" -> {
-                                tvSource.text = "Kaynak: Yerel önizleme (Gemini anahtarı yoksa)"
+                                tvSource.text = "Kaynak: yerel önizleme (sunucuda yapay zeka anahtarı yoksa)"
                                 tvSource.setTextColor(0xFFB45309.toInt())
                                 tvSource.visibility = View.VISIBLE
                             }
@@ -95,7 +95,7 @@ class ClientAiKitchenActivity : AppCompatActivity() {
                             card.findViewById<TextView>(R.id.tvRecipeTitle).text = r.title
                             card.findViewById<TextView>(R.id.tvRecipeMeta).text =
                                 buildString {
-                                    append("${r.estimatedCalories} kcal")
+                                    append("${r.estimatedCalories} kkal")
                                     r.prepTimeMinutes?.let { if (it > 0) append("  ·  ~${it} dk") }
                                 }
                             r.description?.takeIf { it.isNotBlank() }?.let {

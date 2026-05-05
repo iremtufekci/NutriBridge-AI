@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:maxLines="2"
-                android:text="Danisanlar"
+                android:text="Danışanlar"
                 android:textColor="@color/nav_item_inactive"
                 android:textSize="8sp" />
         </LinearLayout>
@@ -135,7 +135,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:maxLines="2"
-                android:text="AI Denetim"
+                android:text="YZ denetim"
                 android:textColor="@color/nav_item_inactive"
                 android:textSize="8sp" />
         </LinearLayout>

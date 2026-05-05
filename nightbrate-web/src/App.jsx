@@ -18,8 +18,9 @@ import { ClientHome } from "./pages/client/ClientHome";
 import { ClientProfile } from "./pages/client/ClientProfile";
 import { ClientDietProgram } from "./pages/client/ClientDietProgram";
 import { ClientDietProgramHistory } from "./pages/client/ClientDietProgramHistory";
-import { PlaceholderWithLayout } from "./pages/PlaceholderWithLayout";
+import { DietitianClients } from "./pages/dietitian/DietitianClients";
 import { ClientMealAnalysis } from "./pages/client/ClientMealAnalysis";
+import { ClientPdfAnalysis } from "./pages/client/ClientPdfAnalysis";
 import { ClientAiKitchenChef } from "./pages/client/ClientAiKitchenChef";
 import { ClientAiKitchenShares } from "./pages/client/ClientAiKitchenShares";
 import { RoleAccountProfile } from "./pages/RoleAccountProfile";
@@ -55,7 +56,8 @@ function App() {
         <Route path="/admin/settings" element={<AdminSettings />} />
         <Route path="/dietitian" element={<DietitianDashboard />} />
         <Route path="/dietitian/dashboard" element={<DietitianDashboard />} />
-        <Route path="/dietitian/clients" element={<PlaceholderWithLayout />} />
+        <Route path="/dietitian/clients/:clientId" element={<DietitianClients />} />
+        <Route path="/dietitian/clients" element={<DietitianClients />} />
         <Route path="/dietitian/programs" element={<DietitianPrograms />} />
         <Route path="/dietitian/ai-review" element={<DietitianAiReview />} />
         <Route path="/dietitian/tasks" element={<DietitianTasks />} />
@@ -67,6 +69,7 @@ function App() {
         <Route path="/client/diet-program" element={<ClientDietProgram />} />
         <Route path="/client/diet-program-history" element={<ClientDietProgramHistory />} />
         <Route path="/client/food-scan" element={<ClientMealAnalysis />} />
+        <Route path="/client/pdf-analysis" element={<ClientPdfAnalysis />} />
         <Route path="/client/ai-chef" element={<ClientAiKitchenChef />} />
         <Route path="/client/ai-chef-shares" element={<ClientAiKitchenShares />} />
         <Route path="/client/profile" element={<ClientProfile />} />

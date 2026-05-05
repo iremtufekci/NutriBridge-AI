@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using Nightbrate.Application.DTOs;
+using Nightbrate.Application.Exceptions;
 using Nightbrate.Application.Interfaces;
 using Nightbrate.Application.Options;
 using Nightbrate.Core.Entities;
@@ -20,9 +21,18 @@ public class MealPhotoAnalysisService(
         string extensionWithDot,
         CancellationToken cancellationToken = default)
     {
-        var saved = await mealPhotoStorage.SaveMealImageAsync(fileStream, extensionWithDot, cancellationToken)
+        await using var buffered = new MemoryStream();
+        await fileStream.CopyToAsync(buffered, cancellationToken).ConfigureAwait(false);
+        var bytes = buffered.ToArray();
+        if (bytes.Length == 0)
+            throw new AppException("Fotograf dosyasi bos.");
+
+        var mime = MimeFromMealExtension(extensionWithDot);
+        var analysis = await mealAnalysisService.AnalyzeImageBytesAsync(bytes, mime, cancellationToken)
             .ConfigureAwait(false);
-        var analysis = await mealAnalysisService.AnalyzeImageAsync(saved.FullPath, cancellationToken)
+
+        await using var uploadStream = new MemoryStream(bytes, writable: false);
+        var saved = await mealPhotoStorage.SaveMealImageAsync(uploadStream, extensionWithDot, cancellationToken)
             .ConfigureAwait(false);
 
         var meal = new MealLog
@@ -60,6 +70,20 @@ public class MealPhotoAnalysisService(
             DetectedFoods = meal.DetectedFoods,
             TimestampUtc = meal.Timestamp,
             AnalysisSource = analysisSource
+        };
+    }
+
+    private static string MimeFromMealExtension(string extensionWithDot)
+    {
+        var ext = extensionWithDot.Trim();
+        if (!ext.StartsWith(".", StringComparison.Ordinal))
+            ext = "." + ext;
+        ext = ext.ToLowerInvariant();
+        return ext switch
+        {
+            ".png" => "image/png",
+            ".jpg" or ".jpeg" => "image/jpeg",
+            _ => "image/jpeg"
         };
     }
 }

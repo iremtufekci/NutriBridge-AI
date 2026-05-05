@@ -57,26 +57,27 @@ export function RegisterDietitian() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0D1117] flex items-center justify-center p-4">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
       <style dangerouslySetInnerHTML={{ __html: `
         .input-style {
           width: 100%;
           padding: 0.75rem;
-          background-color: #0D1117;
-          border: 1px solid #2D3748;
+          background-color: #ffffff;
+          border: 1px solid #e2e8f0;
           border-radius: 0.75rem;
-          color: white;
+          color: #0f172a;
           outline: none;
           transition: all 0.2s;
+          margin-bottom: 1rem;
         }
         .input-style:focus { border-color: #22C55E; }
-        .label-style { display: block; color: #9CA3AF; font-size: 0.875rem; margin-bottom: 0.5rem; margin-left: 0.25rem; }
+        .label-style { display: block; color: #64748B; font-size: 0.875rem; margin-bottom: 0.5rem; margin-left: 0.25rem; }
       `}} />
 
-      <div className="w-full max-w-2xl bg-[#1F2937] rounded-2xl p-8 border border-slate-700 shadow-2xl">
+      <div className="w-full max-w-2xl bg-white rounded-2xl p-8 border border-slate-200 shadow-2xl">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-[#22C55E] mb-2">Diyetisyen Kaydı</h1>
-          <p className="text-slate-400">Platforma katılmak için bilgilerinizi eksiksiz doldurun</p>
+          <p className="text-slate-600">Platforma katılmak için bilgilerinizi eksiksiz doldurun</p>
         </div>
 
         <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 mb-6 flex items-start gap-3">
@@ -142,7 +143,7 @@ export function RegisterDietitian() {
                 name="email" 
                 type="email" 
                 className="input-style" 
-                placeholder="diyetisyen@mail.com"
+                placeholder="örnek@ornek.com"
                 value={formData.email} 
                 onChange={handleChange} 
                 required 

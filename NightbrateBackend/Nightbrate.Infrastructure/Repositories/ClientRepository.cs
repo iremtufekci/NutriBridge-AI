@@ -24,6 +24,15 @@ public class ClientRepository(MongoDbContext context) : IClientRepository
     public Task<List<Client>> GetByDietitianIdAsync(string dietitianId) =>
         context.Clients.Find(x => x.DietitianId == dietitianId).ToListAsync();
 
+    public Task<List<Client>> GetByDietitianIdSortedAsync(string dietitianId, bool firstLastAscending)
+    {
+        var filter = Builders<Client>.Filter.Eq(x => x.DietitianId, dietitianId);
+        var sort = firstLastAscending
+            ? Builders<Client>.Sort.Ascending(c => c.FirstName).Ascending(c => c.LastName)
+            : Builders<Client>.Sort.Descending(c => c.FirstName).Descending(c => c.LastName);
+        return context.Clients.Find(filter).Sort(sort).ToListAsync();
+    }
+
     public Task<long> GetTotalAsync() =>
         context.Clients.CountDocumentsAsync(Builders<Client>.Filter.Empty);
 

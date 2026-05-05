@@ -90,7 +90,7 @@ export function DietitianPrograms() {
       const mapped = Array.isArray(data) ? data : [];
       setClients(mapped);
     } catch (error) {
-      console.error("Danisanlar alinamadi", error);
+      console.error("Danışanlar alınamadı", error);
     } finally {
       setLoadingList(false);
     }
@@ -173,12 +173,12 @@ export function DietitianPrograms() {
 
   const saveProgram = async () => {
     if (!selectedClientId) {
-      alert("Lutfen once bir danisan secin.");
+      alert("Lütfen önce bir danışan seçin.");
       return;
     }
     const dateKey = selectedYmd?.trim() ?? "";
     if (!/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) {
-      alert("Lutfen bir program tarihi secin (takvim veya hizli tarih dugmeleri).");
+      alert("Lütfen bir program tarihi seçin (takvim veya hızlı tarih düğmeleri).");
       return;
     }
 
@@ -197,10 +197,10 @@ export function DietitianPrograms() {
         totalCalories,
       });
       await loadAssignedDates(selectedClientId);
-      alert("Program kaydedildi. Ayni danisan ve tarih icin tekrar duzenleyebilirsiniz.");
+      alert("Program kaydedildi. Aynı danışan ve tarih için tekrar düzenleyebilirsiniz.");
     } catch (error) {
       alert(
-        "Kayit basarisiz: " +
+        "Kayıt başarısız: " +
           ((error as { response?: { data?: { message?: string } } })?.response?.data?.message || "Bilinmeyen hata")
       );
     }
@@ -208,45 +208,45 @@ export function DietitianPrograms() {
 
   return (
     <SidebarLayout userRole="dietitian" userName={dietitianName}>
-      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-[#F4F6F8] dark:bg-[#0D1117] min-h-screen text-slate-900 dark:text-white transition-colors pb-24 lg:pb-8">
+      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-slate-50 min-h-screen text-slate-900 transition-colors pb-24 lg:pb-8">
         <div>
-          <h1 className="text-4xl font-bold">Diyet Programi</h1>
-          <p className="text-slate-500 dark:text-[#9CA3AF] mt-1">
-            Danisani secin; <strong>yeni atama</strong> icin bugun veya ileri bir tarih secin. Daha once atadiginiz
-            tarihleri alttan secerek <strong>duzenleyebilirsiniz</strong>; takvimle gecmis bir tarih de
-            acilabilir (sadece mevcut kayit guncellemek icin).
+          <h1 className="text-4xl font-bold">Diyet programı</h1>
+          <p className="text-slate-500 mt-1">
+            Danışanı seçin; <strong>yeni atama</strong> için bugün veya ileri bir tarih seçin. Daha önce atadığınız
+            tarihleri alttan seçerek <strong>düzenleyebilirsiniz</strong>; takvimle geçmiş bir tarih de
+            açılabilir (sadece mevcut kayıt güncellemek için).
           </p>
         </div>
 
         {selectedClientId && selectedClientName && (
-          <div className="rounded-2xl border-2 border-emerald-500/40 bg-emerald-50/90 dark:bg-emerald-950/40 px-4 py-3">
-            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-[#2ECC71]">Secili danisan</p>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white mt-0.5">{selectedClientName}</p>
+          <div className="rounded-2xl border-2 border-emerald-500/40 bg-emerald-50/90 px-4 py-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Seçili danışan</p>
+            <p className="text-2xl font-bold text-slate-900 mt-0.5">{selectedClientName}</p>
           </div>
         )}
 
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1F2937] p-4 space-y-3">
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 space-y-3">
           <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
                 type="search"
-                placeholder="Danisan adi ile ara..."
-                className="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-[#0D1117] pl-10 pr-3 py-3"
+                placeholder="Danışan adı ile ara…"
+                className="w-full rounded-xl border border-slate-300 bg-slate-50 pl-10 pr-3 py-3"
                 value={clientQuery}
                 onChange={(e) => setClientQuery(e.target.value)}
               />
             </div>
             {loadingList && <Loader2 className="w-5 h-5 animate-spin text-emerald-500 self-center" />}
           </div>
-          <div className="max-h-48 overflow-y-auto rounded-xl border border-slate-200 dark:border-slate-600 divide-y divide-slate-200 dark:divide-slate-600">
+          <div className="max-h-48 overflow-y-auto rounded-xl border border-slate-200 divide-y divide-slate-200">
             {filteredClients.length === 0 ? (
               <p className="p-3 text-sm text-slate-500">
-                {loadingList ? "Liste yukleniyor…" : clients.length === 0 ? "Henuz bagli danisan yok." : "Arama sonucu yok; aramayi sadelestirin."}
+                {loadingList ? "Liste yükleniyor…" : clients.length === 0 ? "Henüz bağlı danışan yok." : "Arama sonucu yok; aramayı sadeleştirin."}
               </p>
             ) : (
               filteredClients.map((client) => {
-                const label = `${client.firstName || ""} ${client.lastName || ""}`.trim() || "Isimsiz";
+                const label = `${client.firstName || ""} ${client.lastName || ""}`.trim() || "İsimsiz";
                 return (
                   <button
                     type="button"
@@ -258,8 +258,8 @@ export function DietitianPrograms() {
                     }}
                     className={`w-full text-left px-3 py-2.5 text-sm font-medium transition-colors ${
                       selectedClientId === client.id
-                        ? "bg-emerald-500/20 text-emerald-800 dark:text-emerald-200 ring-1 ring-inset ring-emerald-500/30"
-                        : "hover:bg-slate-100 dark:hover:bg-[#2D3748]"
+                        ? "bg-emerald-500/20 text-emerald-800 ring-1 ring-inset ring-emerald-500/30"
+                        : "hover:bg-slate-100"
                     }`}
                   >
                     {label}
@@ -272,12 +272,12 @@ export function DietitianPrograms() {
 
         <div>
           {selectedClientId && (
-            <div className="mb-4 rounded-xl border border-amber-200/80 dark:border-amber-800/50 bg-amber-50/80 dark:bg-amber-950/30 p-3">
-              <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">Bu danisana atadiginiz tarihler</p>
+            <div className="mb-4 rounded-xl border border-amber-200/80 bg-amber-50/80 p-3">
+              <p className="text-sm font-semibold text-amber-900">Bu danışana atadığınız tarihler</p>
               {loadingAssigned ? (
-                <p className="text-xs text-amber-800/80 dark:text-amber-300/80 mt-1">Yukleniyor…</p>
+                <p className="text-xs text-amber-800/80 mt-1">Yükleniyor…</p>
               ) : assignedDates.length === 0 ? (
-                <p className="text-xs text-amber-800/80 dark:text-amber-300/80 mt-1">Henuz kayit yok; asagidan tarih secip kaydedin.</p>
+                <p className="text-xs text-amber-800/80 mt-1">Henüz kayıt yok; aşağıdan tarih seçip kaydedin.</p>
               ) : (
                 <div className="mt-2 flex flex-wrap gap-2">
                   {assignedDates.map((ymd) => {
@@ -292,7 +292,7 @@ export function DietitianPrograms() {
                         className={`px-2.5 py-1.5 rounded-lg text-left text-sm border ${
                           selectedYmd === ymd
                             ? "bg-amber-500 text-white border-amber-500"
-                            : "bg-white dark:bg-amber-950/50 border-amber-300 dark:border-amber-700"
+                            : "bg-white border-amber-300"
                         }`}
                       >
                         <span className="block font-semibold">
@@ -307,18 +307,18 @@ export function DietitianPrograms() {
             </div>
           )}
 
-          <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Tarih secimi (yeni veya duzenleme)</p>
+          <p className="text-sm font-semibold text-slate-700 mb-2">Tarih seçimi (yeni veya düzenleme)</p>
           <div className="flex flex-wrap items-end gap-3">
             <label className="flex flex-col text-xs text-slate-500">
-              Takvim (gecmis: yalnizca atadiginiz gunleri duzenlemek icin)
+              Takvim (geçmiş: yalnızca atadığınız günleri düzenlemek için)
               <input
                 type="date"
                 value={selectedYmd}
                 onChange={(e) => e.target.value && setSelectedYmd(e.target.value)}
-                className="mt-1 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-[#0D1117] px-3 py-2 text-slate-900 dark:text-white"
+                className="mt-1 rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900"
               />
             </label>
-            <p className="text-xs text-slate-500 pb-1">Hizli: onumuzdeki 60 gun (yeni atama)</p>
+            <p className="text-xs text-slate-500 pb-1">Hızlı: önümüzdeki 60 gün (yeni atama)</p>
           </div>
           <div className="mt-3 flex flex-wrap gap-2 max-h-40 overflow-y-auto p-1">
             {dateOptions.map((opt) => (
@@ -329,7 +329,7 @@ export function DietitianPrograms() {
                 className={`px-3 py-1.5 rounded-lg text-left text-sm border ${
                   selectedYmd === opt.ymd
                     ? "bg-emerald-500 text-white border-emerald-500"
-                    : "bg-white dark:bg-[#1F2937] border-slate-200 dark:border-slate-700"
+                    : "bg-white border-slate-200"
                 }`}
               >
                 <span className="block font-semibold">{opt.label}</span>
@@ -341,34 +341,34 @@ export function DietitianPrograms() {
 
         {loadingProgram && (
           <p className="text-sm text-slate-500 flex items-center gap-2">
-            <Loader2 className="w-4 h-4 animate-spin" /> Program yukleniyor...
+            <Loader2 className="w-4 h-4 animate-spin" /> Program yükleniyor…
           </p>
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
           <MealCard
-            title="Kahvalti"
+            title="Kahvaltı"
             value={breakfast}
             setValue={setBreakfast}
             kcal={breakfastKcal}
             setKcal={setBreakfastKcal}
           />
           <MealCard
-            title="Ogle Yemegi"
+            title="Öğle yemeği"
             value={lunch}
             setValue={setLunch}
             kcal={lunchKcal}
             setKcal={setLunchKcal}
           />
           <MealCard
-            title="Aksam Yemegi"
+            title="Akşam yemeği"
             value={dinner}
             setValue={setDinner}
             kcal={dinnerKcal}
             setKcal={setDinnerKcal}
           />
           <MealCard
-            title="Ara Ogun"
+            title="Ara öğün"
             value={snack}
             setValue={setSnack}
             kcal={snackKcal}
@@ -376,11 +376,11 @@ export function DietitianPrograms() {
           />
         </div>
 
-        <div className="rounded-3xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-900 p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="rounded-3xl bg-emerald-50 border border-emerald-100 p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <p className="text-slate-500 dark:text-[#9CA3AF]">Gunluk toplam (ogun toplamı)</p>
-            <p className="text-3xl font-bold text-slate-900 dark:text-white mt-1">{totalCalories} kcal</p>
-            <p className="text-xs text-slate-500 mt-1">Otomatik: dort ogunun kalori girdisinin toplami.</p>
+            <p className="text-slate-500">Günlük toplam (öğün toplamı)</p>
+            <p className="text-3xl font-bold text-slate-900 mt-1">{totalCalories} kkal</p>
+            <p className="text-xs text-slate-500 mt-1">Otomatik: dört öğünün kalori girdisinin toplamı.</p>
           </div>
           <button
             type="button"
@@ -388,7 +388,7 @@ export function DietitianPrograms() {
             disabled={loadingProgram}
             className="px-8 py-3 rounded-2xl bg-emerald-500 text-white font-semibold hover:bg-emerald-600 disabled:opacity-50"
           >
-            Programi Kaydet
+            Programı kaydet
           </button>
         </div>
       </div>
@@ -410,25 +410,25 @@ function MealCard({
   setKcal: (n: number) => void;
 }) {
   return (
-    <div className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1F2937] p-4 min-h-[220px] flex flex-col">
+    <div className="rounded-3xl border border-slate-200 bg-white p-4 min-h-[220px] flex flex-col">
       <div className="flex items-start justify-between gap-2">
         <h3 className="text-2xl font-bold leading-tight">{title}</h3>
         <label className="flex flex-col items-end text-xs text-slate-500 shrink-0">
-          kcal
+          kkal
           <input
             type="number"
             min={0}
             value={kcal}
             onChange={(e) => setKcal(Math.max(0, Number(e.target.value) || 0))}
-            className="mt-0.5 w-20 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-[#0D1117] px-2 py-1 text-slate-900 dark:text-white text-sm text-right"
+            className="mt-0.5 w-20 rounded-lg border border-slate-300 bg-slate-50 px-2 py-1 text-slate-900 text-sm text-right"
           />
         </label>
       </div>
       <textarea
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="Ogun icerigini ve besin onerilerinizi yazin..."
-        className="mt-3 flex-1 resize-none rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#0D1117] p-3 text-sm"
+        placeholder="Öğün içeriğini ve besin önerilerinizi yazın…"
+        className="mt-3 flex-1 resize-none rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"
       />
     </div>
   );

@@ -15,6 +15,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.example.nightbrate.ActivityWindowHelper.applyStandardContentWindow
 import coil.load
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -25,6 +26,7 @@ class DietitianDashboardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        applyStandardContentWindow()
         setContentView(R.layout.activity_dietitian_dashboard)
         DietitianBottomBarHelper.bind(this, 0)
 
@@ -33,6 +35,9 @@ class DietitianDashboardActivity : AppCompatActivity() {
         }
         findViewById<TextView>(R.id.btnDashAiReview).setOnClickListener {
             DietitianTabNav.go(this, 3)
+        }
+        findViewById<View>(R.id.cardDashCriticalAlerts).setOnClickListener {
+            DietitianTabNav.go(this, 4)
         }
 
         findViewById<View>(R.id.cardDashTodayTasks).setOnClickListener {

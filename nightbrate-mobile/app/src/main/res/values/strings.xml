@@ -1,15 +1,15 @@
 <resources>
     <string name="app_name">NutriBridge</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <string name="navigation_drawer_open">Gezinme menüsünü aç</string>
+    <string name="navigation_drawer_close">Gezinme menüsünü kapat</string>
+    <string name="nav_header_title">NutriBridge</string>
+    <string name="nav_header_subtitle">Akıllı beslenme</string>
+    <string name="nav_header_desc">Üst bilgi</string>
+    <string name="action_settings">Ayarlar</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_home">Ana sayfa</string>
+    <string name="menu_gallery">Galeri</string>
+    <string name="menu_slideshow">Slayt gösterisi</string>
 
     <string name="client_privacy_policy_text">Gizlilik ve veri güvenliği\n\nNutriBridge olarak kişisel verilerinizin gizliliğine saygı duyuyoruz. Bu metin, uygulamayı danışan olarak kullanırken verilerinizin nasıl işlendiğini özetler.\n\n1. Toplanan veriler: Hesabınız ve kullanımınız kapsamında; ad, soyad, boy, kilo, hedef kalori, öğün / su / kilo ve diyet programı kayıtları ile (varsa) diyetisyen eşleştirme verileri saklanabilir.\n\n2. Amaç: Verileriniz yalnızca beslenme takibi, diyetisyen-danışan sürecinin yürütülmesi ve hizmetin sunulması amacıyla işlenir.\n\n3. Paylaşım: Verileriniz, yalnızca atandığınız onaylı diyetisyenin sizi takip edebilmesi için gerekli ölçüde görünür; üçüncü taraflara satılmaz ve pazarlama amacıyla paylaşılmaz.\n\n4. Güvenlik: Erişim kontrolleriyle korunmaya çalışılır. Güçlü bir şifre kullanmanız önerilir.\n\n5. Haklar: KVKK kapsamındaki talepleriniz için veri sorumlusu / yönetici kanalları üzerinden başvurabilirsiniz.\n\nBilgilendirme amaçlıdır; resmi sözleşmeler ayrıdır.</string>
 

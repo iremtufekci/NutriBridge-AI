@@ -100,7 +100,7 @@ public class ClientService(
         var client = await clientRepository.GetByIdAsync(clientId);
         if (client is null) throw new AppException("Danisan profili bulunamadi.");
 
-        string dietitianName = "Atanmadi";
+        string dietitianName = "Atanmadı";
         if (!string.IsNullOrWhiteSpace(client.DietitianId))
         {
             var dietitian = await dietitianRepository.GetByIdAsync(client.DietitianId);

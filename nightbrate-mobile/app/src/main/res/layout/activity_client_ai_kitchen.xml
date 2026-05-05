@@ -23,7 +23,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="🍳  AI Mutfak Şefi"
+                android:text="🍳  Yapay zeka mutfak şefi"
                 android:textColor="@color/text_primary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -112,14 +112,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:tag="gluten_free"
-                    android:text="Gluten Free" />
+                    android:text="Glutensiz" />
             </RadioGroup>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Hedef kalori (kcal) *"
+                android:text="Hedef kalori (kkal) *"
                 android:textColor="@color/text_primary"
                 android:textSize="15sp"
                 android:textStyle="bold" />

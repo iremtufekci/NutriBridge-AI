@@ -37,7 +37,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="2"
-            android:text="Dashboard"
+            android:text="Özet"
             android:textColor="@color/nav_item_inactive"
             android:textSize="8sp" />
     </LinearLayout>
@@ -69,7 +69,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="2"
-            android:text="Kullanicilar"
+            android:text="Kullanıcılar"
             android:textColor="@color/nav_item_inactive"
             android:textSize="8sp" />
     </LinearLayout>

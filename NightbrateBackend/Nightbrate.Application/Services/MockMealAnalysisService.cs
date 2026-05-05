@@ -22,9 +22,16 @@ public class MockMealAnalysisService : IMealAnalysisService
         "Zeytinyağlı Enginar"
     ];
 
-    public async Task<MealAnalysisResultDto> AnalyzeImageAsync(string imageFilePath, CancellationToken cancellationToken = default)
+    public Task<MealAnalysisResultDto> AnalyzeImageAsync(string imageFilePath, CancellationToken cancellationToken = default)
     {
         _ = imageFilePath;
+        return AnalyzeImageBytesAsync(Array.Empty<byte>(), "image/jpeg", cancellationToken);
+    }
+
+    public async Task<MealAnalysisResultDto> AnalyzeImageBytesAsync(byte[] imageBytes, string mimeType, CancellationToken cancellationToken = default)
+    {
+        _ = imageBytes;
+        _ = mimeType;
         await Task.Delay(Random.Shared.Next(600, 1200), cancellationToken).ConfigureAwait(false);
 
         var count = Random.Shared.Next(2, 5);

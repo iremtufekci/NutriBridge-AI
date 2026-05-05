@@ -133,6 +133,14 @@
       "PackagePath": "staticwebassets\\uploads\\meals\\eb0d8217a3d24306802eff6157779c07.png"
     },
     {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\pdfs\\5deb180f7ca6442db52e81263cbc65ac.pdf",
+      "PackagePath": "staticwebassets\\uploads\\pdfs\\5deb180f7ca6442db52e81263cbc65ac.pdf"
+    },
+    {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\pdfs\\733dfb67ac98405b908eb285e57ff850.pdf",
+      "PackagePath": "staticwebassets\\uploads\\pdfs\\733dfb67ac98405b908eb285e57ff850.pdf"
+    },
+    {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Nightbrate.API.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

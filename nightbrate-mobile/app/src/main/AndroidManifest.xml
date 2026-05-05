@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.nightbrate">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -31,7 +30,6 @@
             android:name=".RegisterClientActivity"
             android:exported="false"
             android:theme="@style/Theme.Nightbrate.NoActionBar" />
-
         <activity
             android:name=".RegisterDietitianActivity"
             android:exported="false"
@@ -41,14 +39,61 @@
             android:name=".AdminDashboardActivity"
             android:exported="false"
             android:theme="@style/Theme.Nightbrate.NoActionBar" />
+        <activity
+            android:name=".AdminSettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+        <activity
+            android:name=".AdminDietitianApprovalsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+        <activity
+            android:name=".AdminSystemAnalyticsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+        <activity
+            android:name=".AdminUserManagementActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+        <activity
+            android:name=".AdminPlaceholderActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
 
         <activity
             android:name=".DietitianDashboardActivity"
             android:exported="false"
             android:theme="@style/Theme.Nightbrate.NoActionBar" />
-
         <activity
             android:name=".DietitianDailyTasksActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+        <activity
+            android:name=".DietitianProfileActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+        <activity
+            android:name=".DietitianProgramsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+        <activity
+            android:name=".DietitianClientsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+        <activity
+            android:name=".DietitianClientDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+        <activity
+            android:name=".DietitianAiReviewActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+        <activity
+            android:name=".DietitianCriticalAlertsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+        <activity
+            android:name=".DietitianPlaceholderActivity"
             android:exported="false"
             android:theme="@style/Theme.Nightbrate.NoActionBar" />
 
@@ -56,25 +101,38 @@
             android:name=".ClientDashboardActivity"
             android:exported="false"
             android:theme="@style/Theme.Nightbrate.NoActionBar" />
-
         <activity
             android:name=".ClientProfileActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.Nightbrate.NoActionBar" />
-
+            android:theme="@style/Theme.Nightbrate.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ClientDietProgramActivity"
             android:exported="false"
             android:theme="@style/Theme.Nightbrate.NoActionBar" />
-
         <activity
             android:name=".ClientDietProgramHistoryActivity"
             android:exported="false"
             android:theme="@style/Theme.Nightbrate.NoActionBar" />
-
         <activity
             android:name=".ClientMealAnalysisActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+        <activity
+            android:name=".ClientPdfAnalysisActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+        <activity
+            android:name=".ClientAiKitchenActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ClientAiKitchenSharesActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Nightbrate.NoActionBar" />
+        <activity
+            android:name=".ClientPlaceholderActivity"
             android:exported="false"
             android:theme="@style/Theme.Nightbrate.NoActionBar" />
 
@@ -87,62 +145,5 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
-        <activity
-            android:name=".DietitianProfileActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Nightbrate.NoActionBar" />
-
-        <activity
-            android:name=".DietitianProgramsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Nightbrate.NoActionBar" />
-
-        <activity
-            android:name=".AdminSettingsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Nightbrate.NoActionBar" />
-
-        <activity
-            android:name=".AdminDietitianApprovalsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Nightbrate.NoActionBar" />
-
-        <activity
-            android:name=".ClientAiKitchenActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.Nightbrate.NoActionBar" />
-
-        <activity
-            android:name=".ClientAiKitchenSharesActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Nightbrate.NoActionBar" />
-
-        <activity
-            android:name=".ClientPlaceholderActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Nightbrate.NoActionBar" />
-
-        <activity
-            android:name=".DietitianPlaceholderActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Nightbrate.NoActionBar" />
-
-        <activity
-            android:name=".AdminPlaceholderActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Nightbrate.NoActionBar" />
-
-        <activity
-            android:name=".AdminSystemAnalyticsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Nightbrate.NoActionBar" />
-
-        <activity
-            android:name=".AdminUserManagementActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Nightbrate.NoActionBar" />
-
     </application>
 </manifest>
