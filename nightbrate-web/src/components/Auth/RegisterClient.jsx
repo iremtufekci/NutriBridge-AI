@@ -1,13 +1,25 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Eye, EyeOff, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Eye, EyeOff, Loader2 } from "lucide-react";
 import { api } from "../../api/http";
+import {
+  AuthError,
+  AuthField,
+  AuthLayout,
+  AuthPageHeader,
+  authBtnPrimaryClass,
+  authBtnSecondaryClass,
+  authInputClass,
+  authSelectClass,
+} from "./AuthLayout";
 
 export function RegisterClient() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
-  
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -18,18 +30,23 @@ export function RegisterClient() {
     weight: "",
     goal: "",
     activityLevel: "",
-    birthDate: ""
+    birthDate: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleNextStep = (e) => {
     e.preventDefault();
+    setError("");
     if (formData.password !== formData.confirmPassword) {
-      alert("Şifreler eşleşmiyor!");
+      setError("Şifreler eşleşmiyor.");
+      return;
+    }
+    if (formData.password.length < 6) {
+      setError("Şifre en az 6 karakter olmalıdır.");
       return;
     }
     setStep(2);
@@ -37,134 +54,276 @@ export function RegisterClient() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Backend'deki ClientRegisterDto ile tam uyumlu Payload
+    setError("");
+    setLoading(true);
+
     const payload = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
+      firstName: formData.firstName.trim(),
+      lastName: formData.lastName.trim(),
+      email: formData.email.trim(),
       password: formData.password,
-      height: parseFloat(formData.height), 
+      height: parseFloat(formData.height),
       weight: parseFloat(formData.weight),
-      targetCalories: formData.goal === "gain" ? 2400 : formData.goal === "maintain" ? 2100 : 1800
+      targetCalories:
+        formData.goal === "gain" ? 2400 : formData.goal === "maintain" ? 2100 : 1800,
     };
 
     try {
       const response = await api.post("/api/Auth/register-client", payload);
-
       if (response.status === 200 || response.status === 201) {
-        alert("Kayıt başarılı! " + (response.data.message || "Hoş geldiniz."));
-        navigate("/");
+        navigate("/login", {
+          state: { message: response.data.message || "Kayıt başarılı. Giriş yapabilirsiniz." },
+        });
       }
-    } catch (error) {
-      // "undefined" hatasını önlemek için detaylı hata yakalama
-      console.error("Hata Detayı:", error);
-      
-      if (error.response) {
-        // Sunucu bir hata kodu döndürdü (400, 500 vb.)
-        const errorMsg = error.response.data?.message || "Sunucu hatası oluştu.";
-        alert("Hata: " + errorMsg);
-      } else if (error.request) {
-        // İstek yapıldı ama cevap gelmedi (Backend kapalı olabilir)
-        alert("Sunucuya ulaşılamıyor. Bağlantınızı ve sunucunun çalıştığını kontrol edin.");
+    } catch (err) {
+      if (err.response) {
+        setError(err.response.data?.message || "Sunucu hatası oluştu.");
+      } else if (err.request) {
+        setError("Sunucuya ulaşılamıyor. Bağlantınızı ve sunucunun çalıştığını kontrol edin.");
       } else {
-        alert("Beklenmedik bir hata oluştu: " + error.message);
+        setError("Beklenmedik bir hata oluştu.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
+  const steps = ["Hesap bilgileri", "Vücut ve hedef"];
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
-      <style dangerouslySetInnerHTML={{ __html: `
-        .input-style {
-          width: 100%;
-          padding: 0.75rem;
-          background-color: #ffffff;
-          border: 1px solid #e2e8f0;
-          border-radius: 0.75rem;
-          color: #0f172a;
-          outline: none;
-          transition: all 0.2s;
-          margin-bottom: 1rem;
+    <AuthLayout wide>
+      <AuthPageHeader
+        title="Danışan kaydı"
+        subtitle={
+          step === 1
+            ? "Adım 1 / 2 — Hesap bilgilerinizi oluşturun"
+            : "Adım 2 / 2 — Hedeflerinizi belirleyin"
         }
-        .input-style:focus {
-          border-color: #22C55E;
-        }
-        .btn-primary {
-          width: 100%;
-          padding: 0.75rem;
-          background-color: #22C55E;
-          color: white;
-          font-weight: bold;
-          border-radius: 0.75rem;
-          border: none;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        .btn-primary:hover {
-          background-color: #16A34A;
-          transform: scale(1.02);
-        }
-      `}} />
+      />
 
-      <div className="w-full max-w-md bg-white rounded-2xl p-8 border border-slate-200 shadow-2xl">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-[#22C55E] mb-2">NutriBridge</h1>
-          <div className="flex justify-center gap-2 mt-4">
-            <div className={`w-8 h-1 rounded-full ${step >= 1 ? "bg-[#22C55E]" : "bg-slate-300"}`} />
-            <div className={`w-8 h-1 rounded-full ${step >= 2 ? "bg-[#22C55E]" : "bg-slate-300"}`} />
-          </div>
-          <p className="text-slate-600 mt-2 text-sm">{step === 1 ? "Kişisel Bilgiler" : "Vücut & Hedef Bilgileri"}</p>
-        </div>
-
-        {step === 1 ? (
-          <form onSubmit={handleNextStep}>
-            <div className="flex gap-4">
-              <input name="firstName" placeholder="Ad" className="input-style" onChange={handleChange} required />
-              <input name="lastName" placeholder="Soyad" className="input-style" onChange={handleChange} required />
+      <div className="mb-8 grid grid-cols-2 gap-4">
+        {steps.map((label, i) => {
+          const n = i + 1;
+          const active = step >= n;
+          const current = step === n;
+          return (
+            <div
+              key={label}
+              className={`rounded-lg border px-4 py-3 ${
+                current
+                  ? "border-[#2ECC71] bg-emerald-50/60"
+                  : active
+                    ? "border-emerald-200 bg-white"
+                    : "border-slate-200 bg-white"
+              }`}
+            >
+              <p className="text-xs font-medium uppercase tracking-wide text-slate-400">Adım {n}</p>
+              <p className={`mt-1 text-sm font-medium ${active ? "text-slate-800" : "text-slate-400"}`}>
+                {label}
+              </p>
             </div>
-            <input name="email" type="email" placeholder="E-posta" className="input-style" onChange={handleChange} required />
-            <div className="relative">
-              <input name="password" type={showPassword ? "text" : "password"} placeholder="Şifre" className="input-style" onChange={handleChange} required />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-3 text-slate-500 bg-transparent border-none cursor-pointer">
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            </div>
-            <input name="confirmPassword" type="password" placeholder="Şifre Tekrar" className="input-style" onChange={handleChange} required />
-            <button type="submit" className="btn-primary" style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}>
-              Sonraki Adım <ArrowRight size={18} />
-            </button>
-          </form>
-        ) : (
-          <form onSubmit={handleSubmit}>
-            <div className="flex gap-4">
-              <input name="height" type="number" placeholder="Boy (cm)" className="input-style" onChange={handleChange} required />
-              <input name="weight" type="number" placeholder="Kilo (kg)" className="input-style" onChange={handleChange} required />
-            </div>
-            <select name="goal" className="input-style" onChange={handleChange} required>
-              <option value="">Hedef Seçiniz</option>
-              <option value="lose">Kilo Vermek</option>
-              <option value="gain">Kilo Almak</option>
-              <option value="maintain">Formu Korumak</option>
-            </select>
-            <select name="activityLevel" className="input-style" onChange={handleChange} required>
-              <option value="">Aktivite Seviyesi</option>
-              <option value="sedentary">Hareketsiz</option>
-              <option value="moderate">Orta Hareketli</option>
-              <option value="active">Çok Aktif</option>
-            </select>
-            <input name="birthDate" type="date" className="input-style" onChange={handleChange} required />
-            <div className="flex gap-4">
-              <button type="button" onClick={() => setStep(1)} className="btn-primary" style={{backgroundColor: '#2D3748', flex: 1}}>Geri</button>
-              <button type="submit" className="btn-primary" style={{flex: 2}}>Kaydı Tamamla</button>
-            </div>
-          </form>
-        )}
-
-        <p className="text-center text-slate-600 mt-6 text-sm">
-          Zaten hesabınız var mı? <Link to="/" className="text-[#22C55E] font-bold hover:underline">Giriş Yap</Link>
-        </p>
+          );
+        })}
       </div>
-    </div>
+
+      <AuthError message={error} />
+
+      {step === 1 ? (
+        <form className="space-y-5" onSubmit={handleNextStep}>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <AuthField id="firstName" label="Ad">
+              <input
+                id="firstName"
+                name="firstName"
+                type="text"
+                autoComplete="given-name"
+                placeholder="Adınız"
+                className={authInputClass}
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+              />
+            </AuthField>
+            <AuthField id="lastName" label="Soyad">
+              <input
+                id="lastName"
+                name="lastName"
+                type="text"
+                autoComplete="family-name"
+                placeholder="Soyadınız"
+                className={authInputClass}
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+              />
+            </AuthField>
+          </div>
+
+          <AuthField id="email" label="E-posta adresi">
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              placeholder="ornek@nutribridge.ai"
+              className={authInputClass}
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </AuthField>
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            <AuthField id="password" label="Şifre">
+              <div className="relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  placeholder="En az 6 karakter"
+                  className={`${authInputClass} pr-11`}
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+                <button
+                  type="button"
+                  aria-label={showPassword ? "Şifreyi gizle" : "Şifreyi göster"}
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 border-0 bg-transparent p-1 text-slate-400 hover:text-slate-600"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </AuthField>
+            <AuthField id="confirmPassword" label="Şifre tekrar">
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                autoComplete="new-password"
+                placeholder="Tekrar girin"
+                className={authInputClass}
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+              />
+            </AuthField>
+          </div>
+
+          <button type="submit" className={`${authBtnPrimaryClass} gap-2`}>
+            Sonraki adım
+            <ArrowRight size={18} />
+          </button>
+        </form>
+      ) : (
+        <form className="space-y-5" onSubmit={handleSubmit}>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <AuthField id="height" label="Boy (cm)">
+              <input
+                id="height"
+                name="height"
+                type="number"
+                min={50}
+                max={250}
+                placeholder="170"
+                className={authInputClass}
+                value={formData.height}
+                onChange={handleChange}
+                required
+              />
+            </AuthField>
+            <AuthField id="weight" label="Kilo (kg)">
+              <input
+                id="weight"
+                name="weight"
+                type="number"
+                min={20}
+                max={400}
+                placeholder="70"
+                className={authInputClass}
+                value={formData.weight}
+                onChange={handleChange}
+                required
+              />
+            </AuthField>
+            <AuthField id="goal" label="Hedef">
+              <select
+                id="goal"
+                name="goal"
+                className={authSelectClass}
+                value={formData.goal}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Seçiniz</option>
+                <option value="lose">Kilo vermek</option>
+                <option value="maintain">Formu korumak</option>
+                <option value="gain">Kilo almak</option>
+              </select>
+            </AuthField>
+            <AuthField id="activityLevel" label="Aktivite seviyesi">
+              <select
+                id="activityLevel"
+                name="activityLevel"
+                className={authSelectClass}
+                value={formData.activityLevel}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Seçiniz</option>
+                <option value="sedentary">Hareketsiz</option>
+                <option value="moderate">Orta hareketli</option>
+                <option value="active">Çok aktif</option>
+              </select>
+            </AuthField>
+          </div>
+
+          <AuthField id="birthDate" label="Doğum tarihi">
+            <input
+              id="birthDate"
+              name="birthDate"
+              type="date"
+              className={authInputClass}
+              value={formData.birthDate}
+              onChange={handleChange}
+              required
+            />
+          </AuthField>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <button
+              type="button"
+              onClick={() => {
+                setError("");
+                setStep(1);
+              }}
+              className={`${authBtnSecondaryClass} gap-2`}
+            >
+              <ArrowLeft size={18} />
+              Geri
+            </button>
+            <button type="submit" disabled={loading} className={authBtnPrimaryClass}>
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Kaydediliyor…
+                </>
+              ) : (
+                "Kaydı tamamla"
+              )}
+            </button>
+          </div>
+        </form>
+      )}
+
+      <p className="mt-10 border-t border-slate-200 pt-8 text-sm text-slate-600">
+        Zaten hesabınız var mı?{" "}
+        <Link to="/login" className="font-semibold text-[#2ECC71] hover:underline">
+          Giriş yapın
+        </Link>
+      </p>
+    </AuthLayout>
   );
 }

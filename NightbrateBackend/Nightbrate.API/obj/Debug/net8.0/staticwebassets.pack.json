@@ -1,6 +1,14 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\diplomas\\719b6e34a80e4a2e9fc74471b66af672.pdf",
+      "PackagePath": "staticwebassets\\uploads\\diplomas\\719b6e34a80e4a2e9fc74471b66af672.pdf"
+    },
+    {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\05998d0e1ea24dd19bae4352f87352a7.png",
+      "PackagePath": "staticwebassets\\uploads\\meals\\05998d0e1ea24dd19bae4352f87352a7.png"
+    },
+    {
       "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\0d42468b2a204e9c8a5f9e42ff9ad3a5.png",
       "PackagePath": "staticwebassets\\uploads\\meals\\0d42468b2a204e9c8a5f9e42ff9ad3a5.png"
     },
@@ -19,6 +27,14 @@
     {
       "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\1f4053712e604d6b9db7f2443d7f92ce.png",
       "PackagePath": "staticwebassets\\uploads\\meals\\1f4053712e604d6b9db7f2443d7f92ce.png"
+    },
+    {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\25750aa691c84cefa7db23efa64d96d3.png",
+      "PackagePath": "staticwebassets\\uploads\\meals\\25750aa691c84cefa7db23efa64d96d3.png"
+    },
+    {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\25dd75ff2685457ca3d32a8c6d58f038.png",
+      "PackagePath": "staticwebassets\\uploads\\meals\\25dd75ff2685457ca3d32a8c6d58f038.png"
     },
     {
       "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\27b5f9b0826143c0bbc57b6fc670becb.png",
@@ -61,8 +77,28 @@
       "PackagePath": "staticwebassets\\uploads\\meals\\464f53bdc84d45d6943a0ed932c1d96c.png"
     },
     {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\465d5dc2adf04c3bbf8e2169faa93632.png",
+      "PackagePath": "staticwebassets\\uploads\\meals\\465d5dc2adf04c3bbf8e2169faa93632.png"
+    },
+    {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\4e9ab542a9b445d48c3c1a138e69df6c.png",
+      "PackagePath": "staticwebassets\\uploads\\meals\\4e9ab542a9b445d48c3c1a138e69df6c.png"
+    },
+    {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\54c41ee4ddf4464290c7fc60face2add.png",
+      "PackagePath": "staticwebassets\\uploads\\meals\\54c41ee4ddf4464290c7fc60face2add.png"
+    },
+    {
       "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\5b6a69637b704e66b6c38e900dc6e567.png",
       "PackagePath": "staticwebassets\\uploads\\meals\\5b6a69637b704e66b6c38e900dc6e567.png"
+    },
+    {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\5f526836cce344e799056995337d314b.png",
+      "PackagePath": "staticwebassets\\uploads\\meals\\5f526836cce344e799056995337d314b.png"
+    },
+    {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\6cb120fd20584a198af3057553d82569.png",
+      "PackagePath": "staticwebassets\\uploads\\meals\\6cb120fd20584a198af3057553d82569.png"
     },
     {
       "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\726f4add73e1413fb5b01a9eba04b1cc.jpg",
@@ -81,12 +117,24 @@
       "PackagePath": "staticwebassets\\uploads\\meals\\867e84e37e0242c2a9c55a0b856ed7f4.png"
     },
     {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\883ba13fd0dd4c2bb70079a2bbe18b54.png",
+      "PackagePath": "staticwebassets\\uploads\\meals\\883ba13fd0dd4c2bb70079a2bbe18b54.png"
+    },
+    {
       "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\890b2c3357d147aa90c2a963e86412a5.png",
       "PackagePath": "staticwebassets\\uploads\\meals\\890b2c3357d147aa90c2a963e86412a5.png"
     },
     {
       "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\8e53986bada94253b026a9391bfa1aa9.png",
       "PackagePath": "staticwebassets\\uploads\\meals\\8e53986bada94253b026a9391bfa1aa9.png"
+    },
+    {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\9093955b480b43e28e32951f1d90fae9.png",
+      "PackagePath": "staticwebassets\\uploads\\meals\\9093955b480b43e28e32951f1d90fae9.png"
+    },
+    {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\911574fc188f479c9e46edb331c29ae7.png",
+      "PackagePath": "staticwebassets\\uploads\\meals\\911574fc188f479c9e46edb331c29ae7.png"
     },
     {
       "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\a41ad1de807c4964a50a95079c6a1d5d.png",
@@ -121,6 +169,10 @@
       "PackagePath": "staticwebassets\\uploads\\meals\\d0c61c9a64094e4fa049ff1facbe3a13.png"
     },
     {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\e500e106c99a4338905ed4f86c6a65ae.png",
+      "PackagePath": "staticwebassets\\uploads\\meals\\e500e106c99a4338905ed4f86c6a65ae.png"
+    },
+    {
       "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\meals\\e99a9c6429a2460da830db4b3370b45a.png",
       "PackagePath": "staticwebassets\\uploads\\meals\\e99a9c6429a2460da830db4b3370b45a.png"
     },
@@ -133,12 +185,56 @@
       "PackagePath": "staticwebassets\\uploads\\meals\\eb0d8217a3d24306802eff6157779c07.png"
     },
     {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\pdfs\\24097c82d4fc4fd6a8e52b1598d72a8d.pdf",
+      "PackagePath": "staticwebassets\\uploads\\pdfs\\24097c82d4fc4fd6a8e52b1598d72a8d.pdf"
+    },
+    {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\pdfs\\2c8c15f699594412965509b837889ffb.pdf",
+      "PackagePath": "staticwebassets\\uploads\\pdfs\\2c8c15f699594412965509b837889ffb.pdf"
+    },
+    {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\pdfs\\534d7ba3eea34906b2ec82230c2487c4.pdf",
+      "PackagePath": "staticwebassets\\uploads\\pdfs\\534d7ba3eea34906b2ec82230c2487c4.pdf"
+    },
+    {
       "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\pdfs\\5deb180f7ca6442db52e81263cbc65ac.pdf",
       "PackagePath": "staticwebassets\\uploads\\pdfs\\5deb180f7ca6442db52e81263cbc65ac.pdf"
     },
     {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\pdfs\\6effdd847e104444b932a8fcb15edddd.pdf",
+      "PackagePath": "staticwebassets\\uploads\\pdfs\\6effdd847e104444b932a8fcb15edddd.pdf"
+    },
+    {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\pdfs\\714d6ab5b68e413789dd6ca87a59587e.pdf",
+      "PackagePath": "staticwebassets\\uploads\\pdfs\\714d6ab5b68e413789dd6ca87a59587e.pdf"
+    },
+    {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\pdfs\\71761a554c9f42d68b88913bd67f32f0.pdf",
+      "PackagePath": "staticwebassets\\uploads\\pdfs\\71761a554c9f42d68b88913bd67f32f0.pdf"
+    },
+    {
       "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\pdfs\\733dfb67ac98405b908eb285e57ff850.pdf",
       "PackagePath": "staticwebassets\\uploads\\pdfs\\733dfb67ac98405b908eb285e57ff850.pdf"
+    },
+    {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\pdfs\\77a3cd9090dc4ee9ae2ece59efd70aa3.pdf",
+      "PackagePath": "staticwebassets\\uploads\\pdfs\\77a3cd9090dc4ee9ae2ece59efd70aa3.pdf"
+    },
+    {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\pdfs\\827a0fc2f6674c6a8605f652ff1347f7.pdf",
+      "PackagePath": "staticwebassets\\uploads\\pdfs\\827a0fc2f6674c6a8605f652ff1347f7.pdf"
+    },
+    {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\pdfs\\8989e45f448245c281a3fb0b724fbe4f.pdf",
+      "PackagePath": "staticwebassets\\uploads\\pdfs\\8989e45f448245c281a3fb0b724fbe4f.pdf"
+    },
+    {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\pdfs\\ed3e9a0804434232a82713f30c1a355f.pdf",
+      "PackagePath": "staticwebassets\\uploads\\pdfs\\ed3e9a0804434232a82713f30c1a355f.pdf"
+    },
+    {
+      "Id": "C:\\Users\\tufek\\Nightbrate\\NightbrateBackend\\Nightbrate.API\\wwwroot\\uploads\\pdfs\\f98c3ab1e0d5401991018fbb9e494a1b.pdf",
+      "PackagePath": "staticwebassets\\uploads\\pdfs\\f98c3ab1e0d5401991018fbb9e494a1b.pdf"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Nightbrate.API.Microsoft.AspNetCore.StaticWebAssets.props",

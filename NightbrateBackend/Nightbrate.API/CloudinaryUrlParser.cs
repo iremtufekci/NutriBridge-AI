@@ -37,4 +37,15 @@ internal static class CloudinaryUrlParser
             return false;
         }
     }
+
+    /// <summary>Placeholder veya eksik anahtarlar Cloudinary'e gitmemeli (yerel depolama kullanilir).</summary>
+    public static bool HasUsableCredentials(string cloudName, string apiKey, string apiSecret)
+    {
+        static bool Placeholder(string? v) =>
+            string.IsNullOrWhiteSpace(v) ||
+            v.Contains("YOUR_", StringComparison.OrdinalIgnoreCase) ||
+            v.Contains("CHANGE_ME", StringComparison.OrdinalIgnoreCase);
+
+        return !Placeholder(cloudName) && !Placeholder(apiKey) && !Placeholder(apiSecret);
+    }
 }

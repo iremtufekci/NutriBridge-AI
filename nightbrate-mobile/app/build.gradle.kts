@@ -52,8 +52,9 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation(libs.androidx.core.ktx)
-    // Activity 1.8+ yaşam döngüsü düzeltmeleri (TopResumedActivityChangeItem vb.)
-    implementation("androidx.activity:activity-ktx:1.9.3")
+    implementation("androidx.core:core-splashscreen:1.2.0")
+    // TopResumedActivityChangeItem + "client record null" — debug/askıda başlatma ile tetiklenir; sürüm güncellemesi + Run (Debug bekleme yok) önerilir
+    implementation("androidx.activity:activity-ktx:1.10.1")
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)

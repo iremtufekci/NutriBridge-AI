@@ -23,7 +23,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Kritik uyarılar"
+                android:text="Kritik Uyarılar"
                 android:textColor="@color/admin_strong"
                 android:textSize="26sp"
                 android:textStyle="bold" />
@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="Son 3 gün verisine göre öğün uyumu ve günlük kalori kuralları değerlendirilir. İncelediğiniz kayıt listeden düşer; eşikler yeniden aşılırsa yeni uyarı oluşabilir."
+                android:text="Danışanlarınız programa uymadığında veya hedef kalorinin belirgin üzerine çıktığında uyarı oluşur. Öğün tamamlama: o günkü programda iki veya daha fazla öğün işaretlenmemişse. Yüksek kalori: yemek analizi toplamı hedefin yaklaşık %20 üstündeyse. İncelediğiniz kayıt listeden düşer."
                 android:textColor="@color/admin_muted"
                 android:textSize="14sp" />
 

@@ -1,42 +1,42 @@
-package com.example.nightbrate.ui.gallery
+package com.example.nightbrate.ui.gallery // Galeri fragment paketi
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.example.nightbrate.databinding.FragmentGalleryBinding
+import android.os.Bundle // Fragment durum verisi
+import android.view.LayoutInflater // XML şişirme
+import android.view.View // Görünüm referansı
+import android.view.ViewGroup // Konteyner grup
+import android.widget.TextView // Metin etiketi
+import androidx.fragment.app.Fragment // Temel fragment sınıfı
+import androidx.lifecycle.ViewModelProvider // ViewModel fabrikası
+import com.example.nightbrate.databinding.FragmentGalleryBinding // View binding
 
-class GalleryFragment : Fragment() {
+class GalleryFragment : Fragment() { // Galeri ekran parçası
 
-    private var _binding: FragmentGalleryBinding? = null
+    private var _binding: FragmentGalleryBinding? = null // Nullable binding referansı
 
     // This property is only valid between onCreateView and
     // onDestroyView.
-    private val binding get() = _binding!!
+    private val binding get() = _binding!! // Güvenli binding erişimi
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+    override fun onCreateView( // Görünüm oluşturulurken
+        inflater: LayoutInflater, // Layout şişirici
+        container: ViewGroup?, // Üst konteyner
+        savedInstanceState: Bundle? // Kayıtlı durum
     ): View {
-        val galleryViewModel =
+        val galleryViewModel = // ViewModel örneği al
             ViewModelProvider(this).get(GalleryViewModel::class.java)
 
-        _binding = FragmentGalleryBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        _binding = FragmentGalleryBinding.inflate(inflater, container, false) // Binding şişir
+        val root: View = binding.root // Kök görünüm
 
-        val textView: TextView = binding.textGallery
-        galleryViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        val textView: TextView = binding.textGallery // Metin alanı referansı
+        galleryViewModel.text.observe(viewLifecycleOwner) { // Metin değişimini izle
+            textView.text = it // UI'ya yansıt
         }
-        return root
+        return root // Oluşturulan kök görünümü döndür
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onDestroyView() { // Görünüm yok edilirken
+        super.onDestroyView() // Üst sınıf temizliği
+        _binding = null // Bellek sızıntısını önle
     }
 }

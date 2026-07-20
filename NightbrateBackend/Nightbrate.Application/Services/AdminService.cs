@@ -43,6 +43,7 @@ public class AdminService(
             Id = dietitian.Id ?? string.Empty,
             FirstName = dietitian.FirstName,
             LastName = dietitian.LastName,
+            Email = dietitian.Email,
             DiplomaNo = dietitian.DiplomaNo,
             ClinicName = dietitian.ClinicName,
             CreatedAt = dietitian.CreatedAt,

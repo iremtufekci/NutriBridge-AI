@@ -1,6 +1,6 @@
-package com.example.nightbrate
+package com.example.nightbrate // Paket tanımı
 
-data class LoginResponse(
-    val token: String,
-    val role: String
+data class LoginResponse( // Giriş API yanıt gövdesi
+    val token: String, // JWT erişim belirteci
+    val role: String // Kullanıcı rolü (client/dietitian/admin)
 )

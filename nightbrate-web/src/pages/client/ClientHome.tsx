@@ -1,10 +1,17 @@
+// React kancaları ve durum yönetimi
 import { useCallback, useEffect, useMemo, useState } from "react";
+// Kenar çubuğu düzeni
 import { SidebarLayout } from "../../components/SidebarLayout";
+// İkonlar (öğünler, bildirim, yükleme vb.)
 import { Apple, Bell, Camera, ChefHat, ChevronRight, Loader2, Salad, Soup, UtensilsCrossed } from "lucide-react";
+// Sayfa yönlendirme
 import { useNavigate } from "react-router-dom";
+// HTTP istemcisi
 import { api } from "../../api/http";
+// Oturum açmış kullanıcının görünen adı
 import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
 
+// API'den gelen danışan profil özeti
 type ClientProfile = {
   firstName?: string;
   lastName?: string;
@@ -13,6 +20,7 @@ type ClientProfile = {
   dietitianName: string;
 };
 
+// Seçili günün diyet programı kaydı
 type ProgramDay = {
   programDate: string;
   breakfast: string;
@@ -27,8 +35,10 @@ type ProgramDay = {
   dietitianName?: string | null;
 };
 
+// Haftanın kısa gün adları (Pazartesi=0 indeks)
 const DAY_SHORT = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"] as const;
 
+// Tarihi YYYY-MM-DD biçimine çevirir
 function toYmd(d: Date) {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -36,14 +46,17 @@ function toYmd(d: Date) {
   return `${y}-${m}-${day}`;
 }
 
+// Saat bilgisini sıfırlayarak gün başlangıcına indirir
 function startOfDay(d: Date) {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
+// İki tarihin aynı takvim günü olup olmadığını kontrol eder
 function isSameDay(a: Date, b: Date) {
   return startOfDay(a).getTime() === startOfDay(b).getTime();
 }
 
+// Bugünden itibaren ardışık N gün üretir
 function getUpcomingDaysFromToday(count: number): Date[] {
   const t = startOfDay(new Date());
   return Array.from({ length: count }, (_, i) => {
@@ -53,11 +66,22 @@ function getUpcomingDaysFromToday(count: number): Date[] {
   });
 }
 
+// Diyetisyen adının boş veya atanmamış placeholder olup olmadığını kontrol eder
 function isPlaceholderDietitianName(name: string | undefined | null) {
   const n = name?.trim() ?? "";
   return n.length === 0 || n === "Atanmadi" || n === "Atanmadı";
 }
 
+// Saate göre selamlama metni ve emoji döndürür
+function getTimeGreeting(): { text: string; emoji: string } {
+  const h = new Date().getHours();
+  if (h >= 5 && h < 12) return { text: "Günaydın", emoji: "🌞" };
+  if (h >= 12 && h < 18) return { text: "İyi günler", emoji: "☀️" };
+  if (h >= 18 && h < 22) return { text: "İyi akşamlar", emoji: "🌆" };
+  return { text: "İyi geceler", emoji: "🌙" };
+}
+
+// Diyetisyen adından avatar baş harflerini üretir
 function initialsFromDietitianName(raw: string) {
   if (!raw || isPlaceholderDietitianName(raw)) return "?";
   const s = raw.replace(/^Dr\.\s*/i, "").trim();
@@ -69,6 +93,7 @@ function initialsFromDietitianName(raw: string) {
   return s.slice(0, 2).toUpperCase();
 }
 
+// Danışan ana sayfa: özet profil, günlük plan ve hızlı erişim
 export function ClientHome() {
   const navigate = useNavigate();
   const userName = useAuthProfileDisplayName();
@@ -79,6 +104,7 @@ export function ClientHome() {
   const [selected, setSelected] = useState(() => startOfDay(new Date()));
   const upcomingDays = useMemo(() => getUpcomingDaysFromToday(14), []);
 
+  // Profil bilgisini API'den çeker
   const loadProfile = useCallback(async () => {
     setProfileLoad(true);
     try {
@@ -97,6 +123,7 @@ export function ClientHome() {
     }
   }, []);
 
+  // Seçili tarih için diyet programını yükler
   const loadProgramForDate = useCallback(async (ymd: string) => {
     setProgramLoad(true);
     try {
@@ -118,6 +145,7 @@ export function ClientHome() {
     void loadProgramForDate(selectedYmd);
   }, [loadProgramForDate, selectedYmd]);
 
+  // Seçili günün uzun Türkçe tarih etiketi
   const selectedDateLabel = useMemo(() => {
     return selected.toLocaleDateString("tr-TR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
   }, [selected]);
@@ -127,8 +155,10 @@ export function ClientHome() {
 
   const greetingName =
     (profile && `${profile.firstName || ""} ${profile.lastName || ""}`.trim()) || userName;
+  const { text: greetText, emoji: greetEmoji } = getTimeGreeting();
 
   const targetKcal = profile?.targetCalories ?? 0;
+  // Seçili günün toplam plan kalorisi (öğün bazlı veya genel toplam)
   const planTotal = useMemo(() => {
     const p = dayProgram;
     if (!p) return 0;
@@ -138,6 +168,7 @@ export function ClientHome() {
     return p.totalCalories ?? 0;
   }, [dayProgram]);
 
+  // Öğün slotu için kalori değeri (yoksa toplam/4 tahmini)
   const kcalForSlot = (p: ProgramDay, slot: "b" | "l" | "d" | "s") => {
     const a = p.breakfastCalories ?? 0;
     const b = p.lunchCalories ?? 0;
@@ -159,6 +190,7 @@ export function ClientHome() {
   const planFillRatio = targetKcal > 0 ? Math.min(1, planTotal / targetKcal) : 0;
   const ringDashOffset = 390 - 390 * planFillRatio;
 
+  // Gösterilecek diyetisyen adı (program veya profilden)
   const displayDietitianName = useMemo(() => {
     const fromProgram = dayProgram?.dietitianName?.trim();
     if (fromProgram && !isPlaceholderDietitianName(fromProgram)) return fromProgram;
@@ -169,6 +201,7 @@ export function ClientHome() {
 
   const hasLiveDietitian = displayDietitianName !== "Diyetisyen atanmadı";
 
+  // Öğün kartları için görüntü satırları
   const mealRows: {
     key: string;
     name: string;
@@ -219,19 +252,18 @@ export function ClientHome() {
     <SidebarLayout userRole="client" userName={userName}>
       <div className="min-h-full bg-slate-50 px-4 py-6 pb-4 transition-colors sm:px-6 sm:pb-6 lg:px-8 lg:pb-8">
         <div className="mx-auto max-w-6xl space-y-6">
+          {/* Profil yüklenirken gösterge */}
           {pageLoading && (
             <p className="flex items-center gap-2 text-slate-500 text-sm">
               <Loader2 className="w-4 h-4 animate-spin" /> Profil yükleniyor…
             </p>
           )}
+          {/* Selamlama başlığı ve bildirim düğmesi */}
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <header className="min-w-0">
-              <h1 className="text-xl sm:text-4xl font-bold text-slate-900 break-words">Günaydın, {greetingName} 🌞</h1>
-              <p className="text-slate-500 mt-1 text-sm sm:text-base">
-                {hasLiveDietitian
-                  ? `${displayDietitianName} — ${isSelectedToday ? "Bugün" : "Seçili gün"} için öğünler ve günlük plan aşağıda.`
-                  : "Diyetisyeninizle eşleştiğinizde planınız burada görünür."}
-              </p>
+              <h1 className="text-xl sm:text-4xl font-bold text-slate-900 break-words">
+                {greetText}, {greetingName} {greetEmoji}
+              </h1>
             </header>
             <button
               type="button"
@@ -242,6 +274,7 @@ export function ClientHome() {
             </button>
           </div>
 
+          {/* Kalori halkası: hedefe göre plan doluluk oranı */}
           <section className="bg-[#EAF3DE] rounded-3xl p-5 sm:p-8 flex flex-col items-center shadow-sm border border-[#E1EBD3]">
             <div className="relative w-40 h-40 sm:w-44 sm:h-44">
               <svg className="w-full h-full -rotate-90">
@@ -287,6 +320,7 @@ export function ClientHome() {
             </div>
           </section>
 
+          {/* Öğün listesi (diyetisyen planından) */}
           <section className="space-y-3">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-bold text-slate-900">Öğünler (diyetisyen planı)</h2>
@@ -343,6 +377,7 @@ export function ClientHome() {
             </div>
           </section>
 
+          {/* Gün seçici ve günlük toplam kalori */}
           <section className="rounded-2xl border border-emerald-200/80 bg-white p-4 sm:p-5 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700 mb-2">
               Günlük plan (diyetisyen)
@@ -393,6 +428,7 @@ export function ClientHome() {
             </div>
           </section>
 
+          {/* Diyetisyen kartı — tam programa git */}
           <button
             type="button"
             onClick={() => navigate("/client/diet-program")}
@@ -414,6 +450,7 @@ export function ClientHome() {
             <ChevronRight className="text-slate-400 shrink-0" />
           </button>
 
+          {/* Yapay zeka mutfak şefi tanıtım bandı */}
           <section className="bg-[#DDF3E7] border border-[#CBEAD9] rounded-2xl p-5 sm:p-6 flex items-start justify-between gap-4">
             <div className="flex items-start gap-3">
               <div className="w-11 h-11 rounded-full bg-emerald-500 flex items-center justify-center text-white shadow-md">

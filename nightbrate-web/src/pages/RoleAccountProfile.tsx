@@ -1,9 +1,15 @@
+// React kancaları
 import { useEffect, useState } from "react";
+// İkonlar
 import { UserRound, Mail, Building2, Award, KeyRound } from "lucide-react";
+// Kenar çubuğu düzeni
 import { SidebarLayout } from "../components/SidebarLayout";
+// Kullanıcı görünen adı
 import { useAuthProfileDisplayName } from "../hooks/useAuthProfileDisplayName";
+// HTTP istemcisi
 import { api } from "../api/http";
 
+// Oturum açmış kullanıcının profil yanıtı
 type AuthProfile = {
   email: string;
   role: string;
@@ -15,6 +21,7 @@ type AuthProfile = {
   connectionCode?: string;
 };
 
+// Profil yüklenene kadar boş başlangıç değerleri
 const empty: AuthProfile = {
   email: "",
   role: "",
@@ -25,12 +32,14 @@ const empty: AuthProfile = {
   diplomaNo: undefined,
 };
 
+// useAccountProfile kancasının dönüş tipi
 export type AccountProfileData = {
   profile: AuthProfile;
   err: string;
   name: string;
 };
 
+// Admin/diyetisyen profil verisini API'den çeken kanca
 export function useAccountProfile(): AccountProfileData {
   const [profile, setProfile] = useState<AuthProfile>(empty);
   const [err, setErr] = useState("");
@@ -40,6 +49,7 @@ export function useAccountProfile(): AccountProfileData {
       try {
         const { data: raw } = await api.get<AuthProfile>("/api/Auth/profile");
         const data = { ...raw } as AuthProfile & { ConnectionCode?: string };
+        // Backend PascalCase alan adını camelCase'e uyarla
         if (!data.connectionCode && (raw as { ConnectionCode?: string }).ConnectionCode) {
           data.connectionCode = (raw as { ConnectionCode?: string }).ConnectionCode;
         }
@@ -52,6 +62,7 @@ export function useAccountProfile(): AccountProfileData {
     })();
   }, []);
 
+  // Ad-soyad yoksa displayName kullan
   const name =
     [profile.firstName, profile.lastName].filter((x) => (x || "").trim()).length > 0
       ? `${profile.firstName} ${profile.lastName}`.trim()
@@ -62,9 +73,11 @@ export function useAccountProfile(): AccountProfileData {
 
 type PanelProps = { appRole: "admin" | "dietitian" };
 
+// Profil bilgi kartı (admin ve diyetisyen için ortak içerik)
 export function AccountProfilePanel({ appRole }: PanelProps) {
   const { profile, err, name } = useAccountProfile();
 
+  // Avatar baş harfleri
   const initials =
     name
       .split(" ")
@@ -82,6 +95,7 @@ export function AccountProfilePanel({ appRole }: PanelProps) {
       )}
 
       <div className="overflow-hidden rounded-3xl border border-slate-200/90 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.06)]">
+        {/* Üst başlık: avatar ve rol rozeti */}
         <div className="bg-gradient-to-br from-emerald-50/80 via-white to-slate-50/50 px-5 pb-5 pt-6 sm:px-6 sm:pb-6 sm:pt-7">
           <div className="flex items-center gap-4">
             <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#2ECC71] text-xl font-bold text-white shadow-md shadow-[#2ECC71]/25 ring-4 ring-white/60 sm:h-[72px] sm:w-[72px] sm:text-2xl">
@@ -98,6 +112,7 @@ export function AccountProfilePanel({ appRole }: PanelProps) {
           </div>
         </div>
 
+        {/* Detay satırları */}
         <div className="space-y-3 border-t border-slate-100 bg-white px-5 py-4 sm:px-6 sm:py-5">
         <div className="flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/80 px-4 py-3.5">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm">
@@ -112,6 +127,7 @@ export function AccountProfilePanel({ appRole }: PanelProps) {
             </p>
           </div>
         </div>
+        {/* Diyetisyene özel alanlar */}
         {appRole === "dietitian" && (
           <>
             <div className="flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/80 px-4 py-3.5">
@@ -162,6 +178,7 @@ export function AccountProfilePanel({ appRole }: PanelProps) {
             </div>
           </>
         )}
+        {/* Yöneticiye özel bilgi notu */}
         {appRole === "admin" && (
           <div className="flex gap-3 rounded-2xl border border-slate-200/80 bg-slate-50/90 px-4 py-3.5">
             <UserRound className="mt-0.5 h-5 w-5 shrink-0 text-[#2ECC71]" />
@@ -178,16 +195,14 @@ export function AccountProfilePanel({ appRole }: PanelProps) {
 
 type Props = { appRole: "admin" | "dietitian" };
 
+// Admin veya diyetisyen profil sayfası (SidebarLayout ile sarılı)
 export function RoleAccountProfile({ appRole }: Props) {
   const userName = useAuthProfileDisplayName();
 
   return (
     <SidebarLayout userRole={appRole} userName={userName}>
       <div className="mx-auto max-w-lg px-4 py-8 pb-24 lg:pb-8">
-        <h1 className="mb-2 text-2xl font-bold text-slate-900 sm:text-3xl">
-          {appRole === "dietitian" ? "Profil & ayarlar" : "Profil"}
-        </h1>
-        <p className="mb-8 text-sm text-slate-500">Bilgiler veritabanındaki hesap kaydınızdan yüklenir.</p>
+        <h1 className="mb-8 text-2xl font-bold text-slate-900 sm:text-3xl">Profil</h1>
         <AccountProfilePanel appRole={appRole} />
       </div>
     </SidebarLayout>

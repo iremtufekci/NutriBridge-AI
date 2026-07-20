@@ -75,7 +75,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="2"
-                android:text="Diyet"
+                android:text="Diyet Programım"
                 android:textColor="@color/nav_item_inactive"
                 android:textSize="8sp" />
         </LinearLayout>
@@ -107,7 +107,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="2"
-                android:text="Geçmiş"
+                android:text="Geçmiş diyetlerim"
                 android:textColor="@color/nav_item_inactive"
                 android:textSize="8sp" />
         </LinearLayout>
@@ -139,7 +139,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="2"
-                android:text="Yemek"
+                android:text="Yemek Analizi"
                 android:textColor="@color/nav_item_inactive"
                 android:textSize="8sp" />
         </LinearLayout>
@@ -171,7 +171,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="2"
-                android:text="PDF"
+                android:text="PDF Analizi"
                 android:textColor="@color/nav_item_inactive"
                 android:textSize="8sp" />
         </LinearLayout>
@@ -203,7 +203,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="2"
-                android:text="YZ mutfak"
+                android:text="Yapay zeka mutfak şefi"
                 android:textColor="@color/nav_item_inactive"
                 android:textSize="8sp" />
         </LinearLayout>
@@ -235,7 +235,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="2"
-                android:text="Paylaştım"
+                android:text="Paylaştığım tarifler"
                 android:textColor="@color/nav_item_inactive"
                 android:textSize="8sp" />
         </LinearLayout>

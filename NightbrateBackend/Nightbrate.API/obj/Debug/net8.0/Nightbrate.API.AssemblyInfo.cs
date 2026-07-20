@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Nightbrate.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+30f976c4a34ff1bbb6727d1306193fdc834bc86b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8529a0ee61a2f5be0ce26fc80279f0d1e1e7343a")]
 [assembly: System.Reflection.AssemblyProductAttribute("Nightbrate.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Nightbrate.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

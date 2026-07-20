@@ -16,24 +16,17 @@ public sealed class MockPdfAnalysisService : IPdfAnalysisAiService
             new ClientPdfAnalysisResultDto
             {
                 AnalysisSource = "mock",
-                DocumentType = "Deneme / API yapilandirmasi",
-                Summary =
-                    "Gemini API anahtari yapilandirilmamis; bu sabit metin gosteriliyor. "
-                    + "Google AI Studio anahtarini appsettings.json icindeki Gemini:ApiKey alanına eklediginizde "
-                    + "PDF icerigi yapay zeka ile ozetlenir. Bu cikti tibbi tavsiye degildir.",
-                KeyFindings =
-                [
-                    "Ornek: PDF yuklemesi ve kayit akisi calisiyor.",
-                    "Gercek analiz icin sunucuda Gemini anahtari gerekli."
-                ],
-                Cautions =
-                [
-                    "AI ozetleri hata yapabilir; kritik kararlarda mutlaka doktorunuzla paylasin.",
-                    "Tibbi tani veya tedavi icin yalnizca bu sonuca guvenmeyin."
-                ],
+                DocumentType = "Ornek laboratuvar sonuclari",
+                Summary = "Ornek laboratuvar sonuclari (Gemini anahtari yapilandirilmamis)",
+                KeyFindings = [],
+                Cautions = [],
                 SuggestedForDietitian =
                 [
-                    "Ornek: \"Gercek analiz sonrasinda diyetisyeninizle paylasilacak laboratuvar / rapor PDF'i.\""
+                    "Aksam kan sekeri normal sinirlar icinde olsa da, HbA1c degerinin prediyabet araligina yakinligi goz onune alindiginda karbonhidrat alimi ve ogun planlamasi konusunda danismanlik verilebilir; bu durum kilo vermeyi zorlastirabilir.",
+                    "HDL kolesterol degeri normal sinirlar icinde olsa da, genel kardiyovaskuler saglik icin doymamis yag asitleri acisindan zengin bir beslenme onerilebilir.",
+                    "Ferritin degeri referans araliginin alt sinirina yakin oldugundan, demir acisindan zengin besinlerin (kirmizi et, baklagiller, yesil yaprakli sebzeler) tuketimi tesvik edilebilir; dusuk demir yorgunluk ve iştah dalgalanmalariyla kilo kontrolunu etkileyebilir.",
+                    "Vitamin B12 duzeyleri normal sinirlar icindedir; vegan veya vejetaryen danisanlar icin B12 destegi veya zenginlestirilmis gidalara yonelik bilgilendirme yapilabilir.",
+                    "Genel olarak tum degerlerin referans araliklari icinde olmasi memnuniyet vericidir; ancak HbA1c egilimi dikkate alinarak saglikli beslenme aliskanliklarinin surdurulmesi ve gelistirilmesi konusunda destek saglanabilir."
                 ]
             });
     }

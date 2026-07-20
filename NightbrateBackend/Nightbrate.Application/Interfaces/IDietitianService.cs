@@ -18,5 +18,10 @@ public interface IDietitianService
     Task<DietProgramViewDto> GetDietProgramAsync(string dietitianId, string clientId, string programDate);
     Task SaveDietProgramAsync(string dietitianId, SaveDietProgramDto dto);
     Task<IReadOnlyList<KitchenChefRecipeLogItemDto>> GetClientKitchenRecipeLogsAsync(string dietitianId, string clientId, int take, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<DietitianMealAnalysisLogItemDto>> GetMealAnalysisLogsAsync(
+        string dietitianId,
+        string? clientId,
+        int take,
+        CancellationToken cancellationToken = default);
     Task<ClientBriefDto?> GetClientBriefAsync(string dietitianId, string clientId, CancellationToken cancellationToken = default);
 }

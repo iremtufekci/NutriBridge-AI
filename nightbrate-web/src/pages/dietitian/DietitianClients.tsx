@@ -1,3 +1,4 @@
+// Diyetisyen danışan yönetimi — liste ve detay görünümleri
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
@@ -16,8 +17,10 @@ import { SidebarLayout } from "../../components/SidebarLayout";
 import { API_BASE_URL, api, getApiErrorMessage } from "../../api/http";
 import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
 
+// Danışan filtre sekmesi anahtarları
 type TabKey = "all" | "active" | "critical" | "passive";
 
+// Her sekmedeki danışan sayıları
 type TabCounts = {
   all: number;
   active: number;
@@ -25,6 +28,7 @@ type TabCounts = {
   passive: number;
 };
 
+// Liste görünümündeki danışan kartı
 type ClientCard = {
   id: string;
   firstName?: string;
@@ -37,16 +41,19 @@ type ClientCard = {
   isCritical: boolean;
 };
 
+// Danışan listesi API yanıtı
 type MyClientsResponse = {
   tabCounts: TabCounts;
   clients: ClientCard[];
 };
 
+// Yapay zeka mutfak tarif özeti
 type KitchenRecipeDto = {
   title?: string;
   estimatedCalories?: number;
 };
 
+// Yapay zeka mutfak kayıt girdisi
 type KitchenLog = {
   id?: string;
   createdAtUtc: string;
@@ -54,6 +61,7 @@ type KitchenLog = {
   preference?: string;
 };
 
+// Danışanın yüklediği PDF analiz kaydı
 type PdfItem = {
   id: string;
   pdfUrl: string;
@@ -62,6 +70,7 @@ type PdfItem = {
   createdAtUtc: string;
 };
 
+// Diyet programındaki tek bir öğün
 type ProgramMeal = {
   mealKey: string;
   label: string;
@@ -70,12 +79,14 @@ type ProgramMeal = {
   completed: boolean;
 };
 
+// Haftalık programın bir günü
 type ProgramDay = {
   programDate: string;
   weekdayLabel: string;
   meals: ProgramMeal[];
 };
 
+// Danışan detay sayfası API yanıtı
 type OverviewResponse = {
   client: {
     clientId: string;
@@ -91,6 +102,7 @@ type OverviewResponse = {
   pdfAnalyses: PdfItem[];
 };
 
+// PDF dosya yolunu tam URL'ye çevirir
 function resolvePdfHref(path: string): string {
   if (!path) return "#";
   if (path.startsWith("http://") || path.startsWith("https://")) return path;
@@ -100,6 +112,7 @@ function resolvePdfHref(path: string): string {
   return `${base}${p}`;
 }
 
+// Son aktivite zamanını göreli Türkçe metne dönüştürür
 function relativeActivity(iso?: string | null): string {
   if (!iso) return "Henüz aktivite yok";
   const t = new Date(iso).getTime();
@@ -115,6 +128,7 @@ function relativeActivity(iso?: string | null): string {
   return `${d} gün önce`;
 }
 
+// Başlangıç tarihini Türkçe kısa formata çevirir
 function formatStart(iso: string): string {
   try {
     return new Date(iso).toLocaleDateString("tr-TR", { day: "numeric", month: "short", year: "numeric" });
@@ -128,6 +142,7 @@ export function DietitianClients() {
   const navigate = useNavigate();
   const { clientId } = useParams<{ clientId?: string }>();
 
+  // Liste görünümü durum değişkenleri
   const [loadingList, setLoadingList] = useState(false);
   const [listError, setListError] = useState<string | null>(null);
   const [tabCounts, setTabCounts] = useState<TabCounts>({ all: 0, active: 0, critical: 0, passive: 0 });
@@ -137,10 +152,12 @@ export function DietitianClients() {
   const [sort, setSort] = useState<"nameAsc" | "nameDesc">("nameAsc");
   const [query, setQuery] = useState("");
 
+  // Detay görünümü durum değişkenleri
   const [overview, setOverview] = useState<OverviewResponse | null>(null);
   const [loadingOverview, setLoadingOverview] = useState(false);
   const [overviewError, setOverviewError] = useState<string | null>(null);
 
+  // Sekme ve sıralama filtresine göre danışan listesini yükler
   const loadList = useCallback(async () => {
     setLoadingList(true);
     setListError(null);
@@ -164,11 +181,13 @@ export function DietitianClients() {
     }
   }, [sort, tab]);
 
+  // Liste görünümündeyken danışan listesini çeker
   useEffect(() => {
     if (clientId) return;
     void loadList();
   }, [clientId, loadList]);
 
+  // Seçili danışanın detay özetini API'den yükler
   const loadOverview = useCallback(async (id: string) => {
     setLoadingOverview(true);
     setOverviewError(null);
@@ -185,6 +204,7 @@ export function DietitianClients() {
     }
   }, []);
 
+  // URL'de clientId varsa detay verisini çeker
   useEffect(() => {
     if (!clientId) {
       setOverview(null);
@@ -193,6 +213,7 @@ export function DietitianClients() {
     void loadOverview(clientId);
   }, [clientId, loadOverview]);
 
+  // Arama kutusuna göre danışan listesini filtreler
   const filteredClients = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return clients;
@@ -202,11 +223,12 @@ export function DietitianClients() {
     });
   }, [clients, query]);
 
+  // İsim sıralamasını artan/azalan arasında değiştirir
   const toggleSort = () => {
     setSort((s) => (s === "nameAsc" ? "nameDesc" : "nameAsc"));
   };
 
-  /* ——— Detay görünümü ——— */
+  // URL'de clientId varsa detay görünümü render edilir
   if (clientId) {
     const display =
       overview?.client?.firstName || overview?.client?.lastName
@@ -216,6 +238,7 @@ export function DietitianClients() {
     return (
       <SidebarLayout userRole="dietitian" userName={dietitianName}>
         <div className="mx-auto max-w-4xl px-4 py-6 space-y-6">
+          {/* Listeye geri dönüş düğmesi */}
           <button
             type="button"
             onClick={() => navigate("/dietitian/clients")}
@@ -238,6 +261,7 @@ export function DietitianClients() {
 
           {!loadingOverview && overview && (
             <>
+              {/* Danışan başlık bilgisi */}
               <div>
                 <h1 className="text-2xl font-bold text-slate-900">{display}</h1>
                 <p className="text-sm text-slate-500">
@@ -245,6 +269,7 @@ export function DietitianClients() {
                 </p>
               </div>
 
+              {/* Haftalık diyet programı — yatay kaydırmalı öğün kartları */}
               <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div className="flex items-center gap-2 mb-4">
                   <CalendarDays className="w-5 h-5 text-emerald-600" />
@@ -304,6 +329,7 @@ export function DietitianClients() {
                 )}
               </section>
 
+              {/* Yapay zeka ile üretilen tarif geçmişi */}
               <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div className="flex items-center gap-2 mb-4">
                   <ChefHat className="w-5 h-5 text-emerald-600" />
@@ -339,6 +365,7 @@ export function DietitianClients() {
                 )}
               </section>
 
+              {/* Danışanın yüklediği PDF analiz dosyaları */}
               <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div className="flex items-center gap-2 mb-4">
                   <FileText className="w-5 h-5 text-emerald-600" />
@@ -366,7 +393,7 @@ export function DietitianClients() {
                           rel="noopener noreferrer"
                           className="shrink-0 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
                         >
-                          PDF’yi aç
+                          PDF'yi aç
                         </a>
                       </li>
                     ))}
@@ -380,7 +407,7 @@ export function DietitianClients() {
     );
   }
 
-  /* ——— Liste görünümü ——— */
+  // Liste görünümü — sekme tanımları
   const tabs: { key: TabKey; label: string; count: number }[] = [
     { key: "all", label: "Tümü", count: tabCounts.all },
     { key: "active", label: "Aktif", count: tabCounts.active },
@@ -391,11 +418,13 @@ export function DietitianClients() {
   return (
     <SidebarLayout userRole="dietitian" userName={dietitianName}>
       <div className="mx-auto max-w-6xl px-4 py-6 space-y-6">
+        {/* Sayfa başlığı */}
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Danışanlarım</h1>
           <p className="text-slate-600 mt-1">Aktif danışanlarınızı takip edin ve yönetin</p>
         </div>
 
+        {/* Segment filtre sekmeleri */}
         <div className="flex flex-wrap gap-2">
           {tabs.map((x) => (
             <button
@@ -415,6 +444,7 @@ export function DietitianClients() {
           ))}
         </div>
 
+        {/* Arama ve sıralama araç çubuğu */}
         <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -442,6 +472,7 @@ export function DietitianClients() {
           </div>
         )}
 
+        {/* Danışan kartları grid'i */}
         {loadingList ? (
           <div className="flex items-center gap-2 text-slate-600 py-12 justify-center">
             <Loader2 className="w-6 h-6 animate-spin" />

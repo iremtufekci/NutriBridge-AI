@@ -16,4 +16,11 @@ public interface IKitchenChefRecipeLogRepository
         int skip,
         int take,
         CancellationToken cancellationToken = default);
+
+    /// <summary>Belirtilen UTC aralığında danışanın paylaşım sayısı (günlük limit için).</summary>
+    Task<long> CountByClientIdInUtcRangeAsync(
+        string clientId,
+        DateTime fromUtcInclusive,
+        DateTime toUtcExclusive,
+        CancellationToken cancellationToken = default);
 }

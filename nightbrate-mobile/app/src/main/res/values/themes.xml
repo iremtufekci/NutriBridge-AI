@@ -16,11 +16,21 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="lollipop">true</item>
+        <!-- API 35+ (ör. Baklava emülatörü): varsayılan edge-to-edge bazen ilk frame’de siyah/boş pencere; giriş ekranı kayboluyor -->
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
     </style>
 
     <style name="Theme.Nightbrate.NoActionBar" parent="Theme.Nightbrate">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- Launcher: splash → giriş teması (API 31+ / 36 önizlemede siyah ilk kare) -->
+    <style name="Theme.Nightbrate.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/client_scaffold</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.Nightbrate.NoActionBar</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
     </style>
 
     <style name="Theme.Nightbrate.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

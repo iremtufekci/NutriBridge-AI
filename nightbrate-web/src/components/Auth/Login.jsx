@@ -1,172 +1,136 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { api } from "../../api/http";
+import { useState } from "react"; // Form alanları için yerel state
+import { useNavigate, useLocation } from "react-router-dom"; // Sayfa yönlendirme + önceki sayfa state'i
+import { Loader2 } from "lucide-react"; // Yükleniyor ikonu (dönen)
+import { api } from "../../api/http"; // Axios istemcisi
+import {
+  AuthError, // Hata mesajı kutusu
+  AuthField, // Label + input sarmalayıcı
+  AuthFooterLinks, // Kayıt sayfalarına linkler
+  AuthLayout, // Ortak giriş sayfası çerçevesi
+  AuthPageHeader, // Başlık + alt başlık
+  AuthSuccess, // Başarı mesajı (kayıttan sonra)
+  authBtnPrimaryClass, // Yeşil buton Tailwind sınıfları
+  authInputClass, // Input Tailwind sınıfları
+} from "./AuthLayout";
+import { useAppFeedback } from "../feedback/AppFeedback"; // Modal alert için
 
-const primary = "#2ECC71";
+export function Login() { // Giriş sayfası bileşeni
+  const [email, setEmail] = useState(""); // E-posta input değeri
+  const [password, setPassword] = useState(""); // Şifre input değeri
+  const [error, setError] = useState(""); // Gösterilecek hata metni
+  const [loading, setLoading] = useState(false); // İstek sürüyor mu
+  const navigate = useNavigate(); // Programatik yönlendirme
+  const location = useLocation(); // URL ve state (kayıt sonrası mesaj)
+  const successMessage = location.state?.message; // Register'dan gelen başarı yazısı
+  const { alert: uiAlert } = useAppFeedback(); // "Şifremi unuttum" popup
 
-export function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+  const handleLogin = async (e) => { // Form gönderildiğinde
+    e.preventDefault(); // Sayfa yenilemeyi engelle
+    setError(""); // Önceki hatayı temizle
+    setLoading(true); // Butonu kilitle
 
     try {
-      const response = await api.post("/api/auth/login", {
-        email: email.trim(),
-        password: password
+      const response = await api.post("/api/auth/login", { // Backend login
+        email: email.trim(), // Boşluksuz e-posta
+        password: password, // Şifre
       });
 
-      const { token, role } = response.data;
-      const userRole = typeof role === "string" ? role.toLowerCase() : "client";
+      const { token, role } = response.data; // JWT ve rol
+      const userRole = typeof role === "string" ? role.toLowerCase() : "client"; // Küçük harf normalize
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("userRole", userRole);
+      localStorage.setItem("token", token); // http.js interceptor bunu okur
+      localStorage.setItem("userRole", userRole); // Sidebar menü seçimi için
 
       try {
-        const me = await api.get("/api/Auth/profile");
+        const me = await api.get("/api/Auth/profile"); // Görünen adı al
         const d = (me.data?.displayName || "").trim();
-        if (d) localStorage.setItem("userName", d);
-        else localStorage.setItem("userName", email.split("@")[0]);
-        localStorage.setItem("theme", "light");
-        document.documentElement.classList.remove("dark");
+        if (d) localStorage.setItem("userName", d); // Tam ad
+        else localStorage.setItem("userName", email.split("@")[0]); // E-posta ön eki
+        localStorage.setItem("theme", "light"); // Varsayılan açık tema
+        document.documentElement.classList.remove("dark"); // Koyu sınıfı kaldır
       } catch (meErr) {
-        console.error("Oturum profili alınamadı", meErr);
-        localStorage.setItem("userName", email.split("@")[0]);
+        console.error("Oturum profili alınamadı", meErr); // Profil opsiyonel
+        localStorage.setItem("userName", email.split("@")[0]); // Yedek isim
       }
 
-      if (userRole === "admin") {
-        navigate("/admin");
-      } else if (userRole === "dietitian") {
-        navigate("/dietitian");
-      } else {
-        navigate("/client");
-      }
+      if (userRole === "admin") navigate("/admin"); // Admin paneli
+      else if (userRole === "dietitian") navigate("/dietitian"); // Diyetisyen paneli
+      else navigate("/client"); // Danışan paneli (varsayılan)
     } catch (err) {
-      if (err.response) {
+      if (err.response) { // Sunucu hata cevabı verdi
         setError(err.response.data.message || "Giriş başarısız.");
-      } else {
+      } else { // Ağ hatası
         setError("Sunucuya bağlanılamadı. Sunucunun çalıştığından (ör. 5231) emin olun.");
       }
     } finally {
-      setLoading(false);
+      setLoading(false); // Butonu tekrar aktif et
     }
   };
 
   return (
-    <div
-      className="flex min-h-svh w-full flex-col items-center justify-center bg-slate-50 px-4 py-8 pt-[max(2rem,env(safe-area-inset-top,0px))] pb-[max(2rem,env(safe-area-inset-bottom,0px))] font-[family-name:var(--font-inter,Inter),system-ui,sans-serif] sm:px-6"
+    <AuthLayout // Ortak auth sayfa düzeni
+      footer={
+        <>
+          <span className="font-medium text-slate-600">Demo hesaplar: </span>
+          admin@nutribridge.ai · dietitian@nutribridge.ai · client@nutribridge.ai
+        </>
+      }
     >
-      <div className="flex w-full max-w-[450px] flex-col gap-4">
-        <div className="rounded-[24px] border border-slate-200/90 bg-white p-8 shadow-lg shadow-slate-300/35 sm:p-10">
-          <div className="text-center mb-8 sm:mb-10">
-            <h1
-              className="text-[1.75rem] sm:text-[2rem] font-bold leading-tight mb-2 text-[#2ECC71]"
-            >
-              NutriBridge
-            </h1>
-            <p className="text-sm sm:text-base text-[#777777]">
-              Akıllı Beslenme Platformu
-            </p>
-          </div>
+      <AuthPageHeader title="Hoş geldiniz" subtitle="NutriBridge hesabınıza giriş yapın" />
 
-          {error && (
-            <div className="mb-6 p-3 rounded-xl text-sm text-center bg-[rgba(231,76,60,0.08)] border border-[rgba(231,76,60,0.35)] text-[#C0392B]">
-              {error}
-            </div>
+      <AuthSuccess message={successMessage} /> {/* Kayıt sonrası yeşil kutu */}
+      <AuthError message={error} /> {/* Kırmızı hata kutusu */}
+
+      <form className="space-y-6" onSubmit={handleLogin}> {/* Enter ile submit */}
+        <AuthField id="login-email" label="E-posta adresi">
+          <input
+            id="login-email"
+            type="email"
+            autoComplete="email"
+            placeholder="ornek@nutribridge.ai"
+            className={authInputClass}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)} // Controlled input
+            required
+          />
+        </AuthField>
+
+        <AuthField id="login-password" label="Şifre">
+          <input
+            id="login-password"
+            type="password"
+            autoComplete="current-password"
+            placeholder="••••••••"
+            className={authInputClass}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </AuthField>
+
+        <div className="flex justify-end">
+          <button
+            type="button" // Form submit etmesin
+            className="shrink-0 border-0 bg-transparent p-0 text-sm font-medium text-[#2ECC71] hover:underline"
+            onClick={() => uiAlert({ title: "Yakında", message: "Şifre sıfırlama yakında eklenecek." })}
+          >
+            Şifremi unuttum
+          </button>
+        </div>
+
+        <button type="submit" disabled={loading} className={authBtnPrimaryClass}>
+          {loading ? ( // İstek sürerken spinner
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Giriş yapılıyor…
+            </>
+          ) : (
+            "Giriş yap"
           )}
+        </button>
+      </form>
 
-          <form className="space-y-5 sm:space-y-6" onSubmit={handleLogin}>
-            <div className="space-y-2">
-              <label
-                className="text-sm font-bold block text-[#333333]"
-                htmlFor="login-email"
-              >
-                E-posta
-              </label>
-              <input
-                id="login-email"
-                type="email"
-                autoComplete="email"
-                placeholder="örnek@ornek.com"
-                className="w-full px-4 py-3.5 rounded-[14px] bg-white border border-[#DDE1E4] text-[#333] placeholder:text-[#999] outline-none transition-shadow focus:ring-2 focus:ring-[#2ECC71]/40"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label
-                className="text-sm font-bold block text-[#333333]"
-                htmlFor="login-password"
-              >
-                Şifre
-              </label>
-              <input
-                id="login-password"
-                type="password"
-                autoComplete="current-password"
-                placeholder="••••••••"
-                className="w-full px-4 py-3.5 rounded-[14px] bg-white border border-[#DDE1E4] text-[#333] placeholder:text-[#999] outline-none transition-shadow focus:ring-2 focus:ring-[#2ECC71]/40"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="-mt-1">
-              <button
-                type="button"
-                className="text-sm font-medium bg-transparent border-0 p-0 cursor-pointer hover:underline text-[#2ECC71]"
-                onClick={() => window.alert("Şifre sıfırlama yakında eklenecek.")}
-              >
-                Şifremi Unuttum
-              </button>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-4 text-white font-bold text-base sm:text-lg transition-opacity rounded-full disabled:opacity-65"
-              style={{ background: primary }}
-            >
-              {loading ? "Giriş Yapılıyor…" : "Giriş Yap"}
-            </button>
-
-            <p className="text-center text-xs sm:text-sm pt-1 text-[#777777]">
-              Sisteme rolünüze göre otomatik yönlendirilirsiniz.
-            </p>
-          </form>
-
-          <div className="mt-8 sm:mt-10 pt-6 border-t border-[#ECECEC] text-center space-y-3">
-            <p className="text-sm text-[#777777]">
-              Hesabınız yok mu?{" "}
-              <Link to="/register-client" className="font-bold hover:underline text-[#2ECC71]">
-                Danışan Kaydı
-              </Link>
-            </p>
-            <p className="text-sm text-[#777777]">
-              Diyetisyen misiniz?{" "}
-              <Link to="/register-dietitian" className="font-bold hover:underline text-[#2ECC71]">
-                Kayıt Olun
-              </Link>
-            </p>
-          </div>
-        </div>
-
-        <div className="rounded-xl border border-slate-200/80 bg-slate-50 px-4 py-3 text-center text-xs text-slate-600 sm:text-sm">
-          <span className="font-semibold text-[#555555]">
-            Örnek hesaplar:{" "}
-          </span>
-          yönetici: admin@nutribridge.ai · diyetisyen: dietitian@nutribridge.ai · danışan: client@nutribridge.ai
-        </div>
-      </div>
-    </div>
+      <AuthFooterLinks /> {/* Danışan/diyetisyen kayıt linkleri */}
+    </AuthLayout>
   );
 }

@@ -1,6 +1,8 @@
+using Microsoft.Extensions.Options;
 using Nightbrate.Application.DTOs;
 using Nightbrate.Application.Exceptions;
 using Nightbrate.Application.Interfaces;
+using Nightbrate.Application.Options;
 using Nightbrate.Application.Utils;
 using Nightbrate.Core.Entities;
 
@@ -10,6 +12,8 @@ public class AuthService(
     IUserRepository userRepository,
     IClientRepository clientRepository,
     IDietitianRepository dietitianRepository,
+    IDiplomaDocumentStorage diplomaStorage,
+    IOptions<DiplomaUploadOptions> diplomaOptions,
     IJwtTokenService jwtTokenService,
     IActivityLogService activityLogService) : IAuthService
 {
@@ -43,11 +47,22 @@ public class AuthService(
         await activityLogService.LogAsync(saved?.Id, display, "Hesap oluşturdu");
     }
 
-    public async Task RegisterDietitianAsync(DietitianRegisterDto dto)
+    public async Task RegisterDietitianAsync(DietitianRegisterDto dto, Stream diplomaStream, string diplomaFileName)
     {
         var email = dto.Email.Trim().ToLowerInvariant();
         var existing = await userRepository.GetByEmailAsync(email);
         if (existing is not null) throw new AppException("Bu e-posta zaten kayıtlı.");
+
+        var maxBytes = Math.Max(256 * 1024, diplomaOptions.Value.MaxBytes);
+        await using var ms = new MemoryStream();
+        await diplomaStream.CopyToAsync(ms).ConfigureAwait(false);
+        var bytes = ms.ToArray();
+        if (bytes.Length == 0) throw new AppException("Diploma dosyasi bos.");
+        if (bytes.Length > maxBytes)
+            throw new AppException($"Diploma dosyasi en fazla {maxBytes / (1024 * 1024)} MB olabilir.");
+
+        await using var uploadStream = new MemoryStream(bytes, writable: false);
+        var saved = await diplomaStorage.SaveAsync(uploadStream, diplomaFileName).ConfigureAwait(false);
 
         PasswordHasher.CreatePasswordHash(dto.Password, out var hash, out var salt);
         var dietitian = new Dietitian
@@ -60,6 +75,7 @@ public class AuthService(
             LastName = dto.LastName,
             DiplomaNo = dto.DiplomaNo,
             ClinicName = dto.ClinicName,
+            DiplomaDocumentUrl = saved.RelativePublicUrl,
             IsApproved = false
         };
 

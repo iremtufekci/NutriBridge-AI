@@ -7,6 +7,10 @@ using Nightbrate.Core.Entities;
 
 namespace Nightbrate.Application.Services;
 
+/// <summary>
+/// PDF akışı: dosyayı diske/Cloudinary'e yazar → yapay zeka analizi → MongoDB'ye kaydeder.
+/// Web ve mobil aynı servisi kullanır.
+/// </summary>
 public class ClientPdfAnalysisService(
     IClientPdfAnalysisRepository repository,
     IPdfDocumentStorage pdfStorage,
@@ -21,6 +25,7 @@ public class ClientPdfAnalysisService(
     {
         if (string.IsNullOrWhiteSpace(clientId)) throw new AppException("Oturum bulunamadi.");
 
+        // Belleğe al: hem depolama hem Gemini aynı bayt dizisini kullanır
         var maxBytes = Math.Max(256 * 1024, pdfOptions.Value.MaxPdfBytes);
         await using var ms = new MemoryStream();
         await pdfStream.CopyToAsync(ms, cancellationToken).ConfigureAwait(false);
@@ -33,13 +38,22 @@ public class ClientPdfAnalysisService(
         if (!safeName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
             safeName += ".pdf";
 
+        // 1) PDF dosyasını kaydet (yerel wwwroot veya Cloudinary)
         await using var uploadStream = new MemoryStream(bytes, writable: false);
         var saved = await pdfStorage.SavePdfAsync(uploadStream, cancellationToken).ConfigureAwait(false);
 
+        // 2) Gemini (veya mock) ile Türkçe özet / bulgular üret
         var ai = await pdfAnalysisAi.AnalyzePdfAsync(bytes, safeName, cancellationToken).ConfigureAwait(false);
 
-        var source = string.Equals(ai.AnalysisSource, "mock", StringComparison.OrdinalIgnoreCase) ? "mock" : "gemini";
+        var source = ai.AnalysisSource?.Trim().ToLowerInvariant() switch
+        {
+            "groq" => "groq",
+            "mock_network" => "mock_network",
+            "mock" => "mock",
+            _ => !string.IsNullOrWhiteSpace(ai.AnalysisSource) ? ai.AnalysisSource.Trim().ToLowerInvariant() : "mock"
+        };
 
+        // 3) Analiz sonucunu danışan ile ilişkilendirerek veritabanına yaz
         var entity = new ClientPdfAnalysis
         {
             ClientId = clientId,
@@ -58,6 +72,7 @@ public class ClientPdfAnalysisService(
         return ToUploadDto(entity);
     }
 
+    /// <summary>Geçmiş ekranı: tam analiz metni dahil tüm alanlar listelenir.</summary>
     public async Task<IReadOnlyList<ClientPdfAnalysisListItemDto>> GetMyAnalysesAsync(
         string clientId,
         int take,

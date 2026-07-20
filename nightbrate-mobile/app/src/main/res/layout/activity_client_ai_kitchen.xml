@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/client_scaffold"
@@ -35,6 +36,16 @@
                 android:text="Malzeme, tercih ve hedef kaloriye göre tarif üretir"
                 android:textColor="@color/text_muted"
                 android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvAiKitchenDailyLimit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Diyetisyeninize günde en fazla 1 tarif paylaşabilirsiniz."
+                android:textColor="#B45309"
+                android:textSize="13sp"
+                android:visibility="gone" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -169,12 +180,43 @@
                 android:textStyle="bold"
                 android:visibility="gone" />
 
+            <TextView
+                android:id="@+id/tvAiKitchenShareHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Aşağıda birden fazla tarif göreceksiniz. Diyetisyeninizle paylaşmak istediğiniz yalnızca birini işaretleyip gönderin."
+                android:textColor="@color/text_muted"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
             <LinearLayout
                 android:id="@+id/llAiKitchenResults"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:orientation="vertical" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAiKitchenShare"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:minHeight="48dp"
+                android:text="Seçili tarifi diyetisyenle paylaş"
+                android:visibility="gone"
+                app:strokeColor="#059669"
+                app:strokeWidth="2dp" />
+
+            <TextView
+                android:id="@+id/tvAiKitchenSaveInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="#047857"
+                android:textSize="14sp"
+                android:visibility="gone" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

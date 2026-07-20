@@ -191,3 +191,10 @@ c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\DebugModelFix\Nig
 C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\CloudinaryDotNet.dll
 C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 C:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\Newtonsoft.Json.dll
+c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\UglyToad.PdfPig.Core.dll
+c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\UglyToad.PdfPig.DocumentLayoutAnalysis.dll
+c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\UglyToad.PdfPig.Fonts.dll
+c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\UglyToad.PdfPig.Package.dll
+c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\UglyToad.PdfPig.Tokenization.dll
+c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\UglyToad.PdfPig.Tokens.dll
+c:\Users\tufek\Nightbrate\NightbrateBackend\Nightbrate.API\bin\Debug\net8.0\UglyToad.PdfPig.dll

@@ -75,16 +75,46 @@ public sealed class GeminiKitchenChefService : IKitchenChefService
         using var opCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         opCts.CancelAfter(TimeSpan.FromMinutes(3));
 
-        string raw;
+        const int maxAttempts = 3;
+        string raw = "";
+        HttpResponseMessage? response = null;
         try
         {
-            using var content = new StringContent(bodyJson, Encoding.UTF8, "application/json");
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            using var response = await _http.PostAsync(path, content, opCts.Token).ConfigureAwait(false);
-            raw = await response.Content.ReadAsStringAsync(opCts.Token).ConfigureAwait(false);
-
-            if (!response.IsSuccessStatusCode)
+            for (var attempt = 0; attempt < maxAttempts; attempt++)
             {
+                if (attempt > 0)
+                {
+                    var delaySec = 2 * (1 << (attempt - 1));
+                    await Task.Delay(TimeSpan.FromSeconds(Math.Min(delaySec, 15)), opCts.Token).ConfigureAwait(false);
+                }
+
+                response?.Dispose();
+                using var content = new StringContent(bodyJson, Encoding.UTF8, "application/json");
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                response = await _http.PostAsync(path, content, opCts.Token).ConfigureAwait(false);
+                raw = await response.Content.ReadAsStringAsync(opCts.Token).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                    break;
+
+                if (raw.Contains("is not found", StringComparison.OrdinalIgnoreCase) ||
+                    raw.Contains("not supported for generateContent", StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new AppException(
+                        "Seçilen yapay zeka modeli bulunamıyor veya bu işlem için kullanılamıyor. " +
+                        "Sunucu yapılandırmasındaki model adını güncel bir sürüme çekin.");
+                }
+
+                if (IsTransientGeminiOverload(response.StatusCode, raw) && attempt < maxAttempts - 1)
+                    continue;
+
+                if (IsTransientGeminiOverload(response.StatusCode, raw))
+                {
+                    throw new AppException(
+                        "Tarif şu an üretilemedi: yapay zeka hizmetinde geçici yoğunluk var. " +
+                        "Birkaç dakika sonra tekrar deneyin.");
+                }
+
                 if (IsQuotaOrRateLimited(response.StatusCode, raw))
                 {
                     throw new AppException(
@@ -96,12 +126,19 @@ public sealed class GeminiKitchenChefService : IKitchenChefService
                 throw new AppException(
                     string.IsNullOrWhiteSpace(hint)
                         ? "Tarif üretilemedi. API anahtarını ve model adını kontrol edin."
-                        : $"Tarif üretilemedi: {hint}");
+                        : $"Tarif üretilemedi: {ToUserFriendlyHint(hint)}");
             }
+
+            if (response is null || !response.IsSuccessStatusCode)
+                throw new AppException("Tarif üretilemedi. Lütfen tekrar deneyin.");
         }
         catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
         {
             throw new AppException("Tarif üretimi zaman aşımına uğradı. Kısa bir süre sonra tekrar deneyin.");
+        }
+        finally
+        {
+            response?.Dispose();
         }
 
         var text = ExtractResponseText(raw);
@@ -146,12 +183,36 @@ public sealed class GeminiKitchenChefService : IKitchenChefService
         };
     }
 
+    private static bool IsTransientGeminiOverload(HttpStatusCode status, string raw)
+    {
+        if (status == HttpStatusCode.ServiceUnavailable)
+            return true;
+        if (string.IsNullOrEmpty(raw))
+            return false;
+        return raw.Contains("high demand", StringComparison.OrdinalIgnoreCase)
+               || raw.Contains("overloaded", StringComparison.OrdinalIgnoreCase)
+               || raw.Contains("UNAVAILABLE", StringComparison.OrdinalIgnoreCase);
+    }
+
     private static bool IsQuotaOrRateLimited(HttpStatusCode status, string raw)
     {
         if (status == HttpStatusCode.TooManyRequests) return true;
         if (string.IsNullOrEmpty(raw)) return false;
         return raw.Contains("quota", StringComparison.OrdinalIgnoreCase)
-               || raw.Contains("RESOURCE_EXHAUSTED", StringComparison.OrdinalIgnoreCase);
+               || raw.Contains("Quota exceeded", StringComparison.OrdinalIgnoreCase)
+               || raw.Contains("RESOURCE_EXHAUSTED", StringComparison.OrdinalIgnoreCase)
+               || raw.Contains("rate limit", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string ToUserFriendlyHint(string hint)
+    {
+        if (hint.Contains("high demand", StringComparison.OrdinalIgnoreCase) ||
+            hint.Contains("overloaded", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Yapay zeka hizmetinde geçici yoğunluk var. Birkaç dakika sonra tekrar deneyin.";
+        }
+
+        return hint;
     }
 
     private static string? TryExtractGeminiErrorMessage(string raw)

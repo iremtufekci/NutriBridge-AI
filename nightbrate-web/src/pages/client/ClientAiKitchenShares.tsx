@@ -1,10 +1,18 @@
+// React kancaları
 import { useCallback, useEffect, useState } from "react";
+// İç sayfa linki
 import { Link } from "react-router-dom";
+// İkonlar
 import { ChefHat, Filter, Loader2, Share2, ChevronDown, ChevronUp } from "lucide-react";
+// Kenar çubuğu düzeni
 import { SidebarLayout } from "../../components/SidebarLayout";
+// API istemcisi
 import { api, getApiErrorMessage } from "../../api/http";
+// Kullanıcı görünen adı
 import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
+import { isRealAiSource } from "../../lib/aiSource";
 
+// Tercih kodu → Türkçe etiket eşlemesi
 const PREF_LABEL: Record<string, string> = {
   practical: "Pratik",
   low_calorie: "Düşük Kalori",
@@ -23,6 +31,7 @@ type Recipe = {
   steps: string[];
 };
 
+// Diyetisyene paylaşılan kayıt satırı
 type LogItem = {
   id?: string;
   createdAtUtc: string;
@@ -33,6 +42,7 @@ type LogItem = {
   selectedRecipes: Recipe[];
 };
 
+// Tarihi YYYY-MM-DD biçimine çevirir
 function toYmd(d: Date) {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -40,12 +50,14 @@ function toYmd(d: Date) {
   return `${y}-${m}-${day}`;
 }
 
+// Verilen gün sayısı kadar geriye gider
 function addDays(d: Date, n: number) {
   const x = new Date(d);
   x.setDate(x.getDate() + n);
   return x;
 }
 
+// Diyetisyene paylaşılan tarif geçmişi sayfası
 export function ClientAiKitchenShares() {
   const userName = useAuthProfileDisplayName();
   const [from, setFrom] = useState("");
@@ -59,6 +71,7 @@ export function ClientAiKitchenShares() {
   const pageSize = 50;
   const [hasMore, setHasMore] = useState(false);
 
+  // Paylaşım kayıtlarını sayfalı olarak yükler
   const load = useCallback(
     async (nextSkip: number, append: boolean) => {
       if (append) setLoadingMore(true);
@@ -100,6 +113,7 @@ export function ClientAiKitchenShares() {
     void load(0, false);
   }, [load]);
 
+  // Hızlı tarih aralığı (son N gün)
   const applyQuickRange = (days: number) => {
     const end = new Date();
     const start = addDays(end, -days);
@@ -112,6 +126,7 @@ export function ClientAiKitchenShares() {
     setTo("");
   };
 
+  // Tarif detayını genişlet/daralt
   const toggleExpand = (id: string) => {
     setExpanded((prev) => {
       const n = new Set(prev);
@@ -124,6 +139,7 @@ export function ClientAiKitchenShares() {
   return (
     <SidebarLayout userRole="client" userName={userName}>
       <div className="mx-auto max-w-2xl px-4 py-6 pb-28 lg:pb-8">
+        {/* Başlık ve yeni tarif linki */}
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-emerald-200/60">
@@ -131,7 +147,7 @@ export function ClientAiKitchenShares() {
             </div>
             <div>
               <h1 className="text-lg font-bold text-slate-800">Diyetisyene paylaştıklarım</h1>
-              <p className="text-sm text-slate-600">Yapay zeka mutfak’ta seçip gönderdiğiniz tarifler</p>
+              <p className="text-sm text-slate-600">Yapay zeka mutfak'ta seçip gönderdiğiniz tarifler</p>
             </div>
           </div>
           <Link
@@ -143,6 +159,7 @@ export function ClientAiKitchenShares() {
           </Link>
         </div>
 
+        {/* Tarih filtresi paneli */}
         <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
           <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-800">
             <Filter className="h-4 w-4 text-emerald-600" />
@@ -212,6 +229,7 @@ export function ClientAiKitchenShares() {
           </p>
         )}
 
+        {/* Paylaşım kayıtları listesi */}
         <ul className="space-y-4">
           {items.map((log) => {
             const key = log.id || log.createdAtUtc + log.preference;
@@ -238,12 +256,12 @@ export function ClientAiKitchenShares() {
                     </div>
                     <span
                       className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                        log.source === "gemini"
+                        isRealAiSource(log.source)
                           ? "bg-blue-100 text-blue-800"
                           : "bg-amber-100 text-amber-800"
                       }`}
                     >
-                      {log.source === "gemini" ? "Yapay zeka" : "Örnek"}
+                      {isRealAiSource(log.source) ? "Yapay zeka" : "Örnek"}
                     </span>
                   </div>
                   <p className="mt-2 text-xs text-slate-600 line-clamp-2">
@@ -301,6 +319,7 @@ export function ClientAiKitchenShares() {
           })}
         </ul>
 
+        {/* Sayfalama: daha fazla yükle */}
         {hasMore && !loading && items.length > 0 && (
           <div className="mt-6 flex justify-center">
             <button

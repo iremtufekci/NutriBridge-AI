@@ -1,3 +1,4 @@
+// Diyetisyen günlük görevler sayfası — otomatik üretilen görevlerin tam listesi
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { CheckSquare, ChevronLeft, Loader2 } from "lucide-react";
@@ -5,6 +6,7 @@ import { SidebarLayout } from "../../components/SidebarLayout";
 import { api, getApiErrorMessage } from "../../api/http";
 import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
 
+// Tek bir günlük görev kalemi
 type TaskItem = {
   id: string;
   taskKey: string;
@@ -16,6 +18,7 @@ type TaskItem = {
   dueLabel: string;
 };
 
+// API'den dönen günlük görev paketi
 type Bundle = {
   taskDate: string;
   pendingCount: number;
@@ -24,6 +27,7 @@ type Bundle = {
   tasks: TaskItem[];
 };
 
+// Görev kategorisine göre rozet renk sınıfı döndürür
 function categoryStyle(cat: string) {
   switch (cat) {
     case "Critical":
@@ -37,6 +41,7 @@ function categoryStyle(cat: string) {
   }
 }
 
+// Görev kategorisi kodunu Türkçe etikete çevirir
 function categoryLabel(cat: string) {
   switch (cat) {
     case "Critical":
@@ -52,11 +57,13 @@ function categoryLabel(cat: string) {
 
 export function DietitianTasks() {
   const name = useAuthProfileDisplayName();
+  // Görev listesi ve yükleme durumu
   const [bundle, setBundle] = useState<Bundle | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
 
+  // Bugünkü görevleri API'den çeker
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -75,6 +82,7 @@ export function DietitianTasks() {
     void load();
   }, [load]);
 
+  // Görev tamamlama durumunu API'ye gönderir ve listeyi yeniler
   const toggle = async (task: TaskItem) => {
     setBusyId(task.id);
     setError(null);
@@ -93,6 +101,7 @@ export function DietitianTasks() {
   return (
     <SidebarLayout userRole="dietitian" userName={name}>
       <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-slate-50 min-h-screen text-slate-900 pb-24 lg:pb-8">
+        {/* Sayfa başlığı ve özet sayfasına geri dönüş */}
         <div className="flex items-center gap-3">
           <Link
             to="/dietitian/dashboard"
@@ -114,18 +123,34 @@ export function DietitianTasks() {
           </div>
         </div>
 
+        {/* Görev türleri hakkında bilgilendirme metni */}
+        <p className="max-w-3xl text-sm leading-relaxed text-slate-600">
+          Günlük görevler, danışanlarınızın bugünkü durumuna göre sistem tarafından otomatik oluşturulur.
+          Listede üç tür iş yer alabilir:{" "}
+          <strong className="font-medium text-slate-800">kritik uyarılar</strong> (öğün uyumu veya yüksek kalori
+          gibi dikkat gerektiren kayıtlar),{" "}
+          <strong className="font-medium text-slate-800">öğün kaydı eksikleri</strong> (bugün henüz yemek analizi
+          yapmamış danışanlar) ve{" "}
+          <strong className="font-medium text-slate-800">günlük program kontrolleri</strong> (bugün için atanmış
+          diyet programının öğün tamamlanma durumunu gözden geçirmeniz gereken danışanlar). Görevi
+          tamamladığınızda işaretleyebilirsiniz; ertesi gün liste güncel verilere göre yenilenir.
+        </p>
+
+        {/* Yükleme göstergesi */}
         {loading && (
           <div className="flex justify-center py-16">
             <Loader2 className="h-10 w-10 animate-spin text-emerald-500" />
           </div>
         )}
 
+        {/* Hata mesajı */}
         {error && (
           <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-rose-700">
             {error}
           </div>
         )}
 
+        {/* Görev listesi */}
         {!loading && bundle && (
           <div className="rounded-3xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm space-y-3">
             {bundle.tasks.length === 0 && (

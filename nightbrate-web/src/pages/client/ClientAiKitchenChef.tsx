@@ -1,9 +1,16 @@
+// React kancaları
 import { useCallback, useEffect, useMemo, useState } from "react";
+// İkonlar
 import { ChefHat, Lightbulb, Loader2, Share2 } from "lucide-react";
+// Kenar çubuğu düzeni
 import { SidebarLayout } from "../../components/SidebarLayout";
+// API istemcisi
 import { api, getApiErrorMessage } from "../../api/http";
+// Kullanıcı görünen adı
 import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
+import { isMockNetworkSource, isRealAiSource } from "../../lib/aiSource";
 
+// Beslenme tercihi seçenekleri (kod → etiket)
 const PREFERENCES: { code: string; label: string }[] = [
   { code: "practical", label: "Pratik" },
   { code: "low_calorie", label: "Düşük Kalori" },
@@ -13,6 +20,7 @@ const PREFERENCES: { code: string; label: string }[] = [
   { code: "gluten_free", label: "Glütensiz" },
 ];
 
+// Tek tarif yapısı
 type Recipe = {
   title: string;
   description?: string | null;
@@ -22,11 +30,13 @@ type Recipe = {
   steps: string[];
 };
 
+// Tarif üretim API yanıtı
 type KitchenChefResponse = {
   recipes: Recipe[];
   source?: string;
 };
 
+// Yapay zeka mutfak şefi: tarif üretme ve diyetisyene paylaşma
 export function ClientAiKitchenChef() {
   const userName = useAuthProfileDisplayName();
   const [ingredients, setIngredients] = useState("");
@@ -39,12 +49,35 @@ export function ClientAiKitchenChef() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [saveBusy, setSaveBusy] = useState(false);
   const [saveInfo, setSaveInfo] = useState<string | null>(null);
+  const [canShareToday, setCanShareToday] = useState(true);
 
+  // Günlük paylaşım hakkı durumunu kontrol eder
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { data } = await api.get<{ canShareToday?: boolean; sharedToday?: boolean }>(
+          "/api/KitchenChef/share-status"
+        );
+        if (!cancelled) {
+          setCanShareToday(data.canShareToday !== false && data.sharedToday !== true);
+        }
+      } catch {
+        if (!cancelled) setCanShareToday(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Yeni tarif sonucu gelince seçim ve bilgi mesajını sıfırla
   useEffect(() => {
     setSelectedIndex(null);
     setSaveInfo(null);
   }, [result]);
 
+  // Form geçerliliği: malzeme, tercih ve 200–5000 kkal aralığı
   const valid = useMemo(() => {
     const k = parseInt(targetCalories.replace(/\D/g, ""), 10);
     return (
@@ -56,6 +89,7 @@ export function ClientAiKitchenChef() {
     );
   }, [ingredients, preference, targetCalories]);
 
+  // Tarif üretim isteğini gönderir
   const submit = useCallback(async () => {
     setError(null);
     if (!valid) {
@@ -84,8 +118,13 @@ export function ClientAiKitchenChef() {
     }
   }, [ingredients, preference, targetCalories, valid]);
 
+  // Seçili tarifi diyetisyenle paylaşır (günde bir kez)
   const shareWithDietitian = useCallback(async () => {
     if (!result?.recipes?.length) return;
+    if (!canShareToday) {
+      setError("Bugün zaten bir tarif paylaştınız. Yarın tekrar deneyebilirsiniz.");
+      return;
+    }
     setSaveInfo(null);
     setError(null);
     const kcal = parseInt(targetCalories.replace(/\D/g, ""), 10);
@@ -108,16 +147,18 @@ export function ClientAiKitchenChef() {
         selectedRecipes: picked,
       });
       setSaveInfo("Seçtiğiniz tarif kaydedildi. Diyetisyeniniz “Yapay zeka denetimi” ekranından görebilir.");
+      setCanShareToday(false);
     } catch (e) {
       setError(getApiErrorMessage(e));
     } finally {
       setSaveBusy(false);
     }
-  }, [ingredients, preference, result, selectedIndex, targetCalories]);
+  }, [canShareToday, ingredients, preference, result, selectedIndex, targetCalories]);
 
   return (
     <SidebarLayout userRole="client" userName={userName}>
       <div className="mx-auto max-w-2xl px-4 py-6 pb-28 lg:pb-8">
+        {/* Üst bilgi bandı */}
         <div className="mb-6 rounded-2xl border border-emerald-200/80 bg-gradient-to-br from-emerald-50/90 to-white p-5">
           <div className="flex items-center gap-3">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-emerald-200/60">
@@ -128,10 +169,16 @@ export function ClientAiKitchenChef() {
               <p className="text-sm text-slate-600">
                 Yapay zeka ile hedef kalorinize uygun tarifler oluşturun
               </p>
+              {!canShareToday && (
+                <p className="mt-2 text-sm font-medium text-amber-800">
+                  Bugün zaten bir tarif paylaştınız. Yarın tekrar deneyebilirsiniz.
+                </p>
+              )}
             </div>
           </div>
         </div>
 
+        {/* Girdi formu */}
         <div className="space-y-6">
           <div>
             <label htmlFor="chef-ingredients" className="mb-2 block text-sm font-semibold text-slate-800">
@@ -219,22 +266,26 @@ export function ClientAiKitchenChef() {
           </div>
         )}
 
+        {/* Üretilen tarifler ve paylaşım */}
         {result && !busy && result.recipes?.length > 0 && (
           <div className="mt-8 space-y-6">
             {result.source && (
               <p
                 className={`text-xs font-semibold ${
-                  result.source === "gemini" ? "text-blue-700" : "text-amber-800"
+                  isRealAiSource(result.source) ? "text-blue-700" : "text-amber-800"
                 }`}
               >
-                {result.source === "gemini"
-                  ? "Kaynak: yapay zeka hizmeti"
-                  : "Kaynak: yerel önizleme (sunucuda yapay zeka anahtarı tanımlı değilse)"}
+                {isRealAiSource(result.source)
+                  ? "Kaynak: yapay zeka hizmeti (Groq)"
+                  : isMockNetworkSource(result.source)
+                    ? "Kaynak: yerel önizleme (Groq servisine bağlanılamadı — ağ/DNS hatası)"
+                    : "Kaynak: yerel önizleme (Groq anahtarı tanımlı değil)"}
               </p>
             )}
             <p className="text-sm text-slate-600">
               Aşağıda <strong>birden fazla</strong> tarif göreceksiniz. Diyetisyeninizle paylaşmak istediğiniz{" "}
-              <strong>yalnızca birini</strong> işaretleyip gönderin.
+              <strong>yalnızca birini</strong> işaretleyip gönderin.{" "}
+              <span className="text-amber-800">Günde en fazla 1 tarif paylaşılabilir.</span>
             </p>
             {result.recipes.map((r, i) => (
               <article
@@ -247,8 +298,9 @@ export function ClientAiKitchenChef() {
                       type="radio"
                       name="share-one-recipe"
                       checked={selectedIndex === i}
+                      disabled={!canShareToday}
                       onChange={() => setSelectedIndex(i)}
-                      className="mt-1.5 h-4 w-4 border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                      className="mt-1.5 h-4 w-4 border-slate-300 text-emerald-600 focus:ring-emerald-500 disabled:opacity-50"
                     />
                     <h2 className="text-lg font-bold text-slate-800">{r.title}</h2>
                   </label>
@@ -282,6 +334,7 @@ export function ClientAiKitchenChef() {
                 </div>
               </article>
             ))}
+            {canShareToday ? (
             <button
               type="button"
               onClick={() => void shareWithDietitian()}
@@ -291,10 +344,16 @@ export function ClientAiKitchenChef() {
               {saveBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Share2 className="h-4 w-4" />}
               Seçili tarifi diyetisyenle paylaş
             </button>
+            ) : (
+              <p className="text-sm font-medium text-amber-800">
+                Bugünkü paylaşım hakkınızı kullandınız. Yarın yeni bir tarif gönderebilirsiniz.
+              </p>
+            )}
             {saveInfo && <p className="text-sm text-emerald-700">{saveInfo}</p>}
           </div>
         )}
 
+        {/* Boş durum: henüz tarif üretilmedi */}
         {!result && !busy && !error && (
           <div className="mt-12 flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 py-12 text-center">
             <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-slate-200/80">

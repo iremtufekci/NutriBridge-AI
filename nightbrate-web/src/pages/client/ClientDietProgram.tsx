@@ -1,11 +1,20 @@
+// React kancaları
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+// Kenar çubuğu düzeni
 import { SidebarLayout } from "../../components/SidebarLayout";
+// API istemcisi ve hata mesajı yardımcısı
 import { api, getApiErrorMessage } from "../../api/http";
+// Kullanıcı görünen adı
 import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
+// Onay/bildirim diyalogları
+import { useAppFeedback } from "../../components/feedback/AppFeedback";
+// Öğün ikonları
 import { Egg, Leaf, UtensilsCrossed, Apple, Loader2, Cookie } from "lucide-react";
 
+// Haftanın kısa gün adları
 const DAY_SHORT = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"] as const;
 
+// Günlük diyet programı API yanıtı
 type ProgramDay = {
   programDate: string;
   breakfast: string;
@@ -26,6 +35,7 @@ type ProgramDay = {
   snackCompleted?: boolean;
 };
 
+// Tarihi YYYY-MM-DD biçimine çevirir
 function toYmd(d: Date) {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -33,14 +43,17 @@ function toYmd(d: Date) {
   return `${y}-${m}-${day}`;
 }
 
+// Gün başlangıcına indirir (saat sıfırlanır)
 function startOfDay(d: Date) {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
+// İki tarihin aynı gün olup olmadığını kontrol eder
 function isSameDay(a: Date, b: Date) {
   return startOfDay(a).getTime() === startOfDay(b).getTime();
 }
 
+// a takvim günü b'den önce mi?
 function beforeCalendarDay(a: Date, b: Date) {
   return startOfDay(a).getTime() < startOfDay(b).getTime();
 }
@@ -55,6 +68,7 @@ function getUpcomingDaysFromToday(count: number): Date[] {
   });
 }
 
+// Sabit öğün tanımları (anahtar, başlık, saat, ikon)
 const MEALS: { key: "breakfast" | "lunch" | "dinner" | "snack"; title: string; time: string; icon: typeof Egg }[] = [
   { key: "breakfast", title: "Kahvaltı", time: "08:00", icon: Egg },
   { key: "lunch", title: "Öğle", time: "12:30", icon: Leaf },
@@ -62,16 +76,19 @@ const MEALS: { key: "breakfast" | "lunch" | "dinner" | "snack"; title: string; t
   { key: "snack", title: "Ara Öğün", time: "16:00", icon: Apple },
 ];
 
+// Danışan diyet programı detay sayfası
 export function ClientDietProgram() {
   const userName = useAuthProfileDisplayName();
+  const { notify, confirm, alert: uiAlert } = useAppFeedback();
   const [detailLoading, setDetailLoading] = useState(true);
   const [dayProgram, setDayProgram] = useState<ProgramDay | null>(null);
   const [selected, setSelected] = useState(() => startOfDay(new Date()));
   const [markingMeal, setMarkingMeal] = useState<string | null>(null);
-  const fetchSeq = useRef(0);
+  const fetchSeq = useRef(0); // Eşzamanlı istek yarışını önlemek için sıra numarası
 
   const upcomingDays = getUpcomingDaysFromToday(14);
 
+  // Seçili tarihin programını API'den yükler
   const loadDay = useCallback(async (ymd: string) => {
     const n = ++fetchSeq.current;
     setDetailLoading(true);
@@ -94,6 +111,7 @@ export function ClientDietProgram() {
     void loadDay(selectedYmd);
   }, [loadDay, selectedYmd]);
 
+  // Sekme tekrar görünür olunca veriyi yenile
   useEffect(() => {
     const onVis = () => {
       if (document.visibilityState === "visible") void loadDay(toYmd(selected));
@@ -102,6 +120,7 @@ export function ClientDietProgram() {
     return () => document.removeEventListener("visibilitychange", onVis);
   }, [loadDay, selected]);
 
+  // Geçmiş gün seçilmişse bugüne geri al
   useEffect(() => {
     const today0 = startOfDay(new Date());
     if (beforeCalendarDay(selected, today0)) {
@@ -109,6 +128,7 @@ export function ClientDietProgram() {
     }
   }, [selected]);
 
+  // Öğün için kalori (ayrı alan yoksa toplam/4)
   const kcalForMeal = (p: ProgramDay, key: (typeof MEALS)[number]["key"]) => {
     const a = p.breakfastCalories ?? 0;
     const b = p.lunchCalories ?? 0;
@@ -124,8 +144,6 @@ export function ClientDietProgram() {
     return 0;
   };
 
-  const dietitianLabel = dayProgram?.dietitianName;
-
   const dayTotalKcal = useMemo(() => {
     const p = dayProgram;
     if (!p) return 0;
@@ -135,6 +153,7 @@ export function ClientDietProgram() {
     return p.totalCalories ?? 0;
   }, [dayProgram]);
 
+  // Öğün tamamlanma durumunu okur
   const mealCompleted = (p: ProgramDay, key: (typeof MEALS)[number]["key"]) => {
     if (key === "breakfast") return p.breakfastCompleted === true;
     if (key === "lunch") return p.lunchCompleted === true;
@@ -142,8 +161,15 @@ export function ClientDietProgram() {
     return p.snackCompleted === true;
   };
 
+  // Öğünü tamamlandı olarak işaretler ve API'ye kaydeder
   const markMealComplete = async (key: (typeof MEALS)[number]["key"]) => {
-    if (!window.confirm("Bu öğünü tamamlandı olarak kaydetmek istediğinize emin misiniz?")) return;
+    const ok = await confirm({
+      title: "Öğün tamamlandı",
+      message: "Bu öğünü tamamlandı olarak kaydetmek istediğinize emin misiniz?",
+      confirmLabel: "Kaydet",
+      variant: "success",
+    });
+    if (!ok) return;
     setMarkingMeal(key);
     try {
       await api.post("/api/client/diet-program/meal-completed", {
@@ -151,8 +177,9 @@ export function ClientDietProgram() {
         meal: key,
       });
       await loadDay(selectedYmd);
+      notify.success("Öğün tamamlandı olarak işaretlendi.");
     } catch (e) {
-      window.alert(getApiErrorMessage(e));
+      notify.error(getApiErrorMessage(e));
     } finally {
       setMarkingMeal(null);
     }
@@ -162,12 +189,13 @@ export function ClientDietProgram() {
     <SidebarLayout userRole="client" userName={userName}>
       <div className="min-h-full bg-slate-50 px-4 py-6 pb-28 lg:pb-8 transition-colors">
         <div className="mx-auto max-w-3xl">
+          {/* Sayfa başlığı */}
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Diyet Programım</h1>
           <p className="text-slate-500 text-sm mt-1">
             Tarih sekmesinde <strong>bugün ve ileri 14 gün</strong> gösteriliyor; güne tıklayın.
-            {dietitianLabel ? ` ${dietitianLabel}` : ""}
           </p>
 
+          {/* Yatay gün seçici takvim */}
           <h2 className="text-lg font-bold text-slate-900 mt-8 mb-3">Diyet takvimi</h2>
           <p className="text-xs text-slate-500 -mt-1 mb-2">Bugün ve sonrası (14 gün) — soldan sağa kaydırın</p>
           <div className="flex gap-1 sm:gap-2 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-thin">
@@ -208,12 +236,14 @@ export function ClientDietProgram() {
             </p>
           )}
 
+          {/* Seçili günde plan yoksa boş durum */}
           {!detailLoading && !dayProgram && (
             <div className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-white/60 p-8 text-center text-slate-500">
               {toYmd(selected)} tarihi için plan yok. Diyetisyeniniz bu tarihe program atadığında burada göreceksiniz.
             </div>
           )}
 
+          {/* Öğün kartları listesi */}
           {!detailLoading && dayProgram && (
             <div className="mt-4 space-y-4">
               {MEALS.map((m) => {
@@ -270,7 +300,7 @@ export function ClientDietProgram() {
                       </div>
                       <button
                         type="button"
-                        onClick={() => window.alert("Alternatif öneriler yakında eklenecek.")}
+                        onClick={() => uiAlert({ title: "Yakında", message: "Alternatif öneriler yakında eklenecek." })}
                         className="text-sm font-semibold px-3 py-1.5 rounded-lg border-2 border-amber-400/80 text-amber-800 bg-amber-50/50 hover:bg-amber-100/80"
                       >
                         Evde yok

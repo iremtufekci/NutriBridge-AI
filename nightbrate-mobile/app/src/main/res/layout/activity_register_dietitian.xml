@@ -200,6 +200,32 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Diploma / Sertifika (PDF veya görsel)"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnPickDiploma"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="@color/register_input_border"
+                    android:text="Belge Seç"
+                    android:textAllCaps="false" />
+
+                <TextView
+                    android:id="@+id/tvDiplomaFile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Henüz dosya seçilmedi"
+                    android:textColor="@color/text_gray"
+                    android:textSize="13sp" />
+
                 <Button
                     android:id="@+id/btnRegister"
                     android:layout_width="match_parent"
