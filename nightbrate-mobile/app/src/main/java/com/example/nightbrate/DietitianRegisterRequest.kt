@@ -1,10 +1,10 @@
-package com.example.nightbrate
+package com.example.nightbrate // Paket tanımı
 
-data class DietitianRegisterRequest(
-    val firstName: String,
-    val lastName: String,
-    val email: String,
-    val password: String,
-    val diplomaNo: String,
-    val clinicName: String
+data class DietitianRegisterRequest( // Diyetisyen kayıt isteği gövdesi
+    val firstName: String, // Ad
+    val lastName: String, // Soyad
+    val email: String, // E-posta
+    val password: String, // Şifre
+    val diplomaNo: String, // Diploma numarası
+    val clinicName: String // Klinik/kurum adı
 )

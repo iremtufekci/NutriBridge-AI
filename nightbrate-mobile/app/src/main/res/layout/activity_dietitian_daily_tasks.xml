@@ -56,12 +56,22 @@
             android:orientation="vertical">
 
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:lineSpacingExtra="3dp"
+                android:text="Günlük görevler, danışanlarınızın bugünkü durumuna göre sistem tarafından otomatik oluşturulur. Listede kritik uyarılar (öğün uyumu veya yüksek kalori), bugün öğün kaydı olmayan danışanlar ve bugün için diyet programı atanmış danışanların program kontrolleri yer alabilir. Görevi tamamladığınızda işaretleyin; liste her gün güncellenir."
+                android:textColor="@color/admin_muted"
+                android:textSize="14sp" />
+
+            <TextView
                 android:id="@+id/tvDailyTasksSummary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:textColor="@color/admin_muted"
-                android:textSize="14sp" />
+                android:textColor="@color/admin_strong"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/containerAllTasks"

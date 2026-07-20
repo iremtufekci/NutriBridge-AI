@@ -13,7 +13,7 @@ public class MealPhotoAnalysisService(
     IMealLogRepository mealLogRepository,
     IClientRepository clientRepository,
     IActivityLogService activityLogService,
-    IOptions<GeminiMealAnalysisOptions> geminiOptions) : IMealPhotoAnalysisService
+    IOptions<GroqAiOptions> groqOptions) : IMealPhotoAnalysisService
 {
     public async Task<MealPhotoAnalysisResponseDto> UploadAnalyzeAndPersistAsync(
         string clientId,
@@ -60,7 +60,9 @@ public class MealPhotoAnalysisService(
             await activityLogService.LogAsync(clientId, name, "Ogun fotografi yuklendi (AI analizi)").ConfigureAwait(false);
         }
 
-        var analysisSource = string.IsNullOrWhiteSpace(geminiOptions.Value.ApiKey) ? "mock" : "gemini";
+        var analysisSource = !string.IsNullOrWhiteSpace(analysis.AnalysisSource)
+            ? analysis.AnalysisSource
+            : !string.IsNullOrWhiteSpace(groqOptions.Value.ApiKey) ? "groq" : "mock";
 
         return new MealPhotoAnalysisResponseDto
         {

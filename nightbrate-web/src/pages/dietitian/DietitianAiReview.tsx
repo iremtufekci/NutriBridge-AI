@@ -1,11 +1,14 @@
+// Diyetisyen yapay zeka denetimi sayfası — danışanların AI mutfak tarif paylaşımları
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { SidebarLayout } from "../../components/SidebarLayout";
 import { api } from "../../api/http";
 import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
 import { BarChart3, Loader2, Search } from "lucide-react";
 
+// Danışan seçim listesi öğesi
 type ClientItem = { id?: string; firstName?: string; lastName?: string };
 
+// Tek bir AI tarif anlık görüntüsü
 type KitchenRecipeSnapshot = {
   title: string;
   description?: string | null;
@@ -15,6 +18,7 @@ type KitchenRecipeSnapshot = {
   steps: string[];
 };
 
+// Danışanın yapay zeka mutfak oturum kaydı
 type KitchenChefLogItem = {
   id?: string;
   createdAtUtc: string;
@@ -27,13 +31,18 @@ type KitchenChefLogItem = {
 
 export function DietitianAiReview() {
   const dietitianName = useAuthProfileDisplayName();
+
+  // Danışan seçimi durumu
   const [clients, setClients] = useState<ClientItem[]>([]);
   const [clientQuery, setClientQuery] = useState("");
   const [selectedClientId, setSelectedClientId] = useState("");
   const [loadingList, setLoadingList] = useState(true);
+
+  // Seçili danışanın AI mutfak kayıtları
   const [kitchenLogs, setKitchenLogs] = useState<KitchenChefLogItem[]>([]);
   const [loadingKitchen, setLoadingKitchen] = useState(false);
 
+  // Arama kutusuna göre danışan listesini filtreler
   const filteredClients = useMemo(() => {
     const q = clientQuery.trim().toLowerCase();
     if (!q) return clients;
@@ -43,6 +52,7 @@ export function DietitianAiReview() {
     });
   }, [clients, clientQuery]);
 
+  // Bağlı danışanları API'den yükler
   const loadClients = useCallback(async () => {
     setLoadingList(true);
     try {
@@ -60,6 +70,7 @@ export function DietitianAiReview() {
     loadClients();
   }, [loadClients]);
 
+  // Seçili danışan değiştiğinde AI mutfak tarif kayıtlarını yükler
   useEffect(() => {
     if (!selectedClientId) {
       setKitchenLogs([]);
@@ -84,6 +95,7 @@ export function DietitianAiReview() {
     };
   }, [selectedClientId]);
 
+  // Seçili danışanın görünen adını hesaplar
   const selectedClientName = useMemo(() => {
     if (!selectedClientId) return "";
     const c = clients.find((x) => x.id === selectedClientId);
@@ -93,6 +105,7 @@ export function DietitianAiReview() {
   return (
     <SidebarLayout userRole="dietitian" userName={dietitianName}>
       <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-slate-50 min-h-screen text-slate-900 transition-colors pb-24 lg:pb-8">
+        {/* Sayfa başlığı ve açıklama */}
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div>
             <h1 className="text-4xl font-bold flex items-center gap-2">
@@ -106,6 +119,7 @@ export function DietitianAiReview() {
           </div>
         </div>
 
+        {/* Seçili danışan vurgu bandı */}
         {selectedClientId && selectedClientName && (
           <div className="rounded-2xl border-2 border-emerald-500/40 bg-emerald-50/90 px-4 py-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Seçili danışan</p>
@@ -113,6 +127,7 @@ export function DietitianAiReview() {
           </div>
         )}
 
+        {/* Danışan arama ve seçim listesi */}
         <div className="rounded-2xl border border-slate-200 bg-white p-4 space-y-3">
           <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
             <div className="relative flex-1">
@@ -162,6 +177,7 @@ export function DietitianAiReview() {
           </div>
         </div>
 
+        {/* Seçili danışanın AI mutfak paylaşım kayıtları */}
         {selectedClientId && (
           <div className="rounded-2xl border border-slate-200 bg-white p-4">
             <h2 className="text-lg font-bold text-slate-900">Yapay zeka mutfak paylaşımları</h2>

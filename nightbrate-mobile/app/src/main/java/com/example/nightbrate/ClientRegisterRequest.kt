@@ -1,12 +1,12 @@
-package com.example.nightbrate
+package com.example.nightbrate // Paket tanımı
 
-data class ClientRegisterRequest(
-    val firstName: String,
-    val lastName: String,
-    val email: String,
-    val password: String,
-    val weight: Double,
-    val height: Double,
-    val targetCalories: Int,
-    val dietitianId: String? = null
+data class ClientRegisterRequest( // Danışan kayıt isteği gövdesi
+    val firstName: String, // Ad
+    val lastName: String, // Soyad
+    val email: String, // E-posta
+    val password: String, // Şifre
+    val weight: Double, // Kilo (kg)
+    val height: Double, // Boy (cm)
+    val targetCalories: Int, // Günlük hedef kalori
+    val dietitianId: String? = null // Opsiyonel bağlı diyetisyen kimliği
 )

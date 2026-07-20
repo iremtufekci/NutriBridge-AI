@@ -1,11 +1,15 @@
+// Diyetisyen diyet programı oluşturma ve düzenleme sayfası
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { SidebarLayout } from "../../components/SidebarLayout";
 import { api } from "../../api/http";
 import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
+import { useAppFeedback } from "../../components/feedback/AppFeedback";
 import { Loader2, Search } from "lucide-react";
 
+// Danışan seçim listesi öğesi
 type ClientItem = { id?: string; firstName?: string; lastName?: string };
 
+// API'den dönen günlük diyet programı
 type DietProgramResponse = {
   clientId?: string;
   programDate?: string;
@@ -22,26 +26,32 @@ type DietProgramResponse = {
   updatedAt?: string;
 };
 
-/** Yerel saatle yyyy-MM-dd (sunucu ile aynı takvim günü). */
-function toYmd(d: Date) {
+// Yerel takvim gününü yyyy-MM-dd formatına çevirir
+function toYmdLocal(d = new Date()) {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
   return `${y}-${m}-${day}`;
 }
 
+// Seçilen tarihin geçmişte olup olmadığını kontrol eder
+function isPastProgramDate(ymd: string) {
+  return ymd < toYmdLocal();
+}
+
+// Verilen tarihe n gün ekler
 function addDays(d: Date, n: number) {
   const x = new Date(d);
   x.setDate(x.getDate() + n);
   return x;
 }
 
-/** Bugünden itibaren n gün (bugün dahil) tarih listesi, her biri { ymd, label } */
+// Bugünden itibaren n gün (bugün dahil) tarih listesi oluşturur
 function buildUpcomingOptions(from: Date, count: number) {
   const start = new Date(from.getFullYear(), from.getMonth(), from.getDate());
   return Array.from({ length: count }, (_, i) => {
     const x = addDays(start, i);
-    const ymd = toYmd(x);
+    const ymd = toYmdLocal(x);
     const w = x.toLocaleDateString("tr-TR", { weekday: "short" });
     const label = x.toLocaleDateString("tr-TR", { day: "numeric", month: "short" });
     return { ymd, label: `${w} ${label}` };
@@ -50,10 +60,17 @@ function buildUpcomingOptions(from: Date, count: number) {
 
 export function DietitianPrograms() {
   const dietitianName = useAuthProfileDisplayName();
+  const { notify } = useAppFeedback();
+
+  // Danışan seçimi ve arama durumu
   const [clients, setClients] = useState<ClientItem[]>([]);
   const [clientQuery, setClientQuery] = useState("");
   const [selectedClientId, setSelectedClientId] = useState("");
-  const [selectedYmd, setSelectedYmd] = useState(() => toYmd(new Date()));
+
+  // Tarih seçimi ve program formu durumu
+  const [selectedYmd, setSelectedYmd] = useState(() => toYmdLocal());
+  const todayYmd = useMemo(() => toYmdLocal(), []);
+  const isReadOnlyDate = isPastProgramDate(selectedYmd);
   const [breakfast, setBreakfast] = useState("");
   const [lunch, setLunch] = useState("");
   const [dinner, setDinner] = useState("");
@@ -62,18 +79,23 @@ export function DietitianPrograms() {
   const [lunchKcal, setLunchKcal] = useState(0);
   const [dinnerKcal, setDinnerKcal] = useState(0);
   const [snackKcal, setSnackKcal] = useState(0);
+
+  // Yükleme durumları
   const [loadingList, setLoadingList] = useState(true);
   const [loadingProgram, setLoadingProgram] = useState(false);
   const [assignedDates, setAssignedDates] = useState<string[]>([]);
   const [loadingAssigned, setLoadingAssigned] = useState(false);
 
+  // Dört öğünün kalori toplamını hesaplar
   const totalCalories = useMemo(
     () => breakfastKcal + lunchKcal + dinnerKcal + snackKcal,
     [breakfastKcal, lunchKcal, dinnerKcal, snackKcal]
   );
 
+  // Hızlı tarih seçimi için önümüzdeki 60 gün
   const dateOptions = useMemo(() => buildUpcomingOptions(new Date(), 60), []);
 
+  // Arama kutusuna göre danışan listesini filtreler
   const filteredClients = useMemo(() => {
     const q = clientQuery.trim().toLowerCase();
     if (!q) return clients;
@@ -83,6 +105,7 @@ export function DietitianPrograms() {
     });
   }, [clients, clientQuery]);
 
+  // Bağlı danışanları API'den yükler
   const loadClients = useCallback(async () => {
     setLoadingList(true);
     try {
@@ -100,6 +123,7 @@ export function DietitianPrograms() {
     loadClients();
   }, [loadClients]);
 
+  // Seçili danışana atanmış program tarihlerini yükler
   const loadAssignedDates = useCallback(async (clientId: string) => {
     if (!clientId) {
       setAssignedDates([]);
@@ -126,6 +150,7 @@ export function DietitianPrograms() {
     void loadAssignedDates(selectedClientId);
   }, [selectedClientId, loadAssignedDates]);
 
+  // Danışan veya tarih değiştiğinde mevcut programı API'den çeker
   useEffect(() => {
     if (!selectedClientId || !selectedYmd) return;
     let cancelled = false;
@@ -165,20 +190,26 @@ export function DietitianPrograms() {
     };
   }, [selectedClientId, selectedYmd]);
 
+  // Seçili danışanın görünen adını hesaplar
   const selectedClientName = useMemo(() => {
     if (!selectedClientId) return "";
     const c = clients.find((x) => x.id === selectedClientId);
     return `${c?.firstName || ""} ${c?.lastName || ""}`.trim();
   }, [clients, selectedClientId]);
 
+  // Programı API'ye kaydeder; geçmiş tarihlerde kayıt engellenir
   const saveProgram = async () => {
     if (!selectedClientId) {
-      alert("Lütfen önce bir danışan seçin.");
+      notify.error("Lütfen önce bir danışan seçin.");
       return;
     }
     const dateKey = selectedYmd?.trim() ?? "";
     if (!/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) {
-      alert("Lütfen bir program tarihi seçin (takvim veya hızlı tarih düğmeleri).");
+      notify.error("Lütfen bir program tarihi seçin (takvim veya hızlı tarih düğmeleri).");
+      return;
+    }
+    if (isPastProgramDate(dateKey)) {
+      notify.error("Geçmiş tarihlerdeki programlar güncellenemez. Bugün veya ileri bir tarih seçin.");
       return;
     }
 
@@ -197,9 +228,9 @@ export function DietitianPrograms() {
         totalCalories,
       });
       await loadAssignedDates(selectedClientId);
-      alert("Program kaydedildi. Aynı danışan ve tarih için tekrar düzenleyebilirsiniz.");
+      notify.success("Program kaydedildi.");
     } catch (error) {
-      alert(
+      notify.error(
         "Kayıt başarısız: " +
           ((error as { response?: { data?: { message?: string } } })?.response?.data?.message || "Bilinmeyen hata")
       );
@@ -209,15 +240,16 @@ export function DietitianPrograms() {
   return (
     <SidebarLayout userRole="dietitian" userName={dietitianName}>
       <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-slate-50 min-h-screen text-slate-900 transition-colors pb-24 lg:pb-8">
+        {/* Sayfa başlığı ve kullanım açıklaması */}
         <div>
           <h1 className="text-4xl font-bold">Diyet programı</h1>
           <p className="text-slate-500 mt-1">
-            Danışanı seçin; <strong>yeni atama</strong> için bugün veya ileri bir tarih seçin. Daha önce atadığınız
-            tarihleri alttan seçerek <strong>düzenleyebilirsiniz</strong>; takvimle geçmiş bir tarih de
-            açılabilir (sadece mevcut kayıt güncellemek için).
+            Danışanı seçin ve <strong>bugün veya ileri bir tarih</strong> için program oluşturun veya güncelleyin.
+            Geçmiş kayıtlar yalnızca görüntülenebilir; düzenlenemez.
           </p>
         </div>
 
+        {/* Seçili danışan vurgu bandı */}
         {selectedClientId && selectedClientName && (
           <div className="rounded-2xl border-2 border-emerald-500/40 bg-emerald-50/90 px-4 py-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Seçili danışan</p>
@@ -225,6 +257,7 @@ export function DietitianPrograms() {
           </div>
         )}
 
+        {/* Danışan arama ve seçim listesi */}
         <div className="rounded-2xl border border-slate-200 bg-white p-4 space-y-3">
           <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
             <div className="relative flex-1">
@@ -270,6 +303,7 @@ export function DietitianPrograms() {
           </div>
         </div>
 
+        {/* Tarih seçimi — atanmış tarihler, takvim ve hızlı düğmeler */}
         <div>
           {selectedClientId && (
             <div className="mb-4 rounded-xl border border-amber-200/80 bg-amber-50/80 p-3">
@@ -284,6 +318,7 @@ export function DietitianPrograms() {
                     const d = new Date(ymd + "T12:00:00");
                     const w = d.toLocaleDateString("tr-TR", { weekday: "short" });
                     const label = d.toLocaleDateString("tr-TR", { day: "numeric", month: "short" });
+                    const past = isPastProgramDate(ymd);
                     return (
                       <button
                         type="button"
@@ -291,12 +326,17 @@ export function DietitianPrograms() {
                         onClick={() => setSelectedYmd(ymd)}
                         className={`px-2.5 py-1.5 rounded-lg text-left text-sm border ${
                           selectedYmd === ymd
-                            ? "bg-amber-500 text-white border-amber-500"
-                            : "bg-white border-amber-300"
+                            ? past
+                              ? "bg-slate-500 text-white border-slate-500"
+                              : "bg-amber-500 text-white border-amber-500"
+                            : past
+                              ? "bg-slate-50 border-slate-300 text-slate-600"
+                              : "bg-white border-amber-300"
                         }`}
                       >
                         <span className="block font-semibold">
                           {w} {label}
+                          {past ? " · salt okunur" : ""}
                         </span>
                         <span className="text-xs opacity-80">{ymd}</span>
                       </button>
@@ -307,18 +347,28 @@ export function DietitianPrograms() {
             </div>
           )}
 
-          <p className="text-sm font-semibold text-slate-700 mb-2">Tarih seçimi (yeni veya düzenleme)</p>
+          <p className="text-sm font-semibold text-slate-700 mb-2">Tarih seçimi</p>
+          {isReadOnlyDate && (
+            <div className="mb-3 rounded-xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-slate-600">
+              <strong className="text-slate-800">{selectedYmd}</strong> geçmiş bir tarih — program yalnızca
+              görüntülenir, kaydedilemez.
+            </div>
+          )}
           <div className="flex flex-wrap items-end gap-3">
             <label className="flex flex-col text-xs text-slate-500">
-              Takvim (geçmiş: yalnızca atadığınız günleri düzenlemek için)
+              Takvim (bugün ve sonrası)
               <input
                 type="date"
-                value={selectedYmd}
-                onChange={(e) => e.target.value && setSelectedYmd(e.target.value)}
+                min={todayYmd}
+                value={isReadOnlyDate ? todayYmd : selectedYmd}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  if (v && !isPastProgramDate(v)) setSelectedYmd(v);
+                }}
                 className="mt-1 rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900"
               />
             </label>
-            <p className="text-xs text-slate-500 pb-1">Hızlı: önümüzdeki 60 gün (yeni atama)</p>
+            <p className="text-xs text-slate-500 pb-1">Hızlı: önümüzdeki 60 gün</p>
           </div>
           <div className="mt-3 flex flex-wrap gap-2 max-h-40 overflow-y-auto p-1">
             {dateOptions.map((opt) => (
@@ -345,6 +395,7 @@ export function DietitianPrograms() {
           </p>
         )}
 
+        {/* Dört öğün düzenleme kartları */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
           <MealCard
             title="Kahvaltı"
@@ -352,6 +403,7 @@ export function DietitianPrograms() {
             setValue={setBreakfast}
             kcal={breakfastKcal}
             setKcal={setBreakfastKcal}
+            readOnly={isReadOnlyDate}
           />
           <MealCard
             title="Öğle yemeği"
@@ -359,6 +411,7 @@ export function DietitianPrograms() {
             setValue={setLunch}
             kcal={lunchKcal}
             setKcal={setLunchKcal}
+            readOnly={isReadOnlyDate}
           />
           <MealCard
             title="Akşam yemeği"
@@ -366,6 +419,7 @@ export function DietitianPrograms() {
             setValue={setDinner}
             kcal={dinnerKcal}
             setKcal={setDinnerKcal}
+            readOnly={isReadOnlyDate}
           />
           <MealCard
             title="Ara öğün"
@@ -373,9 +427,11 @@ export function DietitianPrograms() {
             setValue={setSnack}
             kcal={snackKcal}
             setKcal={setSnackKcal}
+            readOnly={isReadOnlyDate}
           />
         </div>
 
+        {/* Günlük kalori toplamı ve kaydet düğmesi */}
         <div className="rounded-3xl bg-emerald-50 border border-emerald-100 p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <p className="text-slate-500">Günlük toplam (öğün toplamı)</p>
@@ -385,10 +441,10 @@ export function DietitianPrograms() {
           <button
             type="button"
             onClick={saveProgram}
-            disabled={loadingProgram}
+            disabled={loadingProgram || isReadOnlyDate}
             className="px-8 py-3 rounded-2xl bg-emerald-500 text-white font-semibold hover:bg-emerald-600 disabled:opacity-50"
           >
-            Programı kaydet
+            {isReadOnlyDate ? "Geçmiş tarih — kayıt kapalı" : "Programı kaydet"}
           </button>
         </div>
       </div>
@@ -396,21 +452,29 @@ export function DietitianPrograms() {
   );
 }
 
+// Tek bir öğün için içerik ve kalori giriş kartı
 function MealCard({
   title,
   value,
   setValue,
   kcal,
   setKcal,
+  readOnly = false,
 }: {
   title: string;
   value: string;
   setValue: (v: string) => void;
   kcal: number;
   setKcal: (n: number) => void;
+  readOnly?: boolean;
 }) {
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-4 min-h-[220px] flex flex-col">
+    <div
+      className={[
+        "rounded-3xl border p-4 min-h-[220px] flex flex-col",
+        readOnly ? "border-slate-200 bg-slate-50" : "border-slate-200 bg-white",
+      ].join(" ")}
+    >
       <div className="flex items-start justify-between gap-2">
         <h3 className="text-2xl font-bold leading-tight">{title}</h3>
         <label className="flex flex-col items-end text-xs text-slate-500 shrink-0">
@@ -419,16 +483,20 @@ function MealCard({
             type="number"
             min={0}
             value={kcal}
+            readOnly={readOnly}
+            disabled={readOnly}
             onChange={(e) => setKcal(Math.max(0, Number(e.target.value) || 0))}
-            className="mt-0.5 w-20 rounded-lg border border-slate-300 bg-slate-50 px-2 py-1 text-slate-900 text-sm text-right"
+            className="mt-0.5 w-20 rounded-lg border border-slate-300 bg-slate-50 px-2 py-1 text-slate-900 text-sm text-right disabled:opacity-70"
           />
         </label>
       </div>
       <textarea
         value={value}
+        readOnly={readOnly}
+        disabled={readOnly}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Öğün içeriğini ve besin önerilerinizi yazın…"
-        className="mt-3 flex-1 resize-none rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"
+        className="mt-3 flex-1 resize-none rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm disabled:opacity-80"
       />
     </div>
   );

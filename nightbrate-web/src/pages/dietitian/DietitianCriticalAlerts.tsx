@@ -1,3 +1,4 @@
+// Diyetisyen kritik uyarılar sayfası — öğün uyumu ve yüksek kalori ihlalleri
 import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { AlertTriangle, CheckCircle2, Loader2, User, X } from "lucide-react";
@@ -5,6 +6,7 @@ import { SidebarLayout } from "../../components/SidebarLayout";
 import { api, getApiErrorMessage } from "../../api/http";
 import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
 
+// Kritik uyarı kaydı tipi
 type CritAlert = {
   id: string;
   clientId: string;
@@ -16,6 +18,7 @@ type CritAlert = {
   referenceDate: string;
 };
 
+// Danışan kısa profil bilgisi (modal için)
 type ClientBrief = {
   clientId: string;
   firstName: string;
@@ -27,6 +30,7 @@ type ClientBrief = {
   phone?: string;
 };
 
+// Uyarı türü kodunu Türkçe etikete çevirir
 function alertTypeLabel(t: string) {
   switch (t) {
     case "MissedMeals":
@@ -40,14 +44,19 @@ function alertTypeLabel(t: string) {
 
 export function DietitianCriticalAlerts() {
   const name = useAuthProfileDisplayName();
+
+  // Uyarı listesi ve yükleme durumu
   const [alerts, setAlerts] = useState<CritAlert[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
+
+  // Danışan profil modalı durumu
   const [profileClientId, setProfileClientId] = useState<string | null>(null);
   const [brief, setBrief] = useState<ClientBrief | null>(null);
   const [briefLoading, setBriefLoading] = useState(false);
 
+  // Kritik uyarıları API'den yükler
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -66,6 +75,7 @@ export function DietitianCriticalAlerts() {
     void load();
   }, [load]);
 
+  // Uyarıyı incelendi olarak işaretler ve listeden kaldırır
   const acknowledge = async (a: CritAlert) => {
     setBusyId(a.id);
     setError(null);
@@ -83,6 +93,7 @@ export function DietitianCriticalAlerts() {
     }
   };
 
+  // Danışan profil modalını açar ve kısa bilgiyi API'den çeker
   const openProfile = async (clientId: string) => {
     setProfileClientId(clientId);
     setBrief(null);
@@ -97,34 +108,43 @@ export function DietitianCriticalAlerts() {
     }
   };
 
+  // Yüksek öncelikli uyarı sayısı
   const highCount = alerts.filter((x) => x.severity === "High").length;
 
   return (
     <SidebarLayout userRole="dietitian" userName={name}>
       <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-slate-50 min-h-screen text-slate-900 transition-colors pb-28 lg:pb-8">
+        {/* Sayfa başlığı ve uyarı türleri açıklaması */}
         <div>
           <h1 className="text-3xl sm:text-4xl font-bold flex items-center gap-2">
             <AlertTriangle className="w-9 h-9 text-rose-500 shrink-0" />
             Kritik Uyarılar
           </h1>
-          <p className="text-slate-500 mt-1 max-w-2xl">
-            Son 3 günün verilerine göre öğün uyumu ve günlük kalori kuralları değerlendirilir. İncelediğiniz
-            kayıt listeden düşer; veri tekrar eşikleri aştığında yeni uyarı oluşabilir.
+          <p className="text-slate-500 mt-1 max-w-2xl leading-relaxed">
+            Bu listede danışanlarınızın programa uymadığı veya hedef kalorinin belirgin şekilde üzerine çıktığı
+            durumlar gösterilir. <strong>Öğün tamamlama</strong> uyarısı, o gün için atanmış diyet programında iki
+            veya daha fazla öğünün tamamlandı olarak işaretlenmediğinde oluşur.{" "}
+            <strong>Yüksek kalori</strong> uyarısı ise danışanın yemek analizi kayıtlarındaki günlük kalori toplamı,
+            hedefin yaklaşık %20 üzerine çıktığında görünür. İncelediğiniz kayıt listeden kalkar; aynı koşul yeniden
+            oluşursa uyarı tekrar eklenebilir.
           </p>
         </div>
 
+        {/* Yükleme göstergesi */}
         {loading && (
           <p className="text-sm text-slate-500 flex items-center gap-2">
             <Loader2 className="w-4 h-4 animate-spin" /> Uyarılar yükleniyor…
           </p>
         )}
 
+        {/* Hata mesajı */}
         {error && (
           <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
             {error}
           </div>
         )}
 
+        {/* Aktif uyarı özeti bandı */}
         {!loading && alerts.length > 0 && (
           <div className="rounded-2xl border border-rose-200/90 bg-rose-50/90 px-4 py-3 flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
@@ -142,6 +162,7 @@ export function DietitianCriticalAlerts() {
           </div>
         )}
 
+        {/* Uyarı yoksa başarı durumu */}
         {!loading && alerts.length === 0 && !error && (
           <div className="rounded-2xl border border-emerald-200/80 bg-emerald-50/60 px-4 py-6 text-center">
             <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto mb-2" />
@@ -150,6 +171,7 @@ export function DietitianCriticalAlerts() {
           </div>
         )}
 
+        {/* Uyarı kartları listesi */}
         <ul className="space-y-4 max-w-3xl">
           {alerts.map((a) => {
             const isHigh = a.severity === "High";
@@ -200,6 +222,7 @@ export function DietitianCriticalAlerts() {
                 </div>
                 <p className="mt-2 text-sm text-slate-600 leading-relaxed">{a.message}</p>
 
+                {/* Onaylama ve profil görüntüleme düğmeleri */}
                 <div className="mt-4 flex flex-wrap gap-2">
                   <button
                     type="button"
@@ -225,6 +248,7 @@ export function DietitianCriticalAlerts() {
         </ul>
       </div>
 
+      {/* Danışan profil özeti modalı — portal ile body'ye render edilir */}
       {profileClientId &&
         createPortal(
           <div

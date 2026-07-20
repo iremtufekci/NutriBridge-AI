@@ -1,15 +1,15 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson; // MongoDB BSON tipleri
+using MongoDB.Bson.Serialization.Attributes; // Serileştirme öznitelikleri
 
-namespace Nightbrate.Core.Entities;
+namespace Nightbrate.Core.Entities; // Varlık sınıfları ad alanı
 
-public class WaterLog
+public class WaterLog // Su tüketimi kaydı varlığı
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id { get; set; }
+    [BsonId] // MongoDB birincil anahtar
+    [BsonRepresentation(BsonType.ObjectId)] // ObjectId string temsili
+    public string? Id { get; set; } // Kayıt kimliği
 
-    public string ClientId { get; set; } = string.Empty;
-    public int Ml { get; set; }
-    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+    public string ClientId { get; set; } = string.Empty; // Danışan kimliği
+    public int Ml { get; set; } // İçilen su miktarı (ml)
+    public DateTime Timestamp { get; set; } = DateTime.UtcNow; // Kayıt zamanı (UTC)
 }

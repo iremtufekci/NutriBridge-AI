@@ -47,10 +47,16 @@ public sealed class GeminiPdfAnalysisService : IPdfAnalysisAiService
         var nameHint = string.IsNullOrWhiteSpace(originalFileName) ? "" : " Dosya adi: " + originalFileName + ".";
 
         var prompt =
-            "Asagidaki PDF belgesi bir danisanin yukledigi saglik, laboratuvar, diyet veya benzeri dokuman olabilir." + nameHint
-            + " Belgenin icerigini TURKCE ve danisanin anlayacagi sade bir dilde analiz et. "
-            + "Tibbi tani koyma; sadece belgede gorunen bilgileri ozetle ve diyetisyenle paylasima uygun maddeler uret. "
-            + "Ozette sayisal degerleri (varsa) koru. Emin olmadigin cikarimlari keyFindings'e ekleme; cautions'a yaz.";
+            "Asagidaki PDF belgesi bir danisanin yukledigi laboratuvar, saglik veya beslenme ile ilgili dokuman olabilir." + nameHint
+            + " GOREV: Belgedeki SAYISAL laboratuvar ve beslenme degerlerini oku. Her onemli parametre icin diyetisyen perspektifinden profesyonel yorum maddeleri uret. "
+            + "Her madde su yapiya yakin olsun: parametre adi ve sayisal deger + referans durumu (normal, ust sinir, alt sinir, yukselmis vb.); "
+            + "bu degerin kilo alma, kilo verememe veya kilo kaybi ile olasi iliskisi (neden olabilir veya olmayabilir); "
+            + "diyetisyenin verebilecegi somut beslenme onerisi veya takip alani. "
+            + "Ornek ton: \"Aksam kan sekeri normal sinirlar icinde olsa da, HbA1c degerinin prediyabet araligina yakinligi goz onune alindiginda karbonhidrat alimi ve ogun planlamasi konusunda danismanlik verilebilir.\" "
+            + "KURALLAR: Tibbi tani koyma, ilac veya tedavi onerme. Sadece belgede gordugun degerlere dayan; uydurma. TURKCE yaz. "
+            + "suggestedForDietitian alanina 4-8 tam cumle madde yaz (asiri kisa madde kullanma). "
+            + "keyFindings ve cautions alanlarini bos dizi olarak don. "
+            + "summary alanina yalnizca tek cumle belge turu yaz (ornegin: Tam kan sayimi ve biyokimya laboratuvar sonuclari).";
 
         var parts = new JsonArray
         {
@@ -127,17 +133,18 @@ public sealed class GeminiPdfAnalysisService : IPdfAnalysisAiService
             throw new AppException("Yapay zeka yanıtı çözümlenemedi.");
         }
 
-        if (root is null || string.IsNullOrWhiteSpace(root.Summary))
+        var comments = CleanList(root.SuggestedForDietitian);
+        if (root is null || (string.IsNullOrWhiteSpace(root.Summary) && comments.Count == 0))
             throw new AppException("Geçerli analiz metni alınamadı.");
 
         return new ClientPdfAnalysisResultDto
         {
             AnalysisSource = "gemini",
             DocumentType = (root.DocumentType ?? "Belge").Trim(),
-            Summary = root.Summary.Trim(),
-            KeyFindings = CleanList(root.KeyFindings),
-            Cautions = CleanList(root.Cautions),
-            SuggestedForDietitian = CleanList(root.SuggestedForDietitian)
+            Summary = string.IsNullOrWhiteSpace(root.Summary) ? (comments.FirstOrDefault() ?? "Laboratuvar / rapor belgesi") : root.Summary.Trim(),
+            KeyFindings = new List<string>(),
+            Cautions = new List<string>(),
+            SuggestedForDietitian = comments
         };
     }
 

@@ -1,3 +1,4 @@
+// Canlı sistem metrikleri: API performansı, kaynak kullanımı, hata ve güvenlik logları
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import {
   Activity,
@@ -25,10 +26,12 @@ import {
   YAxis,
 } from "recharts";
 import { SidebarLayout } from "../../components/SidebarLayout";
+import { AdminPageShell } from "../../components/admin/AdminPageShell";
 import axios from "axios";
 import { api } from "../../api/http";
 import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
 
+// Axios ve ağ hatalarını Türkçe kullanıcı mesajına çevirir
 function formatApiError(e: unknown): string {
   if (axios.isAxiosError(e)) {
     const s = e.response?.status;
@@ -111,12 +114,14 @@ type Payload = {
   dataNote: string;
 };
 
+// Yanıt süresine göre tablo hücresi renk sınıfı
 function timeColor(ms: number) {
   if (ms < 200) return "text-emerald-600";
   if (ms < 1000) return "text-amber-600";
   return "text-rose-600";
 }
 
+// Güvenlik olayı önem derecesine göre sol kenarlık rengi
 function errToneClass(t: string) {
   if (t === "high") return "border-l-4 border-rose-500 bg-rose-50/50";
   if (t === "medium") return "border-l-4 border-amber-500 bg-amber-50/50";
@@ -129,6 +134,7 @@ export function AdminSystemAnalytics() {
   const [err, setErr] = useState<string | null>(null);
   const [data, setData] = useState<Payload | null>(null);
 
+  // Sistem analitiği yükünü getirir; 20 sn'de bir otomatik yenilenir
   const load = useCallback(async () => {
     setLoading(true);
     try {
@@ -148,6 +154,7 @@ export function AdminSystemAnalytics() {
     return () => clearInterval(t);
   }, [load]);
 
+  // İlk yükleme ekranı
   if (loading && !data) {
     return (
       <SidebarLayout userRole="admin" userName={name}>
@@ -158,6 +165,7 @@ export function AdminSystemAnalytics() {
     );
   }
 
+  // Veri alınamadığında hata ve yeniden dene
   if (err && !data) {
     return (
       <SidebarLayout userRole="admin" userName={name}>
@@ -180,19 +188,19 @@ export function AdminSystemAnalytics() {
 
   return (
     <SidebarLayout userRole="admin" userName={name}>
-      <div className="min-h-full bg-slate-50 px-3 sm:px-6 py-4 sm:py-6 pb-24 lg:pb-8">
-        <div className="mx-auto max-w-7xl space-y-5 sm:space-y-6">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Sistem Analitiği</h1>
-            <p className="text-slate-500 text-sm mt-0.5">
-              Teknik metrikler, sunucu performansı ve güvenlik (son {data?.dataWindowHours ?? 24} saat, canlı)
+      <AdminPageShell
+        title="Sistem analitiği"
+        subtitle={`Teknik metrikler, sunucu performansı ve güvenlik (son ${data?.dataWindowHours ?? 24} saat, canlı)`}
+        maxWidth="wide"
+      >
+          {data?.dataNote ? <p className="-mt-4 text-xs text-slate-500">{data.dataNote}</p> : null}
+          {data?.generatedAtUtc ? (
+            <p className="-mt-2 text-xs text-slate-400">
+              Son üretim: {new Date(data.generatedAtUtc).toLocaleString("tr-TR")}
             </p>
-            {data?.dataNote && <p className="text-xs text-slate-500 mt-1">{data.dataNote}</p>}
-            {data?.generatedAtUtc && (
-              <p className="text-xs text-slate-400 mt-0.5">Son üretim: {new Date(data.generatedAtUtc).toLocaleString("tr-TR")}</p>
-            )}
-          </div>
+          ) : null}
 
+          {/* Özet KPI kartları */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <Kpi
               label="İstek sayısı / saat"
@@ -273,6 +281,7 @@ export function AdminSystemAnalytics() {
             </div>
           </div>
 
+          {/* Saatlik veritabanı ve yanıt dağılımı grafikleri */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <CardChart title="Veritabanı trafiği: okuma ve yazma" subtitle="Sorgu türü dağılımı" icon={Database}>
               <div className="h-64 w-full min-w-0">
@@ -373,6 +382,7 @@ export function AdminSystemAnalytics() {
             </div>
           </div>
 
+          {/* Hata ve güvenlik olay listeleri */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-sm">
               <div className="flex items-center gap-2 mb-3">
@@ -433,12 +443,12 @@ export function AdminSystemAnalytics() {
               </ul>
             </div>
           </div>
-        </div>
-      </div>
+      </AdminPageShell>
     </SidebarLayout>
   );
 }
 
+// Tek metrik özet kartı (değer + alt bilgi + ikon)
 function Kpi({
   label,
   value,
@@ -472,6 +482,7 @@ function Kpi({
   );
 }
 
+// Grafik bölümü için başlıklı beyaz kart kabuğu
 function CardChart({
   title,
   subtitle,
@@ -501,6 +512,7 @@ function CardChart({
   );
 }
 
+// CPU/bellek/disk için yüzde ve ilerleme çubuğu
 function ResourceTile({
   label,
   value,

@@ -316,7 +316,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Kritik Danışanlar"
+                            android:text="Kritik Uyarılar"
                             android:textColor="@color/admin_strong"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -328,7 +328,7 @@
                             android:background="@drawable/diet_badge_rose"
                             android:paddingHorizontal="12dp"
                             android:paddingVertical="6dp"
-                            android:text="0 Danışan"
+                            android:text="0 uyarı"
                             android:textColor="#F87171"
                             android:textSize="11sp"
                             android:textStyle="bold" />
@@ -356,6 +356,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardDashAiReview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -381,21 +382,34 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Son Öğün Fotoğrafları"
+                            android:text="Yapay zeka denetimi"
                             android:textColor="@color/admin_strong"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tvAiReviewBadge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="İnceleme Bekliyor"
-                            android:textColor="@color/admin_muted"
-                            android:textSize="13sp" />
+                            android:background="@drawable/diet_badge_emerald"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="6dp"
+                            android:text="0 kayıt"
+                            android:textColor="#047857"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Danışanların yapay zeka mutfak şefinde paylaştığı tarif ve kalori kayıtları"
+                        android:textColor="@color/admin_muted"
+                        android:textSize="13sp" />
+
                     <LinearLayout
-                        android:id="@+id/containerMealPhotos"
+                        android:id="@+id/containerAiReviewPreview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"

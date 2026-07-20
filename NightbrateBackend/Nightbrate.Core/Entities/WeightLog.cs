@@ -1,15 +1,15 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson; // MongoDB BSON tipleri
+using MongoDB.Bson.Serialization.Attributes; // Serileştirme öznitelikleri
 
-namespace Nightbrate.Core.Entities;
+namespace Nightbrate.Core.Entities; // Varlık sınıfları ad alanı
 
-public class WeightLog
+public class WeightLog // Kilo takip kaydı varlığı
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id { get; set; }
+    [BsonId] // MongoDB birincil anahtar
+    [BsonRepresentation(BsonType.ObjectId)] // ObjectId string temsili
+    public string? Id { get; set; } // Kayıt kimliği
 
-    public string ClientId { get; set; } = string.Empty;
-    public double Weight { get; set; }
-    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+    public string ClientId { get; set; } = string.Empty; // Danışan kimliği
+    public double Weight { get; set; } // Ölçülen kilo (kg)
+    public DateTime Timestamp { get; set; } = DateTime.UtcNow; // Ölçüm zamanı (UTC)
 }

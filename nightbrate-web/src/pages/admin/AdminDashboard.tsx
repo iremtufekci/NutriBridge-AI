@@ -1,10 +1,13 @@
+// Yönetici özet paneli: KPI kartları, grafikler, onay bekleyenler ve aktiviteler
 import { useCallback, useEffect, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import { SidebarLayout } from "../../components/SidebarLayout";
+import { AdminPageShell, adminCardClass } from "../../components/admin/AdminPageShell";
 import { Users, Stethoscope, Clock, Database } from "lucide-react";
 import { AreaChart, Area, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { api } from "../../api/http";
 import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
+import { useAppFeedback } from "../../components/feedback/AppFeedback";
 import { normalizeActivityDescription } from "../../lib/activityDescriptionTr";
 
 type PendingDietitian = {
@@ -37,10 +40,12 @@ type ActivityItem = {
   createdAt?: string;
 };
 
+// Ay/yıl etiketini Türkçe kısa formata çevirir
 function formatMonthTr(year: number, month: number) {
   return new Date(year, month - 1, 1).toLocaleDateString("tr-TR", { month: "short", year: "numeric" });
 }
 
+// API rol adlarının Türkçe karşılıkları (pasta grafik)
 const ROLE_TR: Record<string, string> = {
   Admin: "Yönetici",
   Client: "Danışan",
@@ -49,6 +54,7 @@ const ROLE_TR: Record<string, string> = {
 
 const PIE_COLORS = ["#2ECC71", "#1ABC9C", "#F39C12"];
 
+// ISO tarihini göreli Türkçe süre metnine dönüştürür
 function formatTimeAgoTr(iso: string | undefined) {
   if (!iso) return "—";
   const d = new Date(iso);
@@ -66,6 +72,7 @@ function formatTimeAgoTr(iso: string | undefined) {
   return d.toLocaleDateString("tr-TR");
 }
 
+// Aylık kayıtlar için bir önceki aya göre yüzde değişim (MoM)
 function registrationMomPercent(monthly: { count: number }[]): string | null {
   if (monthly.length < 2) return null;
   const last = monthly[monthly.length - 1].count;
@@ -81,12 +88,13 @@ type StatItem = {
   icon: LucideIcon;
   iconWrap: string;
   iconColor: string;
-  /** Görseldeki yeşil trend; sadece 4. kartta (aylık MoM) */
+  // Görseldeki yeşil trend; sadece 4. kartta (aylık MoM)
   trend: string | null;
 };
 
 export function AdminDashboard() {
   const adminName = useAuthProfileDisplayName();
+  const { notify, confirm } = useAppFeedback();
   const [pendingDietitians, setPendingDietitians] = useState<PendingDietitian[]>([]);
   const [statsData, setStatsData] = useState({
     activeUsers: 0,
@@ -99,6 +107,7 @@ export function AdminDashboard() {
   const [monthlyData, setMonthlyData] = useState<{ month: string; count: number }[]>([]);
   const [activities, setActivities] = useState<ActivityItem[]>([]);
 
+  // Dashboard istatistikleri ve grafik verilerini API'den yükler
   const loadStats = useCallback(async () => {
     const { data: stats } = await api.get<DashboardApi>("/api/admin/dashboard-stats");
 
@@ -128,6 +137,7 @@ export function AdminDashboard() {
     );
   }, []);
 
+  // Son sistem aktivitelerini listeler
   const loadRecentActivities = useCallback(async () => {
     try {
       const { data } = await api.get<ActivityItem[]>("/api/admin/recent-activities?take=15");
@@ -151,15 +161,24 @@ export function AdminDashboard() {
     void load();
   }, [loadStats, loadRecentActivities]);
 
+  // Onay diyaloğu sonrası diyetisyeni aktifleştirir
   const approveDietitian = async (dietitianId?: string) => {
     if (!dietitianId) return;
+    const ok = await confirm({
+      title: "Diyetisyen onayı",
+      message: "Bu diyetisyeni onaylamak istiyor musunuz?",
+      confirmLabel: "Onayla",
+      variant: "success",
+    });
+    if (!ok) return;
     try {
       await api.post(`/api/admin/approve-dietitian/${dietitianId}`);
       setPendingDietitians((prev) => prev.filter((x) => x.id !== dietitianId));
       await loadStats();
       await loadRecentActivities();
+      notify.success("Diyetisyen onaylandı.");
     } catch (error) {
-      alert("Onaylama başarısız: " + ((error as any)?.response?.data?.message || "Bilinmeyen hata"));
+      notify.error("Onaylama başarısız: " + ((error as any)?.response?.data?.message || "Bilinmeyen hata"));
     }
   };
 
@@ -202,21 +221,15 @@ export function AdminDashboard() {
 
   return (
     <SidebarLayout userRole="admin" userName={adminName}>
-      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-slate-50 min-h-screen text-slate-900 transition-colors pb-24 lg:pb-8">
-        <div>
-          <h1 className="mb-1 text-3xl font-bold tracking-tight text-slate-900 sm:text-5xl">
-            Yönetim özeti
-          </h1>
-          <p className="text-slate-600">Sistem genel görünümü ve istatistikler</p>
-        </div>
-
+      <AdminPageShell title="Yönetim özeti" subtitle="Sistem genel görünümü ve istatistikler">
+        {/* Üst KPI kartları */}
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {statItems.map((item) => {
             const Icon = item.icon;
             return (
               <div
                 key={item.title}
-                className="rounded-2xl border border-slate-200/90 bg-white p-4 shadow-md shadow-slate-200/40 ring-1 ring-slate-100 sm:rounded-3xl sm:p-5"
+                className={`${adminCardClass} p-4 sm:p-5`}
               >
                 <div className="flex items-start justify-between gap-2">
                   <p className="pr-1 text-sm font-medium leading-tight text-slate-600">{item.title}</p>
@@ -235,9 +248,10 @@ export function AdminDashboard() {
           })}
         </div>
 
+        {/* Grafikler: alan ve pasta */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
-          <div className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-md shadow-slate-200/40 sm:rounded-3xl sm:p-6 xl:col-span-2">
-            <h3 className="mb-4 text-xl font-bold text-slate-900 sm:text-2xl">Aylık kayıt trendi</h3>
+          <div className={`${adminCardClass} p-5 sm:p-6 xl:col-span-2`}>
+            <h3 className="mb-4 text-lg font-bold text-slate-900 sm:text-xl">Aylık kayıt trendi</h3>
             {monthlyData.length === 0 ? (
               <p className="text-slate-500 text-sm">Henüz kayıt yok veya dönemde veri yok.</p>
             ) : (
@@ -268,8 +282,8 @@ export function AdminDashboard() {
             )}
           </div>
 
-          <div className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-md shadow-slate-200/40 sm:rounded-3xl sm:p-6">
-            <h3 className="mb-4 text-xl font-bold text-slate-900 sm:text-2xl">Kullanıcı rol dağılımı</h3>
+          <div className={`${adminCardClass} p-5 sm:p-6`}>
+            <h3 className="mb-4 text-lg font-bold text-slate-900 sm:text-xl">Kullanıcı rol dağılımı</h3>
             {roleDistribution.length === 0 || roleDistribution.every((d) => d.value === 0) ? (
               <p className="text-slate-500 text-sm">Veri yok.</p>
             ) : (
@@ -294,8 +308,9 @@ export function AdminDashboard() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-md shadow-slate-200/40 sm:rounded-3xl sm:p-6">
-          <h3 className="mb-4 text-xl font-bold text-slate-900 sm:text-2xl">Onay bekleyen diyetisyenler</h3>
+        {/* Hızlı onay listesi */}
+        <div className={`${adminCardClass} p-5 sm:p-6`}>
+          <h3 className="mb-4 text-lg font-bold text-slate-900 sm:text-xl">Onay bekleyen diyetisyenler</h3>
           <div className="space-y-3">
             {pendingDietitians.length === 0 && (
               <p className="text-sm text-slate-500">Şu anda onay bekleyen diyetisyen yok.</p>
@@ -325,8 +340,9 @@ export function AdminDashboard() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-md shadow-slate-200/40 sm:rounded-3xl sm:p-6">
-          <h3 className="mb-4 text-xl font-bold text-slate-900 sm:text-2xl">Son aktiviteler</h3>
+        {/* Son kullanıcı/sistem hareketleri */}
+        <div className={`${adminCardClass} p-5 sm:p-6`}>
+          <h3 className="mb-4 text-lg font-bold text-slate-900 sm:text-xl">Son aktiviteler</h3>
           <div className="space-y-3">
             {activities.length === 0 && (
               <p className="text-sm text-slate-500">Henüz kayıtlı aktivite yok.</p>
@@ -354,7 +370,7 @@ export function AdminDashboard() {
             ))}
           </div>
         </div>
-      </div>
+      </AdminPageShell>
     </SidebarLayout>
   );
 }

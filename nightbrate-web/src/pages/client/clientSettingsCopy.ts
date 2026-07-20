@@ -1,5 +1,6 @@
 /** Danışan ayarları: gizlilik ve hakkında metinleri (Türkçe). */
 
+// Gizlilik politikası tam metni (modalda gösterilir)
 export const CLIENT_PRIVACY_POLICY_TEXT = `Gizlilik ve veri güvenliği
 
 NutriBridge olarak kişisel verilerinizin gizliliğine saygı duyuyoruz. Bu metin, uygulamayı danışan olarak kullanırken verilerinizin nasıl işlendiğini özetler.
@@ -21,6 +22,7 @@ KVKK kapsamındaki başvuru ve bilgi talepleriniz için uygulama yöneticisi / v
 
 Bu metin bilgilendirme amaçlıdır; ayrıntılı sözleşme ve resmi belgeler için lütfen hizmet sağlayıcınıza danışın.`;
 
+// Hakkında metni (modalda gösterilir)
 export const CLIENT_ABOUT_TEXT = `Hakkında — NutriBridge
 
 NutriBridge, danışanlar ile onaylı diyetisyenler arasında beslenme programı takibini, günlük kayıtları ve diyet günlerini yönetmeyi kolaylaştırmak için tasarlanmıştır.
@@ -31,8 +33,9 @@ Geri bildirim ve destek talepleri için lütfen hizmet sağlayıcınız veya yö
 
 Teşekkür ederiz.`;
 
+// Hedef kalori değerinden beslenme hedefi etiketi üret
 export function resolveGoalLabelFromCalories(targetCalories: number): string {
-  if (targetCalories <= 1800) return "Kilo Ver";
-  if (targetCalories >= 2300) return "Kilo Al";
-  return "Formu Koru";
+  if (targetCalories <= 1800) return "Kilo Ver"; // Düşük kalori hedefi
+  if (targetCalories >= 2300) return "Kilo Al"; // Yüksek kalori hedefi
+  return "Formu Koru"; // Orta aralık
 }

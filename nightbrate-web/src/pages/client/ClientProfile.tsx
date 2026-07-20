@@ -1,14 +1,23 @@
+// React kancaları
 import { useCallback, useEffect, useMemo, useState } from "react";
+// Modal içeriğini body'ye taşımak için portal
 import { createPortal } from "react-dom";
+// İkonlar
 import { ChevronRight, Info, Lock, Stethoscope, UserRound, X } from "lucide-react";
+// Kenar çubuğu düzeni
 import { SidebarLayout } from "../../components/SidebarLayout";
+// API istemcisi
 import { api, getApiErrorMessage } from "../../api/http";
+// Gizlilik/hakkında metinleri ve hedef etiketi yardımcısı
 import {
   CLIENT_ABOUT_TEXT,
   CLIENT_PRIVACY_POLICY_TEXT,
   resolveGoalLabelFromCalories,
 } from "./clientSettingsCopy";
+// Onay ve bildirim diyalogları
+import { useAppFeedback } from "../../components/feedback/AppFeedback";
 
+// Danışan profil verisi
 type ClientProfileData = {
   firstName: string;
   lastName: string;
@@ -20,6 +29,7 @@ type ClientProfileData = {
   programStartDate: string;
 };
 
+// API yüklenene kadar kullanılan varsayılan profil
 const defaultProfile: ClientProfileData = {
   firstName: "Danışan",
   lastName: "",
@@ -31,11 +41,15 @@ const defaultProfile: ClientProfileData = {
   programStartDate: new Date().toISOString(),
 };
 
+// Diyetisyen kod önizleme yanıtı
 type PreviewDiet = { displayName: string; firstName?: string; lastName?: string };
 
+// Açık yan panel türü
 type Panel = null | "edit" | "privacy" | "about";
 
+// Danışan profil ve ayarlar sayfası
 export function ClientProfile() {
+  const { notify, confirm } = useAppFeedback();
   const [profile, setProfile] = useState<ClientProfileData>(defaultProfile);
   const [panel, setPanel] = useState<Panel>(null);
   const [editDraft, setEditDraft] = useState({
@@ -47,6 +61,7 @@ export function ClientProfile() {
   });
   const [saveBusy, setSaveBusy] = useState(false);
 
+  // Diyetisyen eşleştirme akışı durumu
   const [dietCode, setDietCode] = useState("");
   const [verifiedCode, setVerifiedCode] = useState<string | null>(null);
   const [dietPreview, setDietPreview] = useState<PreviewDiet | null>(null);
@@ -57,6 +72,7 @@ export function ClientProfile() {
     [profile.firstName, profile.lastName]
   );
 
+  // Profili API'den yükler
   const loadProfile = useCallback(async () => {
     try {
       const { data } = await api.get("/api/client/profile");
@@ -80,6 +96,7 @@ export function ClientProfile() {
     void loadProfile();
   }, [loadProfile]);
 
+  // Düzenleme panelini mevcut profille açar
   const openEditPanel = () => {
     setEditDraft({
       firstName: profile.firstName,
@@ -91,26 +108,27 @@ export function ClientProfile() {
     setPanel("edit");
   };
 
+  // Profil değişikliklerini doğrular ve kaydeder
   const saveProfile = async () => {
     const fn = editDraft.firstName.trim();
     const ln = editDraft.lastName.trim();
     if (!fn || !ln) {
-      alert("Ad ve soyad zorunludur.");
+      notify.error("Ad ve soyad zorunludur.");
       return;
     }
     const h = parseFloat(editDraft.height.replace(",", "."));
     const w = parseFloat(editDraft.weight.replace(",", "."));
     const tc = parseInt(editDraft.targetCalories, 10);
     if (Number.isNaN(h) || h < 50 || h > 250) {
-      alert("Boy 50–250 cm arasında olmalıdır.");
+      notify.error("Boy 50–250 cm arasında olmalıdır.");
       return;
     }
     if (Number.isNaN(w) || w < 20 || w > 400) {
-      alert("Kilo 20–400 kg arasında olmalıdır.");
+      notify.error("Kilo 20–400 kg arasında olmalıdır.");
       return;
     }
     if (Number.isNaN(tc) || tc < 800 || tc > 6000) {
-      alert("Hedef kalori 800–6000 arasında olmalıdır.");
+      notify.error("Hedef kalori 800–6000 arasında olmalıdır.");
       return;
     }
 
@@ -123,16 +141,16 @@ export function ClientProfile() {
       wSame &&
       tc === (profile.targetCalories || 2000);
     if (sameAsLoaded) {
-      alert("Kaydedilecek değişiklik yok.");
+      notify.info("Kaydedilecek değişiklik yok.");
       return;
     }
-    if (
-      !window.confirm(
-        "Kişisel bilgilerinizi bu şekilde kaydetmek istediğinize emin misiniz?"
-      )
-    ) {
-      return;
-    }
+    const ok = await confirm({
+      title: "Profili kaydet",
+      message: "Kişisel bilgilerinizi bu şekilde kaydetmek istediğinize emin misiniz?",
+      confirmLabel: "Kaydet",
+      variant: "success",
+    });
+    if (!ok) return;
 
     setSaveBusy(true);
     try {
@@ -145,8 +163,9 @@ export function ClientProfile() {
       });
       setPanel(null);
       await loadProfile();
+      notify.success("Profil güncellendi.");
     } catch (error: unknown) {
-      alert(getApiErrorMessage(error));
+      notify.error(getApiErrorMessage(error));
     } finally {
       setSaveBusy(false);
     }
@@ -157,10 +176,11 @@ export function ClientProfile() {
     profile.dietitianName === "Atanmadi" ||
     profile.dietitianName === "Atanmadı";
 
+  // 6 haneli takip kodunu doğrular ve diyetisyen önizlemesi getirir
   const handleVerifyDietCode = async () => {
     const code = dietCode.replace(/\s/g, "").toUpperCase();
     if (code.length !== 6) {
-      alert("Lütfen 6 haneli bir kod girin (büyük harf ve rakam).");
+      notify.error("Lütfen 6 haneli bir kod girin (büyük harf ve rakam).");
       return;
     }
     setDietConnectBusy(true);
@@ -177,7 +197,7 @@ export function ClientProfile() {
       setVerifiedCode(code);
     } catch (error: any) {
       const msg = error?.response?.data?.message || "Kod geçerli değil veya diyetisyen onaylı değil.";
-      alert(msg);
+      notify.error(msg);
     } finally {
       setDietConnectBusy(false);
     }
@@ -188,6 +208,7 @@ export function ClientProfile() {
     setVerifiedCode(null);
   };
 
+  // Onaylanan kodla diyetisyene kalıcı bağlantı kurar
   const handleConfirmDietConnect = async () => {
     if (!verifiedCode) return;
     setDietConnectBusy(true);
@@ -195,14 +216,14 @@ export function ClientProfile() {
       const { data } = await api.post("/api/Client/connect-to-dietitian", {
         connectionCode: verifiedCode,
       });
-      alert(data?.message || "Eşleştirme tamamlandı.");
+      notify.success(data?.message || "Eşleştirme tamamlandı.");
       setDietCode("");
       setDietPreview(null);
       setVerifiedCode(null);
       await loadProfile();
     } catch (error: any) {
       const msg = error?.response?.data?.message || "Eşleştirilemedi.";
-      alert(msg);
+      notify.error(msg);
     } finally {
       setDietConnectBusy(false);
     }
@@ -216,11 +237,13 @@ export function ClientProfile() {
     <SidebarLayout userRole="client" userName={userName}>
       <div className="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 lg:px-8 pb-24 lg:pb-8">
         <div className="mx-auto max-w-5xl space-y-5">
+          {/* Sayfa başlığı */}
           <div>
             <h1 className="text-3xl sm:text-5xl font-bold text-slate-900">Profil & Ayarlar</h1>
             <p className="text-slate-500">Bilgilerinizi yönetin</p>
           </div>
 
+          {/* Profil özeti kartı */}
           <section className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8">
             <div className="flex flex-col items-center gap-5">
               <div className="w-24 h-24 rounded-full bg-[#2ECC71] text-white flex items-center justify-center text-4xl font-bold">
@@ -260,6 +283,7 @@ export function ClientProfile() {
             </div>
           </section>
 
+          {/* Diyetisyen atanmamışsa kod ile eşleştirme bölümü */}
           {hasNoDietitian && (
             <section className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 space-y-4">
               <div>
@@ -327,6 +351,7 @@ export function ClientProfile() {
             </section>
           )}
 
+          {/* Ayar menüsü: düzenle, gizlilik, hakkında */}
           <section className="space-y-3">
             <button
               type="button"
@@ -366,6 +391,7 @@ export function ClientProfile() {
           </section>
         </div>
 
+        {/* Kişisel bilgi düzenleme modalı (portal) */}
         {typeof document !== "undefined" &&
           panel === "edit" &&
           createPortal(
@@ -509,6 +535,7 @@ export function ClientProfile() {
             document.body
           )}
 
+        {/* Gizlilik veya hakkında metin modalı (portal) */}
         {typeof document !== "undefined" &&
           (panel === "privacy" || panel === "about") &&
           createPortal(

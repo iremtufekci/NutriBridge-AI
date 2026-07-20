@@ -8,6 +8,7 @@
     android:orientation="vertical">
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/pdfScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -50,7 +51,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:lineSpacingExtra="2dp"
-                        android:text="Laboratuvar veya rapor PDF’i yükleyin; özet Türkçe üretilir. Tıbbi tanı değildir."
+                        android:text="Laboratuvar sonuçlarınızı yükleyin; değerlere göre kilo alımı/verememe ile ilişkili diyetisyen yorumları üretilir. Tıbbi tanı değildir."
                         android:textColor="@color/admin_muted"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -65,6 +66,24 @@
                 android:textAllCaps="false"
                 app:backgroundTint="#2ECC71"
                 app:cornerRadius="16dp" />
+
+            <TextView
+                android:id="@+id/tvPdfSelectedFile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/admin_strong"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tvPdfStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/admin_muted"
+                android:textSize="13sp"
+                android:visibility="gone" />
 
             <ProgressBar
                 android:id="@+id/progressPdf"
@@ -135,6 +154,30 @@
                         android:textColor="#22C55E"
                         android:textSize="13sp"
                         android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:id="@+id/containerPdfKeyFindings"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="vertical"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/containerPdfCautions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="vertical"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/containerPdfSuggested"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="vertical"
+                        android:visibility="gone" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

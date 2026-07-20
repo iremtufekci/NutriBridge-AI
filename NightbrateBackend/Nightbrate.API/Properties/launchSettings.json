@@ -16,8 +16,7 @@
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5231",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "CLOUDINARY_URL": "cloudinary://YOUR_API_KEY:YOUR_API_SECRET@dyfrpiuy7"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "https": {
@@ -27,8 +26,7 @@
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:7078;http://localhost:5231",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "CLOUDINARY_URL": "cloudinary://YOUR_API_KEY:YOUR_API_SECRET@dyfrpiuy7"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "IIS Express": {
@@ -36,8 +34,7 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "CLOUDINARY_URL": "cloudinary://YOUR_API_KEY:YOUR_API_SECRET@dyfrpiuy7"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   }

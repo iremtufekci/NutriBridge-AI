@@ -1,3 +1,4 @@
+// Tüm kullanıcıları listeleme, filtreleme, askıya alma ve aktivite logları
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Activity,
@@ -14,11 +15,14 @@ import {
   Unlock,
 } from "lucide-react";
 import { SidebarLayout } from "../../components/SidebarLayout";
+import { AdminPageShell } from "../../components/admin/AdminPageShell";
 import { api } from "../../api/http";
 import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
 import { normalizeActivityDescription } from "../../lib/activityDescriptionTr";
+import { useAppFeedback } from "../../components/feedback/AppFeedback";
 import axios from "axios";
 
+// Son aktivite zamanını göreli Türkçe metin olarak formatlar
 function formatTimeAgoTr(iso: string | null | undefined) {
   if (!iso) return "—";
   const d = new Date(iso);
@@ -36,6 +40,7 @@ function formatTimeAgoTr(iso: string | null | undefined) {
   return d.toLocaleDateString("tr-TR");
 }
 
+// API hata gövdesinden kullanıcıya gösterilecek mesajı çıkarır
 function formatApiError(e: unknown): string {
   if (axios.isAxiosError(e)) {
     const d = e.response?.data;
@@ -82,6 +87,7 @@ type ActivityItem = {
   createdAt: string;
 };
 
+// Rol filtresi seçenekleri
 const ROLE_FILTER_OPTIONS = [
   { value: "all", label: "Tüm Roller" },
   { value: "admin", label: "Yönetici" },
@@ -89,6 +95,7 @@ const ROLE_FILTER_OPTIONS = [
   { value: "client", label: "Danışan" },
 ];
 
+// Hesap durumu filtresi seçenekleri
 const STATUS_FILTER_OPTIONS = [
   { value: "all", label: "Tüm Durumlar" },
   { value: "active", label: "Aktif" },
@@ -98,6 +105,7 @@ const STATUS_FILTER_OPTIONS = [
 
 export function AdminUserManagement() {
   const adminName = useAuthProfileDisplayName();
+  const { notify, confirm } = useAppFeedback();
   const [stats, setStats] = useState<Stats | null>(null);
   const [rows, setRows] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -115,6 +123,7 @@ export function AdminUserManagement() {
   const [suspendMsg, setSuspendMsg] = useState("");
   const [suspendLoading, setSuspendLoading] = useState(false);
 
+  // Arama kutusu girdisini 350 ms gecikmeyle API sorgusuna bağlar
   useEffect(() => {
     const t = setTimeout(() => setSearchDebounced(search.trim()), 350);
     return () => clearTimeout(t);
@@ -156,6 +165,7 @@ export function AdminUserManagement() {
     void loadUsers();
   }, [loadUsers]);
 
+  // Seçili kullanıcının aktivite geçmişini modalda açar
   const openLogs = async (u: UserRow) => {
     setLogUser(u);
     setLogItems([]);
@@ -173,6 +183,7 @@ export function AdminUserManagement() {
     }
   };
 
+  // Askıya alma nedenini API'ye gönderir
   const submitSuspend = async () => {
     if (!suspendUser) return;
     setSuspendLoading(true);
@@ -185,20 +196,28 @@ export function AdminUserManagement() {
       await loadStats();
       await loadUsers();
     } catch (e) {
-      window.alert(formatApiError(e));
+      notify.error(formatApiError(e));
     } finally {
       setSuspendLoading(false);
     }
   };
 
+  // Askıdaki hesabı tekrar aktifleştirir
   const doUnsuspend = async (u: UserRow) => {
-    if (!window.confirm("Bu kullanıcının askısını kaldırmak istiyor musunuz?")) return;
+    const ok = await confirm({
+      title: "Askıyı kaldır",
+      message: "Bu kullanıcının askısını kaldırmak istiyor musunuz?",
+      confirmLabel: "Askıyı kaldır",
+      variant: "success",
+    });
+    if (!ok) return;
     try {
       await api.post(`/api/Admin/user-management/${encodeURIComponent(u.id)}/unsuspend`);
       await loadStats();
       await loadUsers();
+      notify.success("Kullanıcı askısı kaldırıldı.");
     } catch (e) {
-      window.alert(formatApiError(e));
+      notify.error(formatApiError(e));
     }
   };
 
@@ -209,14 +228,13 @@ export function AdminUserManagement() {
 
   return (
     <SidebarLayout userRole="admin" userName={adminName}>
-      <div className="p-4 sm:p-6 lg:p-8 space-y-6 bg-slate-50 min-h-screen text-slate-900 transition-colors pb-24 lg:pb-8">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Kullanıcı Yönetimi</h1>
-          <p className="text-slate-500 mt-1 text-sm sm:text-base">
-            Sistemdeki tüm kullanıcıları görüntüleyin ve yönetin
-          </p>
-        </div>
+      <AdminPageShell
+        title="Kullanıcı yönetimi"
+        subtitle="Sistemdeki tüm kullanıcıları görüntüleyin ve yönetin"
+        maxWidth="wide"
+      >
 
+        {/* Rol ve durum özet istatistikleri */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
           {(
             [
@@ -235,6 +253,7 @@ export function AdminUserManagement() {
           ))}
         </div>
 
+        {/* Arama ve rol/durum filtreleri */}
         <div
           className={`${cardBase} p-4 sm:p-5 space-y-4`}
         >
@@ -314,6 +333,7 @@ export function AdminUserManagement() {
           </p>
         </div>
 
+        {/* Kullanıcı tablosu */}
         <div className={`${cardBase} overflow-hidden`}>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[900px] text-left text-sm">
@@ -444,8 +464,9 @@ export function AdminUserManagement() {
             </table>
           </div>
         </div>
-      </div>
+      </AdminPageShell>
 
+      {/* Aktivite log modalı */}
       {logUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" role="dialog">
           <div className="bg-white rounded-2xl max-w-lg w-full max-h-[80vh] overflow-hidden shadow-xl border border-slate-200">
@@ -487,6 +508,7 @@ export function AdminUserManagement() {
         </div>
       )}
 
+      {/* Askıya alma onay ve mesaj modalı */}
       {suspendUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" role="dialog">
           <div className="bg-white rounded-2xl max-w-md w-full shadow-xl border border-slate-200 p-6 space-y-4">

@@ -113,11 +113,12 @@ public class DietitianService(
             throw new AppException("Gecerli tarih zorunludur (yyyy-MM-dd).");
         }
 
-        var existing = await dietProgramRepository.GetByDietitianClientAndProgramDateAsync(dietitianId, dto.ClientId, dateKey);
-        if (existing is null && ProgramDateHelper.IsBeforeTodayUtc(dateKey))
+        if (ProgramDateHelper.IsBeforeTodayUtc(dateKey))
         {
-            throw new AppException("Gecmis tarihe yeni program atanamaz; bugun veya ileri bir tarih secin.");
+            throw new AppException("Gecmis tarihlerdeki programlar guncellenemez; yalnizca bugun veya ileri tarihler duzenlenebilir.");
         }
+
+        var existing = await dietProgramRepository.GetByDietitianClientAndProgramDateAsync(dietitianId, dto.ClientId, dateKey);
 
         if (existing is not null)
         {
@@ -303,6 +304,71 @@ public class DietitianService(
             KitchenRecipeLogs = kitchenDtos,
             PdfAnalyses = pdfDtos
         };
+    }
+
+    public async Task<IReadOnlyList<DietitianMealAnalysisLogItemDto>> GetMealAnalysisLogsAsync(
+        string dietitianId,
+        string? clientId,
+        int take,
+        CancellationToken cancellationToken = default)
+    {
+        var clients = await clientRepository.GetByDietitianIdAsync(dietitianId).ConfigureAwait(false);
+        if (clients.Count == 0) return Array.Empty<DietitianMealAnalysisLogItemDto>();
+
+        var clientMap = clients
+            .Where(c => !string.IsNullOrWhiteSpace(c.Id))
+            .ToDictionary(c => c.Id!, c => c);
+
+        IReadOnlyCollection<string> targetIds;
+        if (!string.IsNullOrWhiteSpace(clientId))
+        {
+            if (!clientMap.ContainsKey(clientId))
+                throw new AppException("Sadece kendi danışanlarınızın kayıtlarını görebilirsiniz.");
+            targetIds = new[] { clientId };
+        }
+        else
+        {
+            targetIds = clientMap.Keys.ToList();
+        }
+
+        IReadOnlyList<MealLog> rows;
+        if (!string.IsNullOrWhiteSpace(clientId))
+        {
+            rows = await mealLogRepository
+                .GetByClientIdAsync(clientId, take, cancellationToken)
+                .ConfigureAwait(false);
+        }
+        else
+        {
+            rows = await mealLogRepository
+                .GetByClientIdsAsync(targetIds, take, cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        return rows.Select(m =>
+        {
+            clientMap.TryGetValue(m.ClientId, out var client);
+            var first = client?.FirstName ?? string.Empty;
+            var last = client?.LastName ?? string.Empty;
+            var display = $"{first} {last}".Trim();
+            if (string.IsNullOrWhiteSpace(display)) display = "Danışan";
+
+            return new DietitianMealAnalysisLogItemDto
+            {
+                Id = m.Id,
+                ClientId = m.ClientId,
+                ClientFirstName = first,
+                ClientLastName = last,
+                ClientDisplayName = display,
+                PhotoUrl = m.PhotoUrl,
+                Calories = m.Calories,
+                DetectedFoods = m.DetectedFoods ?? new List<string>(),
+                TimestampUtc = m.Timestamp,
+                Protein = m.Macros?.Protein ?? 0,
+                Carb = m.Macros?.Carb ?? 0,
+                Fat = m.Macros?.Fat ?? 0
+            };
+        }).ToList();
     }
 
     private async Task<List<DietitianProgramDayOverviewDto>> GetWeeklyProgramDaysAsync(

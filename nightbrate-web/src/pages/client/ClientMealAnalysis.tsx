@@ -1,9 +1,16 @@
+// React kancaları
 import { useCallback, useMemo, useRef, useState } from "react";
+// İkonlar
 import { Camera, ImagePlus, Loader2, ScanSearch } from "lucide-react";
+// Kenar çubuğu düzeni
 import { SidebarLayout } from "../../components/SidebarLayout";
+// API taban URL ve istemci
 import { API_BASE_URL, api, getApiErrorMessage } from "../../api/http";
+// Kullanıcı görünen adı
 import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
+import { isMockNetworkSource, isRealAiSource } from "../../lib/aiSource";
 
+// Yemek fotoğrafı analiz API yanıtı
 type AnalysisResponse = {
   mealLogId?: string | null;
   photoUrl: string;
@@ -14,6 +21,7 @@ type AnalysisResponse = {
   analysisSource?: string;
 };
 
+// Göreli veya mutlak fotoğraf URL'sini tam adres yapar
 function resolvePhotoSrc(photoUrl: string): string {
   if (!photoUrl) return "";
   if (photoUrl.startsWith("http://") || photoUrl.startsWith("https://")) return photoUrl;
@@ -23,6 +31,7 @@ function resolvePhotoSrc(photoUrl: string): string {
   return `${base}${path}`;
 }
 
+// Yemek fotoğrafı yükleme ve analiz sayfası
 export function ClientMealAnalysis() {
   const userName = useAuthProfileDisplayName();
   const galleryRef = useRef<HTMLInputElement>(null);
@@ -32,6 +41,7 @@ export function ClientMealAnalysis() {
   const [result, setResult] = useState<AnalysisResponse | null>(null);
   const [previewObjectUrl, setPreviewObjectUrl] = useState<string | null>(null);
 
+  // Seçilen dosyayı sunucuya gönderir ve analiz sonucunu alır
   const uploadFile = useCallback(async (file: File) => {
     setError(null);
     setResult(null);
@@ -84,6 +94,7 @@ export function ClientMealAnalysis() {
   const onPickGallery = useCallback(() => galleryRef.current?.click(), []);
   const onPickCamera = useCallback(() => cameraRef.current?.click(), []);
 
+  // Önizleme veya sunucudan dönen fotoğraf kaynağı
   const displayImg = useMemo(() => {
     if (result?.photoUrl) return resolvePhotoSrc(result.photoUrl);
     return previewObjectUrl || "";
@@ -92,6 +103,7 @@ export function ClientMealAnalysis() {
   return (
     <SidebarLayout userRole="client" userName={userName}>
       <div className="mx-auto max-w-lg px-4 py-6 pb-28 lg:pb-8">
+        {/* Sayfa başlığı */}
         <div className="mb-6 flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/15 text-emerald-600">
             <ScanSearch className="h-6 w-6" aria-hidden />
@@ -104,6 +116,7 @@ export function ClientMealAnalysis() {
           </div>
         </div>
 
+        {/* Gizli dosya girişleri: galeri ve kamera */}
         <input
           ref={galleryRef}
           type="file"
@@ -128,6 +141,7 @@ export function ClientMealAnalysis() {
           }}
         />
 
+        {/* Kaynak seçim düğmeleri */}
         <div className="flex flex-col gap-3 sm:flex-row">
           <button
             type="button"
@@ -153,6 +167,7 @@ export function ClientMealAnalysis() {
           Yalnızca JPG/PNG, en fazla 5 MB.
         </p>
 
+        {/* Yükleme/analiz devam ediyor */}
         {busy && (
           <div className="mt-6 flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-4">
             <Loader2 className="h-5 w-5 animate-spin text-emerald-600" />
@@ -168,12 +183,14 @@ export function ClientMealAnalysis() {
           </div>
         )}
 
+        {/* Yüklenen fotoğraf önizlemesi */}
         {displayImg && !busy && (
           <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
             <img src={displayImg} alt="Yüklenen öğün" className="max-h-72 w-full object-cover" />
           </div>
         )}
 
+        {/* Analiz sonuç kartı */}
         {result && !busy && (
           <div className="mt-6 space-y-4 rounded-2xl border border-emerald-200 bg-emerald-50/80 p-5">
             <div>
@@ -206,14 +223,16 @@ export function ClientMealAnalysis() {
             {result.analysisSource && (
               <p
                 className={`text-xs font-semibold ${
-                  result.analysisSource === "gemini"
+                  isRealAiSource(result.analysisSource)
                     ? "text-blue-700"
                     : "text-amber-700"
                 }`}
               >
-                {result.analysisSource === "gemini"
-                  ? "Analiz kaynağı: yapay zeka hizmeti"
-                  : "Analiz kaynağı: yerel simülasyon (sunucuda yapay zeka anahtarı tanımlı değil)"}
+                {isRealAiSource(result.analysisSource)
+                  ? "Analiz kaynağı: yapay zeka hizmeti (Groq)"
+                  : isMockNetworkSource(result.analysisSource)
+                    ? "Analiz kaynağı: yerel simülasyon (Groq servisine bağlanılamadı — ağ/DNS hatası)"
+                    : "Analiz kaynağı: yerel simülasyon (Groq anahtarı tanımlı değil)"}
               </p>
             )}
           </div>

@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:maxLines="2"
-                android:text="Panel"
+                android:text="Anasayfa"
                 android:textColor="@color/nav_item_inactive"
                 android:textSize="8sp" />
         </LinearLayout>
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:maxLines="2"
-                android:text="Danışanlar"
+                android:text="Danışanlarım"
                 android:textColor="@color/nav_item_inactive"
                 android:textSize="8sp" />
         </LinearLayout>
@@ -104,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:maxLines="2"
-                android:text="Programlar"
+                android:text="Diyet Programları"
                 android:textColor="@color/nav_item_inactive"
                 android:textSize="8sp" />
         </LinearLayout>
@@ -135,7 +135,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:maxLines="2"
-                android:text="YZ denetim"
+                android:text="Yapay zeka denetimi"
                 android:textColor="@color/nav_item_inactive"
                 android:textSize="8sp" />
         </LinearLayout>
@@ -166,7 +166,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:maxLines="2"
-                android:text="Uyarılar"
+                android:text="Kritik Uyarılar"
                 android:textColor="@color/nav_item_inactive"
                 android:textSize="8sp" />
         </LinearLayout>

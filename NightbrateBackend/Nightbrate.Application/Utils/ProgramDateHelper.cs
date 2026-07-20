@@ -47,4 +47,35 @@ public static class ProgramDateHelper
             return DateTime.SpecifyKind(DateTime.UtcNow.Date, DateTimeKind.Utc);
         return new DateTime(d.Year, d.Month, d.Day, 0, 0, 0, DateTimeKind.Utc);
     }
+
+    /// <summary>Türkiye saatine göre bugünün yyyy-MM-dd değeri.</summary>
+    public static string TurkeyTodayYmd()
+    {
+        var tr = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, ResolveTurkeyTimeZone());
+        return tr.ToString(JsonFormat, CultureInfo.InvariantCulture);
+    }
+
+    /// <summary>Türkiye takvim günü başlangıcı (UTC).</summary>
+    public static DateTime TurkeyTodayStartUtc()
+    {
+        var tz = ResolveTurkeyTimeZone();
+        var tr = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tz);
+        var localMidnight = new DateTime(tr.Year, tr.Month, tr.Day, 0, 0, 0, DateTimeKind.Unspecified);
+        return TimeZoneInfo.ConvertTimeToUtc(localMidnight, tz);
+    }
+
+    /// <summary>Türkiye takvim günü bitişi (ertesi gün 00:00 UTC, yarı açık aralık için).</summary>
+    public static DateTime TurkeyTomorrowStartUtc() => TurkeyTodayStartUtc().AddDays(1);
+
+    private static TimeZoneInfo ResolveTurkeyTimeZone()
+    {
+        try
+        {
+            return TimeZoneInfo.FindSystemTimeZoneById("Europe/Istanbul");
+        }
+        catch (TimeZoneNotFoundException)
+        {
+            return TimeZoneInfo.FindSystemTimeZoneById("Turkey Standard Time");
+        }
+    }
 }

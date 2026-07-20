@@ -34,6 +34,12 @@ public class KitchenChefSaveRequestDto
     public List<KitchenChefRecipeDto> SelectedRecipes { get; set; } = new();
 }
 
+public class KitchenChefDailyShareStatusDto
+{
+    public bool CanShareToday { get; set; }
+    public bool SharedToday { get; set; }
+}
+
 public class KitchenChefRecipeLogItemDto
 {
     public string? Id { get; set; }

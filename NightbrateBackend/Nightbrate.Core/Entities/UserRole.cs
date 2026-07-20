@@ -1,8 +1,8 @@
-namespace Nightbrate.Core.Entities;
+namespace Nightbrate.Core.Entities; // Varlık sınıfları ad alanı
 
-public enum UserRole
+public enum UserRole // Sistemdeki kullanıcı rolleri
 {
-    Admin = 0,
-    Dietitian = 1,
-    Client = 2
+    Admin = 0, // Yönetici rolü
+    Dietitian = 1, // Diyetisyen rolü
+    Client = 2 // Danışan rolü
 }

@@ -22,18 +22,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Profil &amp; ayarlar"
+                android:layout_marginBottom="16dp"
+                android:text="Profil"
                 android:textColor="@color/admin_strong"
                 android:textSize="26sp"
                 android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="Bilgiler veritabanındaki hesap kaydınızdan yüklenir."
-                android:textColor="@color/text_gray"
-                android:textSize="13sp" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"

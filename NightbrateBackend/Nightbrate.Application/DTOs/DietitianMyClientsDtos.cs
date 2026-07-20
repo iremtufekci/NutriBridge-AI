@@ -40,6 +40,22 @@ public sealed class DietitianClientOverviewDto
     public IReadOnlyList<ClientPdfAnalysisListItemDto> PdfAnalyses { get; set; } = Array.Empty<ClientPdfAnalysisListItemDto>();
 }
 
+public sealed class DietitianMealAnalysisLogItemDto
+{
+    public string? Id { get; set; }
+    public string ClientId { get; set; } = string.Empty;
+    public string ClientFirstName { get; set; } = string.Empty;
+    public string ClientLastName { get; set; } = string.Empty;
+    public string ClientDisplayName { get; set; } = string.Empty;
+    public string PhotoUrl { get; set; } = string.Empty;
+    public int Calories { get; set; }
+    public List<string> DetectedFoods { get; set; } = new();
+    public DateTime TimestampUtc { get; set; }
+    public double Protein { get; set; }
+    public double Carb { get; set; }
+    public double Fat { get; set; }
+}
+
 public sealed class DietitianProgramDayOverviewDto
 {
     public string ProgramDate { get; set; } = string.Empty;

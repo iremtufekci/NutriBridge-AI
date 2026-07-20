@@ -7,6 +7,9 @@ public class MealAnalysisResultDto
     public double Protein { get; init; }
     public double Carb { get; init; }
     public double Fat { get; init; }
+
+    /// <summary>gemini | mock — ağ hatasında yedek mock kullanıldığında mock yazılır.</summary>
+    public string? AnalysisSource { get; set; }
 }
 
 public class MealPhotoAnalysisResponseDto

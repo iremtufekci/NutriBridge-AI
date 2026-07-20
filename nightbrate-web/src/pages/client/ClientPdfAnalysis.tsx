@@ -1,9 +1,16 @@
+// React kancaları
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+// İkonlar
 import { FileText, Loader2, Upload } from "lucide-react";
+// Kenar çubuğu düzeni
 import { SidebarLayout } from "../../components/SidebarLayout";
+// API taban URL ve istemci
 import { API_BASE_URL, api, getApiErrorMessage } from "../../api/http";
+// Kullanıcı görünen adı
 import { useAuthProfileDisplayName } from "../../hooks/useAuthProfileDisplayName";
+import { isMockNetworkSource, isRealAiSource } from "../../lib/aiSource";
 
+/** Backend'den dönen tek bir PDF analiz kaydı (yükleme + geçmiş listesi aynı şekil). */
 type UploadResult = {
   id: string;
   pdfUrl: string;
@@ -19,6 +26,77 @@ type UploadResult = {
 
 type ListItem = UploadResult;
 
+/** UTC ISO tarihini kullanıcıya Türkçe gösterir. */
+function formatAnalysisDate(iso: string): string {
+  try {
+    return new Date(iso).toLocaleString("tr-TR", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } catch {
+    return iso;
+  }
+}
+
+/** PDF yorumu: laboratuvar değerlerine göre kilo ve beslenme değerlendirmesi. */
+function AnalysisDetailCard({ item }: { item: UploadResult }) {
+  const comments = item.suggestedForDietitian?.filter((x) => x.trim()) ?? [];
+
+  return (
+    <section className="space-y-4 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">
+          {item.documentType}
+        </p>
+        <span className="text-xs text-slate-500">
+          {isRealAiSource(item.analysisSource)
+            ? "Yapay zeka analizi (Groq)"
+            : isMockNetworkSource(item.analysisSource)
+              ? "Örnek (Groq'a bağlanılamadı)"
+              : "Örnek (Groq yapılandırılmamış)"}
+        </span>
+      </div>
+      {item.createdAtUtc && (
+        <p className="text-xs text-slate-400">{formatAnalysisDate(item.createdAtUtc)}</p>
+      )}
+      <a
+        href={resolvePdfHref(item.pdfUrl)}
+        target="_blank"
+        rel="noreferrer"
+        className="block truncate text-sm font-medium text-emerald-600 underline"
+      >
+        {item.originalFileName}
+      </a>
+      {comments.length > 0 ? (
+        <div className="rounded-2xl border border-slate-100 bg-slate-50/80 p-4">
+          <p className="mb-3 text-xs font-bold uppercase tracking-wide text-slate-600">PDF yorumu</p>
+          <ul className="space-y-3 text-sm leading-relaxed text-slate-800">
+            {comments.map((x, i) => (
+              <li key={i} className="flex gap-2">
+                <span className="shrink-0 text-slate-400">•</span>
+                <span>{x}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <p className="text-sm text-slate-500">Bu belge için yorum üretilemedi.</p>
+      )}
+    </section>
+  );
+}
+
+// Geçmiş listesinde kısa önizleme metni
+function historyPreviewText(item: UploadResult): string {
+  const first = item.suggestedForDietitian?.find((x) => x.trim());
+  if (first) return first;
+  return item.summary || "";
+}
+
+/** Göreli yol (/uploads/...) ise API taban adresiyle tam PDF linki üretir. */
 function resolvePdfHref(path: string): string {
   if (!path) return "#";
   if (path.startsWith("http://") || path.startsWith("https://")) return path;
@@ -28,15 +106,18 @@ function resolvePdfHref(path: string): string {
   return `${base}${p}`;
 }
 
+// Laboratuvar PDF yükleme ve analiz geçmişi sayfası
 export function ClientPdfAnalysis() {
   const userName = useAuthProfileDisplayName();
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<UploadResult | null>(null);
+  const [result, setResult] = useState<UploadResult | null>(null); // Az önce yüklenen analiz
+  const [selectedHistoryId, setSelectedHistoryId] = useState<string | null>(null); // Geçmişten seçilen kayıt id'si
   const [history, setHistory] = useState<ListItem[]>([]);
   const [historyLoading, setHistoryLoading] = useState(true);
 
+  // Sayfa açılışında ve yeni yüklemeden sonra danışanın geçmiş PDF analizlerini çeker
   const loadHistory = useCallback(async () => {
     setHistoryLoading(true);
     try {
@@ -53,10 +134,12 @@ export function ClientPdfAnalysis() {
     void loadHistory();
   }, [loadHistory]);
 
+  // Seçilen PDF'i multipart olarak backend'e gönderir; Gemini analizi orada yapılır
   const uploadFile = useCallback(
     async (file: File) => {
       setError(null);
       setResult(null);
+      setSelectedHistoryId(null);
       const fd = new FormData();
       const name = file.name?.toLowerCase().endsWith(".pdf") ? file.name : "belge.pdf";
       fd.append("pdf", file, name);
@@ -66,6 +149,7 @@ export function ClientPdfAnalysis() {
           timeout: 300_000,
         });
         setResult(data);
+        setSelectedHistoryId(data.id);
         await loadHistory();
       } catch (e) {
         setError(getApiErrorMessage(e));
@@ -78,11 +162,17 @@ export function ClientPdfAnalysis() {
 
   const onPick = useCallback(() => inputRef.current?.click(), []);
 
-  const displayItem = useMemo(() => result ?? null, [result]);
+  // Üstte gösterilecek detay: önce yeni sonuç, yoksa geçmişten seçilen kayıt
+  const displayItem = useMemo(() => {
+    if (result) return result;
+    if (!selectedHistoryId) return null;
+    return history.find((h) => h.id === selectedHistoryId) ?? null;
+  }, [result, selectedHistoryId, history]);
 
   return (
     <SidebarLayout userRole="client" userName={userName}>
       <div className="mx-auto max-w-lg px-4 py-6 pb-28 lg:pb-8">
+        {/* Sayfa başlığı ve açıklama */}
         <div className="mb-6 flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/15 text-emerald-600">
             <FileText className="h-6 w-6" aria-hidden />
@@ -90,11 +180,13 @@ export function ClientPdfAnalysis() {
           <div>
             <h1 className="text-lg font-semibold text-slate-800">PDF analizi</h1>
             <p className="text-sm text-slate-500">
-              Laboratuvar, rapor veya diyet belgesi yükleyin; yapay zekâ Türkçe özet üretir. Tıbbi tanı yerine geçmez.
+              Laboratuvar sonuçlarınızı yükleyin; değerlere göre kilo alımı/verememe ile ilişkili diyetisyen
+              yorumları üretilir. Tıbbi tanı yerine geçmez.
             </p>
           </div>
         </div>
 
+        {/* Gizli PDF dosya girişi */}
         <input
           ref={inputRef}
           type="file"
@@ -107,6 +199,7 @@ export function ClientPdfAnalysis() {
           }}
         />
 
+        {/* Yükleme düğmesi */}
         <button
           type="button"
           disabled={busy}
@@ -123,58 +216,17 @@ export function ClientPdfAnalysis() {
           </div>
         )}
 
+        {/* Seçili analiz detay kartı */}
         {displayItem && (
-          <section className="mt-6 space-y-4 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">
-                {displayItem.documentType}
-              </p>
-              <span className="text-xs text-slate-500">
-                {displayItem.analysisSource === "gemini" ? "Yapay zeka analizi" : "Örnek (yapay zeka devre dışı)"}
-              </span>
-            </div>
-            <a
-              href={resolvePdfHref(displayItem.pdfUrl)}
-              target="_blank"
-              rel="noreferrer"
-              className="block truncate text-sm font-medium text-emerald-600 underline"
-            >
-              {displayItem.originalFileName}
-            </a>
-            <p className="text-sm leading-relaxed text-slate-700">{displayItem.summary}</p>
-            {displayItem.keyFindings?.length > 0 && (
-              <div>
-                <p className="mb-1 text-xs font-bold uppercase text-slate-500">Öne çıkanlar</p>
-                <ul className="list-disc space-y-1 pl-5 text-sm text-slate-700">
-                  {displayItem.keyFindings.map((x, i) => (
-                    <li key={i}>{x}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {displayItem.cautions?.length > 0 && (
-              <div className="rounded-2xl border border-amber-200/80 bg-amber-50/90 p-3">
-                <p className="mb-1 text-xs font-bold uppercase text-amber-800">Dikkat</p>
-                <ul className="list-disc space-y-1 pl-5 text-sm text-amber-900">
-                  {displayItem.cautions.map((x, i) => (
-                    <li key={i}>{x}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {displayItem.suggestedForDietitian?.length > 0 && (
-              <div>
-                <p className="mb-1 text-xs font-bold uppercase text-slate-500">Diyetisyenle paylaşım</p>
-                <ul className="list-disc space-y-1 pl-5 text-sm text-slate-700">
-                  {displayItem.suggestedForDietitian.map((x, i) => (
-                    <li key={i}>{x}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </section>
+          <div className="mt-6">
+            <h2 className="mb-3 text-sm font-semibold text-slate-700">
+              {result ? "Son analiz" : "Analiz detayı"}
+            </h2>
+            <AnalysisDetailCard item={displayItem} />
+          </div>
         )}
 
+        {/* Geçmiş yüklemeler listesi */}
         <section className="mt-10">
           <h2 className="mb-3 text-base font-semibold text-slate-800">Geçmiş yüklemeler</h2>
           {historyLoading ? (
@@ -185,28 +237,48 @@ export function ClientPdfAnalysis() {
             <p className="text-sm text-slate-500">Henüz kayıtlı PDF yok.</p>
           ) : (
             <ul className="space-y-3">
-              {history.map((h) => (
-                <li
-                  key={h.id}
-                  className="rounded-2xl border border-slate-200 bg-white p-4"
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold text-slate-800">{h.originalFileName}</p>
-                      <p className="text-xs text-slate-500">{h.documentType}</p>
-                    </div>
-                    <a
-                      href={resolvePdfHref(h.pdfUrl)}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="shrink-0 text-xs font-semibold text-emerald-600"
+              {history.map((h) => {
+                const selected = selectedHistoryId === h.id;
+                return (
+                  <li key={h.id}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setResult(null);
+                        setSelectedHistoryId(h.id);
+                      }}
+                      className={`w-full rounded-2xl border p-4 text-left transition ${
+                        selected
+                          ? "border-emerald-400 bg-emerald-50/60 ring-1 ring-emerald-200"
+                          : "border-slate-200 bg-white hover:border-emerald-200 hover:bg-slate-50"
+                      }`}
                     >
-                      PDF
-                    </a>
-                  </div>
-                  <p className="mt-2 line-clamp-2 text-xs text-slate-600">{h.summary}</p>
-                </li>
-              ))}
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold text-slate-800">{h.originalFileName}</p>
+                          <p className="text-xs text-slate-500">{h.documentType}</p>
+                          {h.createdAtUtc && (
+                            <p className="mt-1 text-xs text-slate-400">{formatAnalysisDate(h.createdAtUtc)}</p>
+                          )}
+                        </div>
+                        <a
+                          href={resolvePdfHref(h.pdfUrl)}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="shrink-0 text-xs font-semibold text-emerald-600"
+                        >
+                          PDF
+                        </a>
+                      </div>
+                      <p className="mt-2 line-clamp-2 text-xs text-slate-600">{historyPreviewText(h)}</p>
+                      <p className="mt-2 text-xs font-semibold text-emerald-600">
+                        {selected ? "Detay açık ↑" : "Tam analizi gör →"}
+                      </p>
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </section>
